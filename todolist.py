@@ -69,7 +69,7 @@ def arrange_items_menu(todo):
 	slowprint("[arranging items]", "-----------------", '')
 	list_items(todo)
 	slowprint("Enter the line number you would like to move. Empty return to finish arranging items. 'c' to cancel.", '')
-	return
+	return None
 
 def arrange_items(todo):
 	unchanged = todo.copy()
@@ -118,12 +118,10 @@ def edit_items_menu(todo):
 	slowprint(("[editing items]", "---------------", ''))
 	list_items(todo)
 	slowprint(("Enter the line number you would like to edit. Empty return to finish editing items. 'c' to cancel.", ''))
-	return
+	return None
 
 def edit_items(todo):
-
 	unchanged = todo.copy()
-
 	edit_items_menu(todo)
 	while True:
 		line = input(" > ")
@@ -167,7 +165,7 @@ def rm_items_menu(todo):
 	slowprint("[removing items]", "----------------", '')
 	list_items(todo)
 	slowprint("Enter line number(s) to remove. Empty return to finish removing items. 'c' to cancel.", '')
-	return
+	return None
 
 def rm_items(todo):
 	rm_items_menu(todo)
@@ -281,7 +279,7 @@ def save(todo: list[str]) -> None:
 		else:
 			f.write("%c")
 	slowprint('', f"File written successfully to '{listfiles}/{file}.todo'.", '')
-	return
+	return None
 
 def read_list_type(filename: str) -> str:
 	try:
@@ -289,7 +287,7 @@ def read_list_type(filename: str) -> str:
 			contents = [line.strip('\n') for line in f.readlines()]
 		return contents[-1]
 	except Exception:
-		return None
+		return ""
 
 def overwrite_save(file: str) -> bool:
 	slowprint('', f"'{file}.todo' already exists. Would you like to overwrite it? (y/N)", '')
@@ -319,7 +317,6 @@ def autosave(todo: list[str]) -> None:
 
 def load_menu() -> list[str]:
 	system("clear")
-	open_file = read_open_file()
 	files = list_files("[loading file]", "--------------")
 	slowprint('', '', "Enter the number of file you would like to open. 'r' to rename a file. 'd' to delete a file. Empty return to cancel.", '')
 	return files
@@ -393,7 +390,7 @@ def new_name(files, to_rename) -> None:
 			slowprint('', f"Cancelled renaming of '{files[to_rename].split(".todo")[0]}'.", '')
 			sleep(1)
 			return None
-		if not new_name in files:
+		if new_name not in files:
 			open_file = read_open_file()
 			if len(open_file) and files[to_rename] == open_file[0]:
 				open_file[0] = f"{new_name}.todo"
@@ -449,7 +446,7 @@ def autoload() -> list[str]:
 			with open(f"{progfiles}/lastopen", 'w') as f:
 				f.write(f"{date}.todo\n%d")
 			if f"{date}.todo" in listdir(listfiles):
-				with open(f"{listfiles}/{date}.todo", 'r'):
+				with open(f"{listfiles}/{date}.todo", 'r') as f:
 					todo = [line.strip('\n') for line in f.readlines()]
 				todo.pop()
 			else:
@@ -471,8 +468,7 @@ def file_integrity() -> None:
 	if not path.exists(progfiles):
 		makedirs(progfiles)
 	if not listdir(progfiles):
-		with open(f"{progfiles}/lastopen", 'w') as f: 
-			pass
+		clear_open_file()
 	if not path.exists(listfiles):
 		makedirs(listfiles)
 	return None
@@ -482,7 +478,7 @@ def read_open_file() -> list[str]:
 		return [line.strip('\n') for line in f.readlines()]
 
 def clear_open_file() -> None:
-	with open(f"{progfiles}/lastopen", 'w') as f:
+	with open(f"{progfiles}/lastopen", 'w'):
 		pass
 	return None
 
@@ -593,4 +589,4 @@ def main():
 						slowprint(f"Unknown command '{item}'.") 
 
 if __name__ == '__main__':
-	exit_code: int = main()
+	main()
