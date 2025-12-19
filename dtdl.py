@@ -7,7 +7,7 @@ from os import system, path, makedirs, listdir, getlogin, rename, remove
 
 usr = getlogin()
 date = datetime.today().strftime('%Y-%m-%d')
-listfiles = f"/home/{usr}/Documents/To-do Lists"
+listfiles = f"/home/{usr}/Documents/To-Do Lists"
 progfiles = f"/home/{usr}/.todolist/programfiles"
 
 # ==================== functions =====================
@@ -115,9 +115,9 @@ def arrange_items(todo):
 
 def edit_items_menu(todo):
 	system("clear")
-	slowprint(("[editing items]", "---------------", ''))
+	slowprint("[editing items]", "---------------", '')
 	list_items(todo)
-	slowprint(("Enter the line number you would like to edit. Empty return to finish editing items. 'c' to cancel.", ''))
+	slowprint("Enter the line number you would like to edit. Empty return to finish editing items. 'c' to cancel.", '')
 	return None
 
 def edit_items(todo):
@@ -227,8 +227,8 @@ def save_menu():
 	files = list_files("[saving file]", "-------------")
 	if len(open_file) and open_file[0] in files:
 		slowprint('', '', f"Name your file, or empty return to overwrite '{open_file[0]}'. 'c' to cancel.", '')
-	elif len(open_file):
-		slowprint('', '', f"Name your file, or empty return to name the file '{open_file[0].split(".todo")[0]}'. 'c' to cancel.", '')
+	elif f"{date}.todo" not in files:
+		slowprint('', '', f"Name your file, or empty return to name the file '{date}'. 'c' to cancel.", '')
 	else:
 		slowprint('', '', "Name your file, or enter the corresponding number to overwrite a file. 'c' to cancel.", '')
 	return files
@@ -250,6 +250,9 @@ def save(todo: list[str]) -> None:
 			if len(open_file):
 				file: str = open_file[0].split(".todo")[0]
 				break
+			elif f"{date}.todo" not in files:
+				file: str = date
+				break
 			else:
 				slowprint("Please name your file.")
 		elif file == 'c':
@@ -262,13 +265,13 @@ def save(todo: list[str]) -> None:
 			break
 	identifier: str = read_list_type(f"{file}.todo")
 	with open(f"{progfiles}/lastopen", 'w') as f:
-		f.write(f"{file}.todo")
+		f.write(f"{file}.todo\n")
 		if identifier:
-			f.write(f"\n{identifier}")
+			f.write(identifier)
 		elif file == date:
-			f.write("\n%d")
+			f.write("%d")
 		else:
-			f.write("\n%c")
+			f.write("%c")
 	with open(f"{listfiles}/{file}.todo", 'w') as f:
 		for items in todo:
 			f.write(f"{items}\n")
@@ -305,6 +308,15 @@ def overwrite_save(file: str) -> bool:
 def autosave(todo: list[str]) -> None:
 	open_file = read_open_file()
 	if len(open_file):
+		last_saved = open_list(open_file[0])
+		last_saved.pop()
+		if todo == last_saved:
+			return None
+	if (len(open_file)) or (f"{date}.todo" not in listdir(listfiles)):
+		if not len(open_file):
+			open_file = [f"{date}.todo", "%d"]
+			with open(f"{progfiles}/lastopen", 'w') as f:
+				f.write(f"{open_file[0]}\n{open_file[1]}")
 		with open(f"{listfiles}/{open_file[0]}", 'w') as f:
 			for items in todo:
 				f.write(f"{items}\n")
@@ -326,8 +338,8 @@ def load(unchanged: list[str]) -> list[str]:
 		slowprint('', "No files to show.", '')
 		return unchanged
 	files = load_menu()
-	open_file = read_open_file()
 	while True:
+		open_file = read_open_file()
 		select = input(" > ")
 		if select.isdigit():
 			select = int(select) - 1
@@ -391,6 +403,9 @@ def new_name(files, to_rename) -> None:
 			sleep(1)
 			return None
 		if new_name not in files:
+			list_to_be_renamed = open_list(f"{files[to_rename]}")
+			if list_to_be_renamed[-1] == "%d":
+				new_name += "(D)"
 			open_file = read_open_file()
 			if len(open_file) and files[to_rename] == open_file[0]:
 				open_file[0] = f"{new_name}.todo"
@@ -399,7 +414,7 @@ def new_name(files, to_rename) -> None:
 			rename(f"{listfiles}/{files[to_rename]}", f"{listfiles}/{new_name}.todo")
 			return None
 		else:
-			slowprint(f"Name '{new_name}' already in use.")
+			slowprint(f"Name '{new_name}' already in use. If you wish to use the name '{new_name}' for this file, first delete the file currently using that name.")
 
 def delete_load_file(files: list[str]) -> None:
 	slowprint('', "Enter the number corresponding to the file you would like to delete. Empty return to cancel.", '')
@@ -443,15 +458,14 @@ def autoload() -> list[str]:
 	open_file = read_open_file()
 	if len(open_file):
 		if open_file[1] == "%d" and open_file[0] != f"{date}.todo":
-			with open(f"{progfiles}/lastopen", 'w') as f:
-				f.write(f"{date}.todo\n%d")
 			if f"{date}.todo" in listdir(listfiles):
+				with open(f"{progfiles}/lastopen", 'w') as f:
+					f.write(f"{date}.todo\n%d")
 				with open(f"{listfiles}/{date}.todo", 'r') as f:
 					todo = [line.strip('\n') for line in f.readlines()]
 				todo.pop()
 			else:
-				with open(f"{listfiles}/{date}.todo", 'w'):
-					pass
+				clear_open_file()
 			return todo
 		try:
 			with open(f"{listfiles}/{open_file[0]}", 'r') as f:
@@ -459,9 +473,6 @@ def autoload() -> list[str]:
 			todo.pop()
 		except Exception:
 			clear_open_file()
-	elif f"{date}.todo" not in listdir(listfiles):
-		with open(f"{progfiles}/lastopen", 'w') as f:
-			f.write(f"{date}.todo\n%d")
 	return todo
 
 def file_integrity() -> None:
@@ -539,44 +550,44 @@ def main():
 				slowprint("Please enter a valid line number to cross-off.")
 		else:
 			match item:
-				case "":
+				case '':
 					menu(todo, False)
-				case "s":
+				case 's':
 					todo: list[str] = sort_items(todo)
 					menu(todo, False)
-				case "a" | "A":
+				case 'a' | 'A':
 					if len(todo) > 1:
 						todo: list[str] = arrange_items(todo)
 						return_to_menu(todo)
 					else:
 						slowprint("Must have at least 2 list items to arrange.")
-				case "e" | "E":
+				case 'e' | 'E':
 					if len(todo) > 0:
 						todo: list[str] = edit_items(todo)
 						return_to_menu(todo)
 					else:
 						slowprint("Must have at least 1 list item to edit.")
-				case "r" | "R":
+				case 'r' | 'R':
 					if len(todo) > 0:
 						todo: list[str] = rm_items(todo)
 						return_to_menu(todo)
 					else:
 						slowprint("Must have at least 1 list item to remove.")
-				case "c" | "C":
+				case 'c' | 'C':
 					todo: list[str] = clear(todo)
 					return_to_menu(todo)
-				case "S":
+				case 'S':
 					if len(todo) > 0:
 						save(todo)
 						return_to_menu(todo)
 					else:
 						slowprint("Must have a list to save.")
-				case "L":
+				case 'l' | 'L':
 					todo: list[str] = load(todo)
 					return_to_menu(todo)
-				case "h" | "H":
+				case 'h' | 'H':
 					slowprint('', "'s'  Sort Items", "'a'  Arrange Items", "'e'  Edit Items", "'r'  Remove Items", '', "'C'  Clear List", "'S'  Save List To File", "'L'  Load List From File", '', "'h'  Show This Help Text", "'q'  Quit", '')
-				case "q" | "Q":
+				case 'q' | 'Q':
 					if len(todo):
 						autosave(todo)
 					system("clear")
@@ -588,5 +599,5 @@ def main():
 					else:
 						slowprint(f"Unknown command '{item}'.") 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	main()
