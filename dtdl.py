@@ -9,6 +9,7 @@ usr = getlogin()
 date = datetime.today().strftime('%Y-%m-%d')
 listfiles = f"/home/{usr}/Documents/To-Do Lists"
 progfiles = f"/home/{usr}/.todolist/programfiles"
+ext = ".todo"
 
 # ==================== functions =====================
 
@@ -39,11 +40,15 @@ def list_files(*function_header):
 	slowprint(function_header[0], function_header[1], f"{disp_open_file}", '', "Files:", '')
 	files = listdir(listfiles)
 	num = 1
-	for file in files:
+	for i in range(len(files)):
+		if i >= len(files):
+			break
+		if ext not in files[i]:
+			files.remove(files[i])	
 		if num < 10:
-			slowprint(f" {num}.  {file}")
+			slowprint(f" {num}.  {files[i]}")
 		else:
-			slowprint(f" {num}. {file}")
+			slowprint(f" {num}. {files[i]}")
 		num += 1
 	return files
 
@@ -242,13 +247,13 @@ def save(todo: list[str]) -> None:
 			file: int = int(file) - 1
 			if file in range(len(files)):
 				if overwrite_save(files[file]):
-					file: str = files[file].split(".todo")[0]
+					file: str = files[file].split(ext)[0]
 					break
 			else:
 				slowprint("Enter a valid file number, or name your file.")
 		elif file == '':
 			if len(open_file):
-				file: str = open_file[0].split(".todo")[0]
+				file: str = open_file[0].split(ext)[0]
 				break
 			elif f"{date}.todo" not in files:
 				file: str = date
@@ -261,6 +266,10 @@ def save(todo: list[str]) -> None:
 		elif f"{file}.todo" in files:
 			if overwrite_save(file):
 				break
+		elif ext in file:
+			slowprint("Name can't contain '.todo'.")
+		elif fake_daily(file):
+			slowprint("Name can't be a date in the format of 'YYYY-MM-DD'.")
 		else:
 			break
 	identifier: str = read_list_type(f"{file}.todo")
@@ -283,6 +292,12 @@ def save(todo: list[str]) -> None:
 			f.write("%c")
 	slowprint('', f"File written successfully to '{listfiles}/{file}.todo'.", '')
 	return None
+
+def fake_daily(file: str) -> bool:
+	isdate = file.split('-')
+	if len(isdate) == 3 and isdate[0] in range(1000, 10000) and isdate[1] in range(1, 32) and isdate[2] in range(1, 32):
+		return True
+	return False	
 
 def read_list_type(filename: str) -> str:
 	try:
@@ -395,11 +410,11 @@ def rename_load_file(files: list[str]) -> None:
 			slowprint("Please enter a valid file number.")
 
 def new_name(files, to_rename) -> None:
-	slowprint('', f"Enter the new name of '{files[to_rename].split(".todo")[0]}'. Empty return to cancel.", '')
+	slowprint('', f"Enter the new name of '{files[to_rename].split(ext)[0]}'. Empty return to cancel.", '')
 	while True:
 		new_name = input(" > ")
 		if new_name == '':
-			slowprint('', f"Cancelled renaming of '{files[to_rename].split(".todo")[0]}'.", '')
+			slowprint('', f"Cancelled renaming of '{files[to_rename].split(ext)[0]}'.", '')
 			sleep(1)
 			return None
 		if new_name not in files:
