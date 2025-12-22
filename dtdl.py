@@ -268,7 +268,7 @@ def save(todo: list[str]) -> None:
 				break
 		elif ext in file:
 			slowprint("Name can't contain '.todo'.")
-		elif fake_daily(file):
+		elif is_daily(file):
 			slowprint("Name can't be a date in the format of 'YYYY-MM-DD'.")
 		else:
 			break
@@ -293,11 +293,17 @@ def save(todo: list[str]) -> None:
 	slowprint('', f"File written successfully to '{listfiles}/{file}.todo'.", '')
 	return None
 
-def fake_daily(file: str) -> bool:
+def is_daily(file: str) -> bool:
 	isdate = file.split('-')
-	if len(isdate) == 3 and isdate[0] in range(1000, 10000) and isdate[1] in range(1, 32) and isdate[2] in range(1, 32):
-		return True
-	return False	
+	if len(isdate) == 3:
+		for i in range(len(isdate)):
+			if not isdate[i].isdigit():
+				return False
+			else:
+				isdate[i] = int(isdate[i])
+		if isdate[0] in range(2000, 10000) and isdate[1] in range(1, 32) and isdate[2] in range(1, 32):
+			return True
+	return False
 
 def read_list_type(filename: str) -> str:
 	try:
@@ -367,7 +373,13 @@ def load(unchanged: list[str]) -> list[str]:
 				elif len(unchanged):
 					prompt_save(unchanged)
 				todo = open_list(files[select])
-				with open(f'{progfiles}/lastopen', 'w') as f:
+				if not len(todo):
+					if empty_file_delete(files[select]):
+						files = load_menu()
+						continue
+					else:
+						todo = open_list(files[select])
+				with open(f"{progfiles}/lastopen", 'w') as f:
 					f.write(f"{files[select]}\n{todo[-1]}")
 				todo.pop()
 				break
@@ -386,6 +398,26 @@ def load(unchanged: list[str]) -> list[str]:
 			slowprint("Enter a valid file number.")
 	slowprint('', f"File {files[select]} successfully loaded.", '')
 	return todo
+
+def empty_file_delete(filename: str) -> bool:
+	slowprint('', "The file you're trying to open is empty. Would you like to delete it? 'y' to delete, and 'n' to open. (y/n)", '')
+	while True:
+		will_delete = input(" > ")
+		match will_delete:
+			case 'y' | 'Y':
+				remove(f"{listfiles}/{filename}")
+				return True
+			case 'n' | 'N':
+				with open(f"{listfiles}/{filename}", 'w') as f:
+					if is_daily(filename):
+						f.write("%d")
+					else:
+						f.write("%c")
+				return False
+			case _:
+				slowprint("Enter 'y' or 'n'.")
+
+				
 
 def open_list(file: str) -> list[str]:
 	with open(f"{listfiles}/{file}", 'r') as f:
