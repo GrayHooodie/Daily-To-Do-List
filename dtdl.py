@@ -36,6 +36,17 @@ def list_items(todo: list[str]) -> None:
 	slowprint('')
 	return None
 
+def get_file_names() -> list[str]:
+	files = listdir(listfiles)
+	num = 1
+	for i in range(len(files)):
+		if i >= len(files):
+			break
+		if ext not in files[i]:
+			files.remove(files[i])
+		num += 1
+	return files
+
 def list_files(*function_header: str) -> list[str]:
 	open_file = read_open_file()
 	if len(open_file):
@@ -43,22 +54,18 @@ def list_files(*function_header: str) -> list[str]:
 	else:
 		disp_open_file = ''
 	slowprint(function_header[0], function_header[1], f"{disp_open_file}", '', "Files:", '')
-	files = listdir(listfiles)
+	files = get_file_names()
 	num = 1
-	for i in range(len(files)):
-		if i >= len(files):
-			break
-		if ext not in files[i]:
-			files.remove(files[i])	
+	for file in files:
 		if num < 10:
-			slowprint(f" {num}.  {files[i]}")
+			slowprint(f" {num}.  {file}")
 		else:
-			slowprint(f" {num}. {files[i]}")
+			slowprint(f" {num}. {file}")
 		num += 1
 	slowprint('')	
 	return files
 
-def sort_items(todo: list[str]) -> list[str]:
+def sort_items(todo: list[str], transfer: bool) -> list[str]:
 	uncrossed = []
 	crossed = []
 	for item in todo:
@@ -66,6 +73,8 @@ def sort_items(todo: list[str]) -> list[str]:
 			crossed.append(item)
 		else:
 			uncrossed.append(item)
+	if transfer:
+		return uncrossed	
 	return uncrossed + crossed
 
 def cross(todo: list[str], line: int) -> list[str]:
@@ -250,19 +259,20 @@ def save(todo: list[str]) -> None:
 				break
 			elif f"{date}.todo" not in files:
 				file: str = date
+				move_old_dailys(files)
 				break
 			else:
 				slowprint("Please name your file.")
 		elif file == 'c':
 			slowprint('', "Cancelled file save.", '')
 			return
+		elif is_daily(file):
+			slowprint("Name can't be a date in the format of 'YYYY-MM-DD'.")
 		elif f"{file}.todo" in files:
 			if overwrite_save(f"{file}.todo"):
 				break
 		elif ext in file:
 			slowprint("Name can't contain '.todo'.")
-		elif is_daily(file):
-			slowprint("Name can't be a date in the format of 'YYYY-MM-DD'.")
 		else:
 			break
 	identifier: str = read_list_type(f"{file}.todo")
@@ -328,9 +338,11 @@ def autosave(todo: list[str]) -> None:
 			return None
 	if (len(open_file)) or (f"{date}.todo" not in listdir(listfiles)):
 		if not len(open_file):
+			files = get_file_names()
+			move_old_dailys(files)
 			open_file = [f"{date}.todo", "%d"]
 			with open(f"{progfiles}/lastopen", 'w') as f:
-				f.write(f"{open_file[0]}\n{open_file[1]}")
+				f.write(f"{open_file[0]}\n{open_file[1]}")	
 		with open(f"{listfiles}/{open_file[0]}", 'w') as f:
 			for items in todo:
 				f.write(f"{items}\n")
@@ -341,10 +353,18 @@ def autosave(todo: list[str]) -> None:
 		prompt_save(todo)
 	return None
 
+def move_old_dailys(files):
+	if not path.exists(f"{listfiles}/old_dailys"):
+		makedirs(f"{listfiles}/old_dailys")
+	for f in files:
+		if is_daily(f.split(ext)[0]):
+			rename(f"{listfiles}/{f}", f"{listfiles}/old_dailys/{f}")
+	return None
+
 def load_menu() -> list[str]:
 	system("clear")
 	files = list_files("[loading file]", "--------------")
-	slowprint('', "Enter the number of file you would like to open. 'r' to rename a file. 'd' to delete a file. Empty return to cancel.", '')
+	slowprint('', "Enter the number of file you would like to open. 'r' to rename a file. 'd' to delete a file. 'c' to cancel.", '')
 	return files
 
 def load(unchanged: list[str]) -> list[str]:
@@ -378,13 +398,13 @@ def load(unchanged: list[str]) -> list[str]:
 				break
 			else:
 				slowprint(invalid_fn)
-		elif select == '':
+		elif select in ['c', 'C']:
 			slowprint('', "No file loaded.", '')
 			return unchanged
-		elif select == 'r' or select == 'R':
+		elif select in ['r', 'R']:
 			rename_load_file(files)
 			files = load_menu()
-		elif select == 'd' or select == 'D':
+		elif select in ['d', 'D']:
 			delete_load_file(files)
 			files = load_menu()
 		else:
@@ -503,6 +523,9 @@ def autoload() -> list[str]:
 					todo = [line.strip('\n') for line in f.readlines()]
 				todo.pop()
 			else:
+				todo = open_list(open_file[0])
+				todo.pop()
+				todo = sort_items(todo, True)
 				clear_open_file()
 			return todo
 		try:
@@ -590,7 +613,7 @@ def main():
 				case '':
 					menu(todo, False)
 				case 's':
-					todo: list[str] = sort_items(todo)
+					todo: list[str] = sort_items(todo, False)
 					menu(todo, False)
 				case 'a' | 'A':
 					if len(todo) > 1:
