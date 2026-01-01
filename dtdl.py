@@ -179,6 +179,43 @@ def edit_item_text(minlength: int, text: list[str]) -> str:
 			return edited
 		slowprint(text[3])
 
+def postpone_items_menu(todo: list[str]) -> None:
+	system("clear")
+	slowprint("[postponing items]", "------------------", '')
+	list_items(todo)
+	return None
+
+def postpone_items(todo: list[str]) -> list[str]:
+	open_file = read_open_file()
+	if not len(open_file):
+		slowprint("Must have a file open to postpone items.")
+		return todo
+	elif open_file["lstype"] == "%c":
+		slowprint("File must be a 'daily' to-do list to postpone items.")
+		return todo
+	unchanged = todo.copy()
+	to_postpone = []
+	text = ["Enter line number(s) to postpone. Empty return to finish postponing items. 'c' to cancel.", invalid_ln]
+	while True:
+		postpone_items_menu(todo)
+		line = enter_digit(1, len(todo), text, True)
+		if line == -1:
+			break
+		elif line == -2:
+			slowprint('', no_chng, '')
+			return unchanged
+		to_postpone.append(todo[line])	
+		todo.remove(todo[line])
+	add_to_postpone(to_postpone)	
+	confirm_edits(todo == unchanged, "postponed")	
+	return todo
+			
+def add_to_postpone(to_postpone: list[str]) -> None:
+	with open(f"{progfiles}/postpone", 'a') as f:
+		for item in to_postpone:
+			f.write(f"{item}\n")	
+	return None
+
 def rm_items_menu(todo: list[str]) -> None:
 	system("clear")
 	slowprint("[removing items]", "----------------", '')
@@ -186,19 +223,20 @@ def rm_items_menu(todo: list[str]) -> None:
 	return None
 
 def rm_items(todo: list[str]) -> list[str]:
-	rm_items_menu(todo)
 	unchanged = todo.copy()
 	text = ["Enter line number(s) to remove. Empty return to finish removing items. 'c' to cancel.", invalid_ln]
 	while True:
+		rm_items_menu(todo)
 		line = enter_digit(1, len(todo), text, True)
 		if line == -1:
 			confirm_edits(todo == unchanged, "removed")	
+			if not len(todo):
+				clear_open_file()	
 			return todo
 		elif line == -2:
 			slowprint('', no_chng, '')
 			return unchanged
 		todo.pop(line)
-		rm_items_menu(todo)
 
 def clear(todo):
 	slowprint('', "Are you sure you want to clear your to-do list? (y/N)", '')
@@ -550,6 +588,7 @@ def autoload() -> list[str]:
 				todo = open_list(open_file["name"])
 				todo.pop()
 				todo = sort_items(todo, True)
+				todo = append_postponed(todo)
 				clear_open_file()
 			return todo
 		try:
@@ -560,11 +599,21 @@ def autoload() -> list[str]:
 			clear_open_file()
 	return todo
 
+def append_postponed(todo: list[str]) -> list[str]:
+	with open(f"{progfiles}/postpone", 'r') as f:
+		todo += [line.strip('\n') for line in f.readlines()]
+	with open(f"{progfiles}/postpone", 'w'):
+		pass
+	return todo
+
 def file_integrity() -> None:
 	if not path.exists(progfiles):
 		makedirs(progfiles)
-	if not listdir(progfiles):
+	if not path.exists(f"{progfiles}/lastopen"):
 		clear_open_file()
+	if not path.exists(f"{progfiles}/postpone"):
+		with open(f"{progfiles}/postpone", 'w'):
+			pass
 	if not path.exists(listfiles):
 		makedirs(listfiles)
 	if not path.exists(f"{listfiles}/archive"):
@@ -662,6 +711,9 @@ def main():
 						return_to_menu(todo)
 					else:
 						slowprint("Must have at least 1 list item to edit.")
+				case 'p' | 'P':
+					todo = postpone_items(todo)
+					return_to_menu(todo)	
 				case 'r' | 'R':
 					if len(todo) > 0:
 						todo: list[str] = rm_items(todo)
@@ -681,7 +733,7 @@ def main():
 					todo: list[str] = load(todo)
 					return_to_menu(todo)
 				case 'h' | 'H':
-					slowprint('', "'s'  Sort Items", "'a'  Arrange Items", "'e'  Edit Items", "'r'  Remove Items", '', "'C'  Clear List", "'S'  Save List To File", "'L'  Load List From File", '', "'h'  Show This Help Text", "'q'  Quit", '')
+					slowprint('', "'s'  Sort Items", "'a'  Arrange Items", "'e'  Edit Items", "'p'  Postpone Items", "'r'  Remove Items", '', "'C'  Clear List", "'S'  Save List To File", "'L'  Load List From File", '', "'h'  Show This Help Text", "'q'  Quit", '')
 				case 'q' | 'Q':
 					if len(todo):
 						autosave(todo)
