@@ -4,7 +4,7 @@ from os import system, path, makedirs, listdir, getlogin, rename, remove
 import dtdl, glob, fman, lman
 
 def list_items(todo: list[str]) -> None:
-	open_file = read_open_file()
+	open_file = fman.read_open_file()
 	if len(open_file):
 		slowprint(f"Current File: {open_file["name"]}")
 	slowprint('', "To-Do List:", '')
@@ -22,13 +22,13 @@ def list_items(todo: list[str]) -> None:
 	return None
 
 def list_files(*function_header: str) -> None:
-	open_file = read_open_file()
+	open_file = fman.read_open_file()
 	if len(open_file):
 		disp_open_file = f"\nCurrent File: {open_file["name"]}"
 	else:
 		disp_open_file = ''
 	slowprint(function_header[0], function_header[1], f"{disp_open_file}", '', "Files:", '')
-	files = get_file_names()
+	files = fman.get_file_names()
 	num = 1
 	for file in files:
 		if num < 10:
@@ -72,10 +72,10 @@ def rm_items_menu(todo: list[str]) -> None:
 
 def save_menu():
 	system("clear")
-	open_file = read_open_file()
+	open_file = fman.read_open_file()
 	list_files("[saving file]", "-------------")
-	files = get_file_names()
-	if len(openfile) and file_exists(open_file["name"]):
+	files = fman.get_file_names()
+	if len(openfile) and fman.file_exists(open_file["name"]):
 		slowprint('', f"Name your file, or empty return to overwrite '{open_file["name"]}'. 'c' to cancel.", '')
 	elif f"{date}.todo" not in files:
 		slowprint('', f"Name your file, or empty return to name the file '{date}'. 'c' to cancel.", '')

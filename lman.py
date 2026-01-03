@@ -81,7 +81,7 @@ def edit_item_text(minlength: int, text: list[str]) -> str:
 		slowprint(text[3])
 
 def postpone_items(todo: list[str]) -> list[str]:
-	open_file = read_open_file()
+	open_file = fman.read_open_file()
 	if not len(open_file):
 		slowprint("Must have a file open to postpone items.")
 		return todo
@@ -101,7 +101,7 @@ def postpone_items(todo: list[str]) -> list[str]:
 			return unchanged
 		to_postpone.append(todo[line])	
 		todo.remove(todo[line])
-	add_to_postpone(to_postpone)	
+	fman.add_to_postpone(to_postpone)	
 	confirm_edits(todo == unchanged, "postponed")	
 	return todo
 
@@ -114,7 +114,7 @@ def rm_items(todo: list[str]) -> list[str]:
 		if line == -1:
 			confirm_edits(todo == unchanged, "removed")	
 			if not len(todo):
-				clear_open_file()	
+				fman.clear_open_file()	
 			return todo
 		elif line == -2:
 			slowprint('', no_chng, '')
@@ -127,7 +127,7 @@ def clear(todo):
 		check = input(" > ")
 		match check:
 			case 'y' | 'Y':
-				clear_open_file()
+				fman.clear_open_file()
 				slowprint('', "To-do list cleared.", '')
 				return []
 			case 'n' | 'N' | '':
@@ -141,7 +141,7 @@ def load(unchanged: list[str]) -> list[str]:
 		slowprint('', "No files to show.", '')
 		return unchanged
 	while True:
-		files = get_file_names()
+		files = fman.get_file_names()
 		disp.load_menu()
 		open_file = fman.read_open_file()
 		select = input(" > ").lower()
@@ -152,12 +152,12 @@ def load(unchanged: list[str]) -> list[str]:
 					last_saved = open_list(open_file["name"])
 					last_saved.pop()
 					if unchanged != last_saved:
-						prompt_save(unchanged)
+						fman.prompt_save(unchanged)
 				elif len(unchanged):
-					prompt_save(unchanged)
+					fman.prompt_save(unchanged)
 				todo = open_list(files[select])
 				if not len(todo):
-					if empty_file_delete(files[select]):
+					if fman.empty_file_delete(files[select]):
 						continue
 					else:
 						todo = open_list(files[select])
@@ -173,24 +173,24 @@ def load(unchanged: list[str]) -> list[str]:
 					slowprint('', "No file loaded.", '')
 					return unchanged
 				case 'r':	
-					rename_load_file(files)
+					fman.rename_load_file(files)
 				case 'a':
-					archive_load_file(files)
+					fman.archive_load_file(files)
 				case 'd':		
-					delete_load_file(files)
+					fman.delete_load_file(files)
 				case _:
-					slowprint(invalid_fn)
+					disp.slowprint(invalid_fn)
 	slowprint('', f"File {files[select]} successfully loaded.", '')
 	return todo
 
 def open_list(file: str) -> list[str]:
-	if file_exists(file):	
+	if fman.file_exists(file):	
 		with open(f"{listfiles}/{file}", 'r') as f:
 			return [line.strip('\n') for line in f.readlines()]
 
 def autoload() -> list[str]:
 	todo = []
-	open_file = read_open_file()
+	open_file = fman.read_open_file()
 	if len(open_file):
 		if open_file["lstype"] == "%d" and open_file["name"] != f"{date}.todo":
 			if f"{date}.todo" in listdir(listfiles):
@@ -202,16 +202,16 @@ def autoload() -> list[str]:
 			else:
 				todo = open_list(open_file["name"])
 				todo.pop()
-				todo = sort_items(todo, True)
+				todo = lman.sort_items(todo, True)
 				todo = append_postponed(todo)
-				clear_open_file()
+				fman.clear_open_file()
 			return todo
 		try:
 			with open(f"{listfiles}/{open_file["name"]}", 'r') as f:
 				todo = [line.strip('\n') for line in f.readlines()]
 			todo.pop()
 		except Exception:
-			clear_open_file()
+			fman.clear_open_file()
 	return todo
 
 def append_postponed(todo: list[str]) -> list[str]:
