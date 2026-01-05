@@ -1,6 +1,8 @@
-from os import listdir, system
+from os import listdir, remove, rename, system
+from time import sleep
 
-import glob, progfuncs as pf
+import modules.glob as glob
+import modules.gnrl as gnrl
 
 def get_file_names() -> list[str]:
 	files = listdir(glob.listfiles)
@@ -21,14 +23,14 @@ def prompt_save(todo) -> None:
 			case 'n' | 'N':
 				return None
 			case 'y' | 'Y' | '':
-				fman.save(todo)
+				save(todo)
 				sleep(1)
 				return None
 			case _:
 				gnrl.slowprint(glob.y_or_n)
 
 def select_identifier(filename: str) -> str:
-	identifier: str = fman.read_list_type(f"{filename}.todo")
+	identifier: str = read_list_type(f"{filename}.todo")
 	if identifier:
 		return identifier
 	elif filename == glob.date:
@@ -37,34 +39,21 @@ def select_identifier(filename: str) -> str:
 		return "%c"
 
 def read_list_type(filename: str) -> str:
-	if fman.file_exists(filename):
-		return fman.open_list(filename)[-1]
+	if file_exists(filename):
+		return open_list(filename)[-1]
 	return ""
 
-def overwrite_save(filename: str) -> bool:
-	gnrl.slowprint('', f"'{filename}' already exists. Would you like to overwrite it? (y/N)", '')
-	while True:
-		will_overwrite = input(" > ")
-		match will_overwrite:
-			case 'n' | 'N' | '':
-				disp.save_menu()
-				return False
-			case 'y' | 'Y':
-				return True
-			case _:
-				gnrl.slowprint(glob.y_or_n)
-
 def autosave(todo: list[str]) -> None:
-	open_file = pf.read_open_file()
+	open_file = read_open_file()
 	if len(open_file):
-		last_saved = fman.open_list(open_file["name"])
+		last_saved = open_list(open_file["name"])
 		last_saved.pop()
 		if todo == last_saved:
 			return None
 	if (len(open_file)) or (f"{glob.date}.todo" not in listdir(glob.listfiles)):
 		if not len(open_file):
-			files = fman.get_file_names()
-			fman.move_old_dailys(files)
+			files = get_file_names()
+			move_old_dailys(files)
 			open_file = {"name": f"{glob.date}.todo", "lstype": "%d"}
 			with open(f"{glob.progfiles}/lastopen", 'w') as f:
 				f.write(f"{open_file["name"]}\n{open_file["lstype"]}")	
@@ -75,14 +64,13 @@ def autosave(todo: list[str]) -> None:
 		gnrl.slowprint('', f"Saved list to '{open_file["name"]}'.", '')
 		sleep(1)
 	else:
-		fman.prompt_save(todo)
-	system("clear")	
+		prompt_save(todo)
 	return None
 
 def move_old_dailys(files):
 	for f in files:
-		if gnrl.is_daily(f.split(ext)[0]):
-			fman.archiveit(f)
+		if gnrl.is_daily(f.split(glob.ext)[0]):
+			archiveit(f)
 	return None
 
 def empty_file_delete(filename: str) -> bool:
@@ -110,7 +98,7 @@ def archive_load_file(files: list[str]) -> None:
 		if to_archive.isdigit():
 			to_archive = int(to_archive) - 1
 			if to_archive in range(len(files)):
-				fman.archiveit(files[to_archive])
+				archiveit(files[to_archive])
 				return None
 			else:
 				gnrl.slowprint(glob.invalid_fn)
@@ -132,7 +120,7 @@ def rename_load_file(files: list[str]) -> None:
 		if to_rename.isdigit():
 			to_rename = int(to_rename) - 1
 			if to_rename in range(len(files)):
-				fman.renameit(files, to_rename)
+				renameit(files, to_rename)
 				return None
 			else:
 				gnrl.slowprint(glob.invalid_fn)
@@ -144,19 +132,19 @@ def rename_load_file(files: list[str]) -> None:
 			gnrl.slowprint(glob.invalid_fn)
 
 def renameit(files, to_rename) -> None:
-	gnrl.slowprint('', f"Enter the new name of '{files[to_rename].split(ext)[0]}'. 'c' to cancel.", '')
+	gnrl.slowprint('', f"Enter the new name of '{files[to_rename].split(glob.ext)[0]}'. 'c' to cancel.", '')
 	while True:
 		new_name = input(" > ")
 		if new_name.lower() == 'c':
-			gnrl.slowprint('', f"Cancelled renaming of '{files[to_rename].split(ext)[0]}'.", '')
+			gnrl.slowprint('', f"Cancelled renaming of '{files[to_rename].split(glob.ext)[0]}'.", '')
 			sleep(1)
 			return None
 		elif len(new_name) > 1:
-			if not fman.file_exists(new_name):
-				list_to_be_renamed = fman.open_list(f"{files[to_rename]}")
+			if not file_exists(new_name):
+				list_to_be_renamed = open_list(f"{files[to_rename]}")
 				if list_to_be_renamed[-1] == "%d":
 					new_name += "(D)"
-				open_file = pf.read_open_file()
+				open_file = read_open_file()
 				if len(open_file) and files[to_rename] == open_file["name"]:
 					open_file["name"] = f"{new_name}.todo"
 					with open(f"{glob.progfiles}/lastopen", 'w') as f:
@@ -169,66 +157,19 @@ def renameit(files, to_rename) -> None:
 			gnrl.slowprint("Name must be longer than one character.")
 
 def file_exists(filename: str) -> bool:
-	files = fman.get_file_names()
+	files = get_file_names()
 	if filename in files:
 		return True
 	return False
 
-def load(unchanged: list[str]) -> list[str]:
-	if not len(listdir(glob.listfiles)):
-		gnrl.slowprint('', "No files to show.", '')
-		return unchanged
-	while True:
-		files = fman.get_file_names()
-		disp.load_menu()
-		open_file = pf.read_open_file()
-		select = input(" > ").lower()
-		if select.isdigit():
-			select = int(select) - 1
-			if select in range(len(files)):
-				if len(open_file):
-					last_saved = fman.open_list(open_file["name"])
-					last_saved.pop()
-					if unchanged != last_saved:
-						fman.prompt_save(unchanged)
-				elif len(unchanged):
-					fman.prompt_save(unchanged)
-				todo = fman.open_list(files[select])
-				if not len(todo):
-					if fman.empty_file_delete(files[select]):
-						continue
-					else:
-						todo = fman.open_list(files[select])
-				with open(f"{glob.progfiles}/lastopen", 'w') as f:
-					f.write(f"{files[select]}\n{todo[-1]}")
-				todo.pop()
-				break
-			else:
-				gnrl.slowprint(glob.invalid_fn)
-		else:
-			match select:
-				case 'c':
-					gnrl.slowprint('', "No file loaded.", '')
-					return unchanged
-				case 'r':	
-					fman.rename_load_file(files)
-				case 'a':
-					fman.archive_load_file(files)
-				case 'd':		
-					fman.delete_load_file(files)
-				case _:
-					gnrl.slowprint(glob.invalid_fn)
-	gnrl.slowprint('', f"File {files[select]} successfully loaded.", '')
-	return todo
-
 def open_list(file: str) -> list[str]:
-	if fman.file_exists(file):	
+	if file_exists(file):	
 		with open(f"{glob.listfiles}/{file}", 'r') as f:
 			return [line.strip('\n') for line in f.readlines()]
 
 def autoload() -> list[str]:
 	todo = []
-	open_file = pf.read_open_file()
+	open_file = read_open_file()
 	if len(open_file):
 		if open_file["lstype"] == "%d" and open_file["name"] != f"{glob.date}.todo":
 			if f"{glob.date}.todo" in listdir(glob.listfiles):
@@ -240,63 +181,24 @@ def autoload() -> list[str]:
 			else:
 				todo = open_list(open_file["name"])
 				todo.pop()
-				todo = pf.sort_items(todo, True)
-				todo = pf.append_postponed(todo)
-				pf.clear_open_file()
+				todo = rm_crossed(todo)
+				todo = append_postponed(todo)
+				clear_open_file()
 			return todo
 		try:
 			with open(f"{glob.listfiles}/{open_file["name"]}", 'r') as f:
 				todo = [line.strip('\n') for line in f.readlines()]
 			todo.pop()
 		except Exception:
-			pf.clear_open_file()
+			clear_open_file()
 	return todo
 
-def save(todo: list[str]) -> None:
-	disp.save_menu()
-	files = get_file_names()
-	open_file = pf.read_open_file()
-	while True:
-		file: str = input(" > ")
-		if file.isdigit():
-			file: int = int(file) - 1
-			if file in range(len(files)):
-				if overwrite_save(files[file]):
-					file: str = files[file].split(ext)[0]
-					break
-			else:
-				gnrl.slowprint("Please enter a valid file number, or name your file.")
-		elif file == '':
-			if len(open_file):
-				file: str = open_file["name"].split(ext)[0]
-				break
-			elif f"{glob.date}.todo" not in files:
-				file: str = glob.date
-				move_old_dailys(files)
-				break
-			else:
-				gnrl.slowprint("Please name your file.")
-		elif file == 'c':
-			gnrl.slowprint('', "Cancelled file save.", '')
-			return
-		elif gnrl.is_daily(file):
-			gnrl.slowprint("Name can't be a glob.date in the format of 'YYYY-MM-DD'.")
-		elif f"{file}.todo" in files:
-			if overwrite_save(f"{file}.todo"):
-				break
-		elif glob.ext in file:
-			gnrl.slowprint("Name can't contain '.todo'.")
-		else:
-			break
-	identifier: str = select_identifier(file)
-	with open(f"{glob.progfiles}/lastopen", 'w') as f:
-		f.write(f"{file}.todo\n{identifier}")
-	with open(f"{glob.listfiles}/{file}.todo", 'w') as f:
-		for items in todo:
-			f.write(f"{items}\n")
-		f.write(identifier)
-	gnrl.slowprint('', f"File written successfully to '{glob.listfiles}/{file}.todo'.", '')
-	return None
+def rm_crossed(todo: list[str]) -> list[str]:
+	uncrossed = []
+	for item in todo:
+		if ord(item[1]) != 822:
+			uncrossed.append(item)
+	return uncrossed
 
 def delete_load_file(files: list[str]) -> None:
 	gnrl.slowprint('', "Enter the number corresponding to the file you would like to delete. 'c' to cancel.", '')
@@ -326,11 +228,28 @@ def confirm_delete(files: list[str], to_delete: int) -> None:
 				sleep(1)
 				return None
 			case 'y':
-				open_file = pf.read_open_file()
+				open_file = read_open_file()
 				if len(open_file) and open_file["name"] == files[to_delete]:
-					pf.clear_open_file()
+					clear_open_file()
 				remove(f"{glob.listfiles}/{files[to_delete]}")
 				return None
 			case _:
 				gnrl.slowprint(glob.y_or_n)
 
+def append_postponed(todo: list[str]) -> list[str]:
+	with open(f"{glob.progfiles}/postpone", 'r') as f:
+		todo += [line.strip('\n') for line in f.readlines()]
+	with open(f"{glob.progfiles}/postpone", 'w'):
+		pass
+	return todo
+
+def read_open_file() -> dict[str: str]:
+	with open(f"{glob.progfiles}/lastopen", 'r') as f:
+		open_file = [line.strip('\n') for line in f.readlines()]
+	if len(open_file):
+		return {"name": open_file[0], "lstype": open_file[1]}
+	return {}
+
+def clear_open_file() -> None:
+	with open(f"{glob.progfiles}/lastopen", 'w'):
+		return None

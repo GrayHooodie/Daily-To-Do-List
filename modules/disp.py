@@ -1,10 +1,12 @@
+from os import getlogin, listdir, makedirs, path, remove, rename, system
 from time import sleep
-from os import system, path, makedirs, listdir, getlogin, rename, remove
 
-import fman, glob, gnrl, progfuncs as pf
+import modules.fman as fman
+import modules.glob as glob
+import modules.gnrl as gnrl
 
 def list_items(todo: list[str]) -> None:
-	open_file = pf.read_open_file()
+	open_file = fman.read_open_file()
 	if len(open_file):
 		gnrl.slowprint(f"Current File: {open_file["name"]}")
 	gnrl.slowprint('', "To-Do List:", '')
@@ -22,12 +24,11 @@ def list_items(todo: list[str]) -> None:
 	return None
 
 def list_files(*function_header: str) -> None:
-	open_file = pf.read_open_file()
+	open_file = fman.read_open_file()
 	if len(open_file):
-		disp_open_file = f"\nCurrent File: {open_file["name"]}"
+		gnrl.slowprint(function_header[0], function_header[1], f"\nCurrent File: {open_file["name"]}", '', "Files:", '')
 	else:
-		disp_open_file = ''
-	gnrl.slowprint(function_header[0], function_header[1], f"{disp_open_file}", '', "Files:", '')
+		gnrl.slowprint(function_header[0], function_header[1], '', "Files:", '')
 	files = fman.get_file_names()
 	num = 1
 	for file in files:
@@ -49,33 +50,33 @@ def confirm_edits_text(is_equal: bool, function: str) -> None:
 def arrange_items_menu(todo: list[str]) -> None:
 	system("clear")
 	gnrl.slowprint("[arranging items]", "-----------------", '')
-	disp.list_items(todo)
+	list_items(todo)
 	return None
 
 def edit_items_menu(todo: list[str]) -> None:
 	system("clear")
 	gnrl.slowprint("[editing items]", "---------------", '')
-	disp.list_items(todo)
+	list_items(todo)
 	return None
 
 def postpone_items_menu(todo: list[str]) -> None:
 	system("clear")
 	gnrl.slowprint("[postponing items]", "------------------", '')
-	disp.list_items(todo)
+	list_items(todo)
 	return None
 
 def rm_items_menu(todo: list[str]) -> None:
 	system("clear")
 	gnrl.slowprint("[removing items]", "----------------", '')
-	disp.list_items(todo)
+	list_items(todo)
 	return None
 
 def save_menu():
 	system("clear")
-	open_file = pf.read_open_file()
-	disp.list_files("[saving file]", "-------------")
+	open_file = fman.read_open_file()
+	list_files("[saving file]", "-------------")
 	files = fman.get_file_names()
-	if len(openfile) and fman.file_exists(open_file["name"]):
+	if len(open_file) and fman.file_exists(open_file["name"]):
 		gnrl.slowprint('', f"Name your file, or empty return to overwrite '{open_file["name"]}'. 'c' to cancel.", '')
 	elif f"{glob.date}.todo" not in files:
 		gnrl.slowprint('', f"Name your file, or empty return to name the file '{glob.date}'. 'c' to cancel.", '')
@@ -85,7 +86,7 @@ def save_menu():
 
 def load_menu() -> None:
 	system("clear")
-	disp.list_files("[loading file]", "--------------")
+	list_files("[loading file]", "--------------")
 	gnrl.slowprint('', "Enter the number of file you would like to open. 'r' to rename a file. 'd' to delete a file. 'a' to archive a file. 'c' to cancel.", '')
 	return None
 
@@ -97,13 +98,13 @@ def title() -> None:
 def menu(todo: list[str], justopened: bool) -> None:
 	system("clear")
 	if justopened:
-		disp.title()
-	disp.list_items(todo)
+		title()
+	list_items(todo)
 	gnrl.slowprint('', "Add an item, or cross-off an item by entering its line number. 'h' for help.", '')
 	return None
 
 def return_to_menu(todo: list[str]) -> None:
 	sleep(1)
-	disp.menu(todo, False)
+	menu(todo, False)
 	return None
 

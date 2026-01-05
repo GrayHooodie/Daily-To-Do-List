@@ -1,6 +1,7 @@
 from os import makedirs, path
+from time import sleep
 
-import fman, glob
+import modules.glob as glob
 
 def strike(text: str) -> str:
 	new_text: str = ""
@@ -15,7 +16,7 @@ def unstrike(text: str) -> str:
 	return new_text
 
 def enter_digit(base: int, length: int, text: list[str], enter_to_confirm: bool) -> int:
-	gnrl.slowprint('', text[0], '')
+	slowprint('', text[0], '')
 	while True:
 		num = input(" > ")
 		if num.isdigit():
@@ -24,11 +25,11 @@ def enter_digit(base: int, length: int, text: list[str], enter_to_confirm: bool)
 				return num
 		elif num.lower() == 'c':
 			if len(text) == 3:
-				gnrl.slowprint('', text[2], '')
+				slowprint('', text[2], '')
 			return -2
 		elif enter_to_confirm and num == '':
 			return -1	
-		gnrl.slowprint(text[1])
+		slowprint(text[1])
 
 def is_daily(file: str) -> bool:
 	isdate = file.split('-')

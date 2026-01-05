@@ -1,6 +1,10 @@
 # Simple todo-list program made by Matt L on 2025/12/11 while not wanting to go to sleep
+from os import system
 
-import disp, fman, gnrl, progfuncs as pf
+import modules.disp as disp
+import modules.fman as fman
+import modules.gnrl as gnrl
+import modules.progfuncs as pf
 
 def main() -> int:
 	gnrl.file_integrity()
@@ -20,7 +24,7 @@ def main() -> int:
 				case '':
 					disp.menu(todo, False)
 				case 's':
-					todo = pf.sort_items(todo, False)
+					todo = pf.sort_items(todo)
 					disp.menu(todo, False)
 				case 'a' | 'A':
 					if len(todo) > 1:
@@ -48,18 +52,19 @@ def main() -> int:
 					disp.return_to_menu(todo)
 				case 'S':
 					if len(todo) > 0:
-						fman.save(todo)
+						pf.save(todo)
 						disp.return_to_menu(todo)
 					else:
 						gnrl.slowprint("Must have a list to save.")
 				case 'l' | 'L':
-					todo = fman.load(todo)
+					todo = pf.load(todo)
 					disp.return_to_menu(todo)
 				case 'h' | 'H':
 					gnrl.slowprint('', "'s'  Sort Items", "'a'  Arrange Items", "'e'  Edit Items", "'p'  Postpone Items", "'r'  Remove Items", '', "'C'  Clear List", "'S'  Save List To File", "'L'  Load List From File", '', "'h'  Show This Help Text", "'q'  Quit", '')
 				case 'q' | 'Q':
 					if len(todo):
 						fman.autosave(todo)
+					system("clear")
 					return 0
 				case _:
 					if len(item) > 1:
