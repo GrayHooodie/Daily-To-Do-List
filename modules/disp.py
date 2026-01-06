@@ -48,31 +48,31 @@ def confirm_edits_text(is_equal: bool, function: str) -> None:
 	return None
 
 def arrange_items_menu(todo: list[str]) -> None:
-	system("clear")
+	system(glob.clear)
 	gnrl.slowprint("[arranging items]", "-----------------", '')
 	list_items(todo)
 	return None
 
 def edit_items_menu(todo: list[str]) -> None:
-	system("clear")
+	system(glob.clear)
 	gnrl.slowprint("[editing items]", "---------------", '')
 	list_items(todo)
 	return None
 
 def postpone_items_menu(todo: list[str]) -> None:
-	system("clear")
+	system(glob.clear)
 	gnrl.slowprint("[postponing items]", "------------------", '')
 	list_items(todo)
 	return None
 
 def rm_items_menu(todo: list[str]) -> None:
-	system("clear")
+	system(glob.clear)
 	gnrl.slowprint("[removing items]", "----------------", '')
 	list_items(todo)
 	return None
 
 def save_menu():
-	system("clear")
+	system(glob.clear)
 	open_file = fman.read_open_file()
 	list_files("[saving file]", "-------------")
 	files = fman.get_file_names()
@@ -85,18 +85,18 @@ def save_menu():
 	return None
 
 def load_menu() -> None:
-	system("clear")
+	system(glob.clear)
 	list_files("[loading file]", "--------------")
 	gnrl.slowprint('', "Enter the number of file you would like to open. 'r' to rename a file. 'd' to delete a file. 'a' to archive a file. 'c' to cancel.", '')
 	return None
 
 def title() -> None:
-	system("clear")
+	system(glob.clear)
 	gnrl.slowprint('', "---------------------------", "Welcome to your to-do list!", "---------------------------", '')
 	return None
 
 def menu(todo: list[str], justopened: bool) -> None:
-	system("clear")
+	system(glob.clear)
 	if justopened:
 		title()
 	list_items(todo)

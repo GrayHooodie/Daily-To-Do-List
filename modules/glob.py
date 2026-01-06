@@ -1,10 +1,14 @@
 from datetime import datetime
-from os import path
+from os import name, path
 from pathlib import Path
 
-home: str = str(Path.home())
 date: str = datetime.today().strftime('%Y-%m-%d')
+if name == "nt":
+    clear = "cls"
+else:
+    clear = "clear"
 
+home: str = str(Path.home())
 listfiles: str = path.join(home, "Documents", "To-Do Lists")
 progfiles: str = path.join(home, ".dtdl", "programfiles")
 ext: str = ".todo"
