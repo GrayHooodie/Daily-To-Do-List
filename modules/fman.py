@@ -1,4 +1,4 @@
-from os import listdir, path, remove, rename, system
+from os import listdir, makedirs, path, remove, rename, system
 from time import sleep
 
 import modules.glob as glob
