@@ -1,4 +1,4 @@
-from os import listdir
+from os import listdir, path
 from time import sleep
 
 import modules.disp as disp
@@ -108,7 +108,7 @@ def postpone_items(todo: list[str]) -> list[str]:
 	return todo
 
 def add_to_postpone(to_postpone: list[str]) -> None:
-	with open(f"{glob.progfiles}/postpone", 'a') as f:
+	with open(path.join(glob.progfiles, "postpone"), 'a') as f:
 		for item in to_postpone:
 			f.write(f"{item}\n")	
 	return None
@@ -181,9 +181,9 @@ def save(todo: list[str]) -> None:
 		else:
 			break
 	identifier: str = fman.select_identifier(file)
-	with open(f"{glob.progfiles}/lastopen", 'w') as f:
+	with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
 		f.write(f"{file}.todo\n{identifier}")
-	with open(f"{glob.listfiles}/{file}.todo", 'w') as f:
+	with open(path.join(glob.listfiles, f"{file}.todo"), 'w') as f:
 		for items in todo:
 			f.write(f"{items}\n")
 		f.write(identifier)
@@ -228,7 +228,7 @@ def load(unchanged: list[str]) -> list[str]:
 						continue
 					else:
 						todo = fman.open_list(files[select])
-				with open(f"{glob.progfiles}/lastopen", 'w') as f:
+				with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
 					f.write(f"{files[select]}\n{todo[-1]}")
 				todo.pop()
 				break

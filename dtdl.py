@@ -7,7 +7,7 @@ import modules.gnrl as gnrl
 import modules.progfuncs as pf
 
 def main() -> int:
-	gnrl.file_integrity()
+	fman.file_integrity()
 	todo = fman.autoload()
 	disp.menu(todo, True)
 	while True:

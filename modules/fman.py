@@ -1,4 +1,4 @@
-from os import listdir, remove, rename, system
+from os import listdir, path, remove, rename, system
 from time import sleep
 
 import modules.glob as glob
@@ -55,9 +55,9 @@ def autosave(todo: list[str]) -> None:
 			files = get_file_names()
 			move_old_dailys(files)
 			open_file = {"name": f"{glob.date}.todo", "lstype": "%d"}
-			with open(f"{glob.progfiles}/lastopen", 'w') as f:
+			with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
 				f.write(f"{open_file["name"]}\n{open_file["lstype"]}")	
-		with open(f"{glob.listfiles}/{open_file["name"]}", 'w') as f:
+		with open(path.join(glob.listfiles, open_file["name"]), 'w') as f:
 			for items in todo:
 				f.write(f"{items}\n")
 			f.write(f"{open_file["lstype"]}")
@@ -82,7 +82,7 @@ def empty_file_delete(filename: str) -> bool:
 				remove(f"{glob.listfiles}/{filename}")
 				return True
 			case 'n':
-				with open(f"{glob.listfiles}/{filename}", 'w') as f:
+				with open(path.join(glob.listfiles, filename), 'w') as f:
 					if gnrl.is_daily(filename):
 						f.write("%d")
 					else:
@@ -147,7 +147,7 @@ def renameit(files, to_rename) -> None:
 				open_file = read_open_file()
 				if len(open_file) and files[to_rename] == open_file["name"]:
 					open_file["name"] = f"{new_name}.todo"
-					with open(f"{glob.progfiles}/lastopen", 'w') as f:
+					with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
 						f.write(f"{open_file["name"]}\n{open_file["lstype"]}")
 				rename(f"{glob.listfiles}/{files[to_rename]}", f"{glob.listfiles}/{new_name}.todo")
 				return None
@@ -164,7 +164,7 @@ def file_exists(filename: str) -> bool:
 
 def open_list(file: str) -> list[str]:
 	if file_exists(file):	
-		with open(f"{glob.listfiles}/{file}", 'r') as f:
+		with open(path.join(glob.listfiles, file), 'r') as f:
 			return [line.strip('\n') for line in f.readlines()]
 
 def autoload() -> list[str]:
@@ -173,9 +173,9 @@ def autoload() -> list[str]:
 	if len(open_file):
 		if open_file["lstype"] == "%d" and open_file["name"] != f"{glob.date}.todo":
 			if f"{glob.date}.todo" in listdir(glob.listfiles):
-				with open(f"{glob.progfiles}/lastopen", 'w') as f:
+				with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
 					f.write(f"{glob.date}.todo\n%d")
-				with open(f"{glob.listfiles}/{glob.date}.todo", 'r') as f:
+				with open(path.join(glob.listfiles, f"{glob.date}.todo"), 'r') as f:
 					todo = [line.strip('\n') for line in f.readlines()]
 				todo.pop()
 			else:
@@ -186,7 +186,7 @@ def autoload() -> list[str]:
 				clear_open_file()
 			return todo
 		try:
-			with open(f"{glob.listfiles}/{open_file["name"]}", 'r') as f:
+			with open(path.join(glob.listfiles, open_file["name"]), 'r') as f:
 				todo = [line.strip('\n') for line in f.readlines()]
 			todo.pop()
 		except Exception:
@@ -237,19 +237,33 @@ def confirm_delete(files: list[str], to_delete: int) -> None:
 				gnrl.slowprint(glob.y_or_n)
 
 def append_postponed(todo: list[str]) -> list[str]:
-	with open(f"{glob.progfiles}/postpone", 'r') as f:
+	with open(path.join(glob.progfiles, "postpone"), 'r') as f:
 		todo += [line.strip('\n') for line in f.readlines()]
-	with open(f"{glob.progfiles}/postpone", 'w'):
+	with open(path.join(glob.progfiles, "postpone"), 'w'):
 		pass
 	return todo
 
 def read_open_file() -> dict[str: str]:
-	with open(f"{glob.progfiles}/lastopen", 'r') as f:
+	with open(path.join(glob.progfiles, "lastopen"), 'r') as f:
 		open_file = [line.strip('\n') for line in f.readlines()]
 	if len(open_file):
 		return {"name": open_file[0], "lstype": open_file[1]}
 	return {}
 
 def clear_open_file() -> None:
-	with open(f"{glob.progfiles}/lastopen", 'w'):
+	with open(path.join(glob.progfiles, "lastopen"), 'w'):
 		return None
+
+def file_integrity() -> None:
+	if not path.exists(glob.progfiles):
+		makedirs(glob.progfiles)
+	if not path.exists(path.join(glob.progfiles, "lastopen")):
+		clear_open_file()
+	if not path.exists(path.join(glob.progfiles, "postpone")):
+		with open(path.join(glob.progfiles, "postpone"), 'w'):
+			pass
+	if not path.exists(glob.listfiles):
+		makedirs(glob.listfiles)
+	if not path.exists(path.join(glob.listfiles, "archive")):
+		makedirs(path.join(glob.listfiles, "archive"))	
+	return None
