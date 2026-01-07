@@ -43,20 +43,6 @@ def is_daily(file: str) -> bool:
 			return True
 	return False
 
-def file_integrity() -> None:
-	if not path.exists(glob.progfiles):
-		makedirs(glob.progfiles)
-	if not path.exists(f"{glob.progfiles}/lastopen"):
-		pf.clear_open_file()
-	if not path.exists(f"{glob.progfiles}/postpone"):
-		with open(f"{glob.progfiles}/postpone", 'w'):
-			pass
-	if not path.exists(glob.listfiles):
-		makedirs(glob.listfiles)
-	if not path.exists(f"{glob.listfiles}/archive"):
-		makedirs(f"{glob.listfiles}/archive")	
-	return None
-
 def slowprint(*text) -> None:
 	delay: float = 0.02
 	for line in text:

@@ -3,11 +3,12 @@ from os import system
 
 import modules.disp as disp
 import modules.fman as fman
+import modules.glob as glob
 import modules.gnrl as gnrl
 import modules.progfuncs as pf
 
 def main() -> int:
-	gnrl.file_integrity()
+	fman.file_integrity()
 	todo = fman.autoload()
 	disp.menu(todo, True)
 	while True:
@@ -64,7 +65,7 @@ def main() -> int:
 				case 'q' | 'Q':
 					if len(todo):
 						fman.autosave(todo)
-					system("clear")
+					system(glob.clear)
 					return 0
 				case _:
 					if len(item) > 1:

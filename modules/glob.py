@@ -1,11 +1,16 @@
 from datetime import datetime
-from os import getlogin
+from os import name, path
+from pathlib import Path
 
-usr: str = getlogin()
 date: str = datetime.today().strftime('%Y-%m-%d')
+if name == "nt":
+    clear = "cls"
+else:
+    clear = "clear"
 
-listfiles: str = f"/home/{usr}/Documents/To-Do Lists"
-progfiles: str = f"/home/{usr}/.todolist/programfiles"
+home: str = str(Path.home())
+listfiles: str = path.join(home, "Documents", "To-Do Lists")
+progfiles: str = path.join(home, ".dtdl", "programfiles")
 ext: str = ".todo"
 
 invalid_ln: str = "Please enter a valid line number."
