@@ -1,11 +1,13 @@
 # Simple todo-list program made by Matt L on 2025/12/11 while not wanting to go to sleep
 from os import system
+import tkinter as tk
 
 import modules.disp as disp
 import modules.fman as fman
 import modules.glob as glob
 import modules.gnrl as gnrl
 import modules.progfuncs as pf
+
 
 def main() -> int:
 	fman.file_integrity()
@@ -40,8 +42,14 @@ def main() -> int:
 					else:
 						gnrl.slowprint("Must have at least 1 list item to edit.")
 				case 'p' | 'P':
-					todo = pf.postpone_items(todo)
-					disp.return_to_menu(todo)	
+					open_file = fman.read_open_file()
+					if not len(open_file):
+						gnrl.slowprint("Must have a saved file open to postpone items.")
+					elif open_file["lstype"] == "%c":
+						gnrl.slowprint("File must be a 'daily' to-do list to postpone items. A 'daily' to-do list is one that is named with the default of the current day's date.")
+					else:
+						todo = pf.postpone_items(todo)
+						disp.return_to_menu(todo)	
 				case 'r' | 'R':
 					if len(todo) > 0:
 						todo = pf.rm_items(todo)

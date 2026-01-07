@@ -83,13 +83,6 @@ def edit_item_text(minlength: int, text: list[str]) -> str:
 		gnrl.slowprint(text[3])
 
 def postpone_items(todo: list[str]) -> list[str]:
-	open_file = fman.read_open_file()
-	if not len(open_file):
-		gnrl.slowprint("Must have a saved file open to postpone items.")
-		return todo
-	elif open_file["lstype"] == "%c":
-		gnrl.slowprint("File must be a 'daily' to-do list to postpone items.")
-		return todo
 	unchanged = todo.copy()
 	to_postpone = []
 	text = ["Enter line number(s) to postpone. Empty return to finish postponing items. 'c' to cancel.", glob.invalid_ln]
