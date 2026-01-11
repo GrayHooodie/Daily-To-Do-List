@@ -250,9 +250,9 @@ def load(unchanged: list[str]) -> list[str]:
 					last_saved = fman.open_list(open_file["name"])
 					last_saved.pop()
 					if unchanged != last_saved:
-						fman.prompt_save(unchanged)
+						prompt_save(unchanged)
 				elif len(unchanged):
-					fman.prompt_save(unchanged)
+					prompt_save(unchanged)
 				todo = fman.open_list(files[select])
 				if not len(todo):
 					if fman.empty_file_delete(files[select]):
