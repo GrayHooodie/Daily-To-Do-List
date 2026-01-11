@@ -15,20 +15,6 @@ def get_file_names() -> list[str]:
 		num += 1
 	return files
 
-def prompt_save(todo) -> None:
-	gnrl.slowprint('', "Would you like to save your current to-do list? (Y/n)", '')
-	while True:
-		will_save = input(" > ")
-		match will_save:
-			case 'n' | 'N':
-				return None
-			case 'y' | 'Y' | '':
-				save(todo)
-				sleep(1)
-				return None
-			case _:
-				gnrl.slowprint(glob.y_or_n)
-
 def select_identifier(filename: str) -> str:
 	identifier: str = read_list_type(f"{filename}.todo")
 	if identifier:
@@ -42,30 +28,6 @@ def read_list_type(filename: str) -> str:
 	if file_exists(filename):
 		return open_list(filename)[-1]
 	return ""
-
-def autosave(todo: list[str]) -> None:
-	open_file = read_open_file()
-	if len(open_file):
-		last_saved = open_list(open_file["name"])
-		last_saved.pop()
-		if todo == last_saved:
-			return None
-	if (len(open_file)) or (f"{glob.date}.todo" not in listdir(glob.listfiles)):
-		if not len(open_file):
-			files = get_file_names()
-			move_old_dailys(files)
-			open_file = {"name": f"{glob.date}.todo", "lstype": "%d"}
-			with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
-				f.write(f"{open_file["name"]}\n{open_file["lstype"]}")	
-		with open(path.join(glob.listfiles, open_file["name"]), 'w') as f:
-			for items in todo:
-				f.write(f"{items}\n")
-			f.write(f"{open_file["lstype"]}")
-		gnrl.slowprint('', f"Saved list to '{open_file["name"]}'.", '')
-		sleep(1)
-	else:
-		prompt_save(todo)
-	return None
 
 def move_old_dailys(files):
 	for f in files:
@@ -84,9 +46,9 @@ def empty_file_delete(filename: str) -> bool:
 			case 'n':
 				with open(path.join(glob.listfiles, filename), 'w') as f:
 					if gnrl.is_daily(filename):
-						f.write("%d")
+						f.write("%d\n")
 					else:
-						f.write("%c")
+						f.write("%c\n")
 				return False
 			case _:
 				gnrl.slowprint(glob.y_or_n)
@@ -148,7 +110,7 @@ def renameit(files, to_rename) -> None:
 				if len(open_file) and files[to_rename] == open_file["name"]:
 					open_file["name"] = f"{new_name}.todo"
 					with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
-						f.write(f"{open_file["name"]}\n{open_file["lstype"]}")
+						f.write(f"{open_file["name"]}\n{open_file["lstype"]}\n")
 				rename(f"{glob.listfiles}/{files[to_rename]}", f"{glob.listfiles}/{new_name}.todo")
 				return None
 			else:
@@ -174,7 +136,7 @@ def autoload() -> list[str]:
 		if open_file["lstype"] == "%d" and open_file["name"] != f"{glob.date}.todo":
 			if f"{glob.date}.todo" in listdir(glob.listfiles):
 				with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
-					f.write(f"{glob.date}.todo\n%d")
+					f.write(f"{glob.date}.todo\n%d\n")
 				with open(path.join(glob.listfiles, f"{glob.date}.todo"), 'r') as f:
 					todo = [line.strip('\n') for line in f.readlines()]
 				todo.pop()

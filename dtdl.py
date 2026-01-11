@@ -70,7 +70,7 @@ def main() -> int:
 					gnrl.slowprint('', "'s'  Sort Items", "'a'  Arrange Items", "'e'  Edit Items", "'p'  Postpone Items", "'r'  Remove Items", '', "'C'  Clear List", "'S'  Save List To File", "'L'  Load List From File", '', "'h'  Show This Help Text", "'q'  Quit", '')
 				case 'q' | 'Q':
 					if len(todo):
-						fman.autosave(todo)
+						pf.autosave(todo)
 					system(glob.clear)
 					return 0
 				case _:

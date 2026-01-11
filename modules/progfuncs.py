@@ -137,6 +137,30 @@ def clear(todo):
 			case _:
 				gnrl.slowprint(glob.y_or_n)
 
+def autosave(todo: list[str]) -> None:
+	open_file = fman.read_open_file()
+	if len(open_file):
+		last_saved = fman.open_list(open_file["name"])
+		last_saved.pop()
+		if todo == last_saved:
+			return None
+	if (len(open_file)) or (f"{glob.date}.todo" not in listdir(glob.listfiles)):
+		if not len(open_file):
+			files = fman.get_file_names()
+			fman.move_old_dailys(files)
+			open_file = {"name": f"{glob.date}.todo", "lstype": "%d"}
+			with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
+				f.write(f"{open_file["name"]}\n{open_file["lstype"]}\n")	
+		with open(path.join(glob.listfiles, open_file["name"]), 'w') as f:
+			for items in todo:
+				f.write(f"{items}\n")
+			f.write(f"{open_file["lstype"]}\n")
+		gnrl.slowprint('', f"Saved list to '{open_file["name"]}'.", '')
+		sleep(1)
+	else:
+		prompt_save(todo)
+	return None
+
 def save(todo: list[str]) -> None:
 	disp.save_menu()
 	files = fman.get_file_names()
@@ -175,13 +199,27 @@ def save(todo: list[str]) -> None:
 			break
 	identifier: str = fman.select_identifier(file)
 	with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
-		f.write(f"{file}.todo\n{identifier}")
+		f.write(f"{file}.todo\n{identifier}\n")
 	with open(path.join(glob.listfiles, f"{file}.todo"), 'w') as f:
 		for items in todo:
 			f.write(f"{items}\n")
-		f.write(identifier)
-	gnrl.slowprint('', f"File written successfully to '{glob.listfiles}/{file}.todo'.", '')
+		f.write(f"{identifier}\n")
+	gnrl.slowprint('', f"File written successfully to '{path.join(glob.listfiles, file)}.todo'.", '')
 	return None
+
+def prompt_save(todo) -> None:
+	gnrl.slowprint('', "Would you like to save your current to-do list? (Y/n)", '')
+	while True:
+		will_save = input(" > ")
+		match will_save:
+			case 'n' | 'N':
+				return None
+			case 'y' | 'Y' | '':
+				save(todo)
+				sleep(1)
+				return None
+			case _:
+				gnrl.slowprint(glob.y_or_n)
 
 def overwrite_save(filename: str) -> bool:
 	gnrl.slowprint('', f"'{filename}' already exists. Would you like to overwrite it? (y/N)", '')
@@ -222,7 +260,7 @@ def load(unchanged: list[str]) -> list[str]:
 					else:
 						todo = fman.open_list(files[select])
 				with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
-					f.write(f"{files[select]}\n{todo[-1]}")
+					f.write(f"{files[select]}\n{todo[-1]}\n")
 				todo.pop()
 				break
 			else:
