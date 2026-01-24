@@ -5,14 +5,14 @@ import modules.fman as fman
 import modules.glob as glob
 import modules.gnrl as gnrl
 
-def list_items(todo: list[str]) -> None:
+def list_items() -> None:
 	open_file = fman.read_open_file()
 	if len(open_file):
 		gnrl.slowprint(f"Current File: {open_file["name"]}")
 	gnrl.slowprint('', "To-Do List:", '')
-	if len(todo) > 0:
+	if len(glob.todo) > 0:
 		num = 1
-		for item in todo:
+		for item in glob.todo:
 			if num < 10:
 				gnrl.slowprint(f" {num}.  {item}")
 			else:
@@ -25,11 +25,12 @@ def list_items(todo: list[str]) -> None:
 
 def list_files(*function_header: str) -> None:
 	open_file = fman.read_open_file()
-	if len(open_file):
-		gnrl.slowprint(function_header[0], function_header[1], f"\nCurrent File: {open_file["name"]}", '', "Files:", '')
-	else:
-		gnrl.slowprint(function_header[0], function_header[1], '', "Files:", '')
 	files = fman.get_file_names()
+	gnrl.slowprint(function_header[0], function_header[1])
+	if len(open_file):
+		gnrl.slowprint(f"\nCurrent File: {open_file["name"]}")
+	if len(files):
+		gnrl.slowprint('', "Files:", '')
 	num = 1
 	for file in files:
 		if num < 10:
@@ -47,28 +48,28 @@ def confirm_edits_text(is_equal: bool, function: str) -> None:
 		gnrl.slowprint('', f"Item(s) successfully {function}.", '')
 	return None
 
-def arrange_items_menu(todo: list[str]) -> None:
+def arrange_items_menu() -> None:
 	system(glob.clear)
 	gnrl.slowprint("[arranging items]", "-----------------", '')
-	list_items(todo)
+	list_items()
 	return None
 
-def edit_items_menu(todo: list[str]) -> None:
+def edit_items_menu() -> None:
 	system(glob.clear)
 	gnrl.slowprint("[editing items]", "---------------", '')
-	list_items(todo)
+	list_items()
 	return None
 
-def postpone_items_menu(todo: list[str]) -> None:
+def postpone_items_menu() -> None:
 	system(glob.clear)
 	gnrl.slowprint("[postponing items]", "------------------", '')
-	list_items(todo)
+	list_items()
 	return None
 
-def rm_items_menu(todo: list[str]) -> None:
+def rm_items_menu() -> None:
 	system(glob.clear)
 	gnrl.slowprint("[removing items]", "----------------", '')
-	list_items(todo)
+	list_items()
 	return None
 
 def save_menu():
@@ -91,20 +92,15 @@ def load_menu() -> None:
 	return None
 
 def title() -> None:
-	system(glob.clear)
 	gnrl.slowprint('', "---------------------------", "Welcome to your to-do list!", "---------------------------", '')
 	return None
 
-def menu(todo: list[str], justopened: bool) -> None:
+def menu(justopened: bool, bypass: bool) -> None:
+	if bypass:
+		return None
 	system(glob.clear)
 	if justopened:
 		title()
-	list_items(todo)
+	list_items()
 	gnrl.slowprint('', "Add an item, or cross-off an item by entering its line number. 'h' for help.", '')
 	return None
-
-def return_to_menu(todo: list[str]) -> None:
-	sleep(1)
-	menu(todo, False)
-	return None
-
