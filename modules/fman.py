@@ -41,7 +41,7 @@ def empty_file_delete(filename: str) -> bool:
 		will_delete = input(" > ").lower()
 		match will_delete:
 			case 'y':
-				remove(f"{glob.listfiles}/{filename}")
+				remove(path.join(glob.listfiles, filename))
 				return True
 			case 'n':
 				with open(path.join(glob.listfiles, filename), 'w') as f:
@@ -72,7 +72,7 @@ def archive_load_file(files: list[str]) -> None:
 			gnrl.slowprint(glob.invalid_fn)
 
 def archiveit(filename: str) -> None:
-	rename(f"{glob.listfiles}/{filename}", f"{glob.listfiles}/archive/{filename}")
+	rename(path.join(glob.listfiles, filename), path.join(glob.listfiles, "archive", filename))
 	return None
 
 def rename_load_file(files: list[str]) -> None:
@@ -111,7 +111,7 @@ def renameit(files, to_rename) -> None:
 					open_file["name"] = f"{new_name}.todo"
 					with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
 						f.write(f"{open_file["name"]}\n{open_file["lstype"]}\n")
-				rename(f"{glob.listfiles}/{files[to_rename]}", f"{glob.listfiles}/{new_name}.todo")
+				rename(path.join(glob.listfiles, files[to_rename]), path.join(glob.listfiles, f"{new_name}.todo"))
 				return None
 			else:
 				gnrl.slowprint(f"Name '{new_name}' already in use. If you wish to use the name '{new_name}' for this file, first delete the file currently using that name.")
@@ -193,7 +193,7 @@ def confirm_delete(files: list[str], to_delete: int) -> None:
 				open_file = read_open_file()
 				if len(open_file) and open_file["name"] == files[to_delete]:
 					clear_open_file()
-				remove(f"{glob.listfiles}/{files[to_delete]}")
+				remove(path.join(glob.listfiles, files[to_delete]))
 				return None
 			case _:
 				gnrl.slowprint(glob.y_or_n)
