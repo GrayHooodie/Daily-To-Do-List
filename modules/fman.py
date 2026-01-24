@@ -67,7 +67,7 @@ def archive_load_file(files: list[str]) -> None:
 		elif to_rename.lower() == 'c':
 			gnrl.slowprint('', "Cancelled archiving.", '')
 			sleep(1)
-			return 
+			return None
 		else:
 			gnrl.slowprint(glob.invalid_fn)
 
@@ -89,7 +89,7 @@ def rename_load_file(files: list[str]) -> None:
 		elif to_rename.lower() == 'c':
 			gnrl.slowprint('', "Cancelled renaming.", '')
 			sleep(1)
-			return 
+			return None
 		else:
 			gnrl.slowprint(glob.invalid_fn)
 
@@ -103,7 +103,7 @@ def renameit(files, to_rename) -> None:
 			return None
 		elif len(new_name) > 1:
 			if not file_exists(new_name):
-				list_to_be_renamed = open_list(f"{files[to_rename]}")
+				list_to_be_renamed = open_list(files[to_rename])
 				if list_to_be_renamed[-1] == "%d":
 					new_name += "(D)"
 				open_file = read_open_file()
@@ -129,8 +129,8 @@ def open_list(file: str) -> list[str]:
 		with open(path.join(glob.listfiles, file), 'r') as f:
 			return [line.strip('\n') for line in f.readlines()]
 
-def autoload() -> list[str]:
-	todo = []
+def autoload() -> None:
+	glob.todo = []
 	open_file = read_open_file()
 	if len(open_file):
 		if open_file["lstype"] == "%d" and open_file["name"] != f"{glob.date}.todo":
@@ -138,29 +138,30 @@ def autoload() -> list[str]:
 				with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
 					f.write(f"{glob.date}.todo\n%d\n")
 				with open(path.join(glob.listfiles, f"{glob.date}.todo"), 'r') as f:
-					todo = [line.strip('\n') for line in f.readlines()]
-				todo.pop()
+					glob.todo = [line.strip('\n') for line in f.readlines()]
+				glob.todo.pop()
 			else:
-				todo = open_list(open_file["name"])
-				todo.pop()
-				todo = rm_crossed(todo)
-				todo = append_postponed(todo)
+				glob.todo = open_list(open_file["name"])
+				glob.todo.pop()
+				rm_crossed()
+				append_postponed()
 				clear_open_file()
-			return todo
+			return None
 		try:
 			with open(path.join(glob.listfiles, open_file["name"]), 'r') as f:
-				todo = [line.strip('\n') for line in f.readlines()]
-			todo.pop()
+				glob.todo = [line.strip('\n') for line in f.readlines()]
+			glob.todo.pop()
 		except Exception:
 			clear_open_file()
-	return todo
+	return None
 
-def rm_crossed(todo: list[str]) -> list[str]:
+def rm_crossed() -> None:
 	uncrossed = []
-	for item in todo:
+	for item in glob.todo:
 		if ord(item[1]) != 822:
 			uncrossed.append(item)
-	return uncrossed
+	glob.todo = uncrossed
+	return None
 
 def delete_load_file(files: list[str]) -> None:
 	gnrl.slowprint('', "Enter the number corresponding to the file you would like to delete. 'c' to cancel.", '')
@@ -181,7 +182,13 @@ def delete_load_file(files: list[str]) -> None:
 			gnrl.slowprint(glob.invalid_fn)
 
 def confirm_delete(files: list[str], to_delete: int) -> None:
-	gnrl.slowprint('', f"Are you sure you'd like to delete the file '{files[to_delete]}'? (y/N)", '')
+	open_file = read_open_file()
+	if len(open_file) and open_file["name"] == files[to_delete]:
+		file_is_open = True
+	if file_is_open:	
+		gnrl.slowprint('', f"Are you sure you'd like to delete the file '{files[to_delete]}'? This will also clear your current to-do list. (y/N)", '')
+	else:
+		gnrl.slowprint('', f"Are you sure you'd like to delete the file '{files[to_delete]}'? (y/N)", '')
 	while True:
 		confirm_delete = input(" > ").lower()
 		match confirm_delete:
@@ -190,20 +197,20 @@ def confirm_delete(files: list[str], to_delete: int) -> None:
 				sleep(1)
 				return None
 			case 'y':
-				open_file = read_open_file()
-				if len(open_file) and open_file["name"] == files[to_delete]:
+				if file_is_open:
 					clear_open_file()
+					glob.todo = []	
 				remove(path.join(glob.listfiles, files[to_delete]))
 				return None
 			case _:
 				gnrl.slowprint(glob.y_or_n)
 
-def append_postponed(todo: list[str]) -> list[str]:
+def append_postponed() -> None:
 	with open(path.join(glob.progfiles, "postpone"), 'r') as f:
-		todo += [line.strip('\n') for line in f.readlines()]
+		glob.todo += [line.strip('\n') for line in f.readlines()]
 	with open(path.join(glob.progfiles, "postpone"), 'w'):
 		pass
-	return todo
+	return None
 
 def read_open_file() -> dict[str: str]:
 	with open(path.join(glob.progfiles, "lastopen"), 'r') as f:

@@ -6,99 +6,107 @@ import modules.fman as fman
 import modules.glob as glob
 import modules.gnrl as gnrl
 
-def sort_items(todo: list[str]) -> list[str]:
+def sort_items() -> None:
 	uncrossed = []
 	crossed = []
-	for item in todo:
+	for item in glob.todo:
 		if ord(item[1]) == 822:
 			crossed.append(item)
 		else:
 			uncrossed.append(item)
-	return uncrossed + crossed
+	glob.todo = uncrossed + crossed
 
-def cross(todo: list[str], line: int) -> list[str]:
-	if ord(todo[line][1]) == 822:
-		todo[line] = gnrl.unstrike(todo[line])
+def cross(line: int) -> None:
+	if ord(glob.todo[line][1]) == 822:
+		glob.todo[line] = gnrl.unstrike(glob.todo[line])
 	else:
-		todo[line] = gnrl.strike(todo[line])
-	return todo
+		glob.todo[line] = gnrl.strike(glob.todo[line])
+	return None
 
-def arrange_items(todo: list[str]) -> list[str]:
-	unchanged = todo.copy()
-	disp.arrange_items_menu(todo)
-	first_text = ["Enter the line number you would like to move. Empty return to finish arranging items. 'c' to cancel.", glob.invalid_ln]
+def arrange_items() -> None:
+	unchanged = glob.todo.copy()
+	disp.arrange_items_menu()
+	first_text = {"context": "Enter the line number you would like to move. Empty return to finish arranging items. 'c' to cancel.", "line_num": glob.invalid_ln}
 	while True:
-		line = gnrl.enter_digit(1, len(todo), first_text, True)
+		line = gnrl.enter_digit(1, first_text, True)
 		if line == -1:
-			disp.confirm_edits_text(todo == unchanged, "arranged")
-			return todo
+			disp.confirm_edits_text(glob.todo == unchanged, "arranged")
+			sleep(1)
+			return None
 		elif line == -2:
 			gnrl.slowprint('', glob.no_chng, '')
-			return unchanged
-		second_text = [f"Enter the new position of line {line + 1}. 'c' to cancel line {line + 1} arrangement.", glob.invalid_ln, f"Cancelled arrangement of line {line + 1}."]
-		dest = gnrl.enter_digit(1, len(todo), second_text, False)
+			glob.todo = unchanged
+			sleep(1)
+			return None	
+		second_text = {"context": f"Enter the new position of line {line + 1}. 'c' to cancel line {line + 1} arrangement.", "line_num": glob.invalid_ln, "cancel": f"Cancelled arrangement of line {line + 1}."}
+		dest = gnrl.enter_digit(1, second_text, False)
 		if dest == -2:
 			sleep(1)
-			disp.arrange_items_menu(todo)
+			disp.arrange_items_menu()
 			continue
-		item = todo[line]
-		todo.remove(item)
-		todo.insert(dest, item)
-		disp.arrange_items_menu(todo)
+		item = glob.todo[line]
+		glob.todo.remove(item)
+		glob.todo.insert(dest, item)
+		disp.arrange_items_menu()
 
-def edit_items(todo: list[str]) -> list[str]:
-	unchanged = todo.copy()
-	disp.edit_items_menu(todo)
-	first_text = ["Enter the line number you would like to edit. Empty return to finish editing items. 'c' to cancel.", glob.invalid_ln]
+def edit_items() -> None:
+	unchanged = glob.todo.copy()
+	first_text = {"context": "Enter the line number you would like to edit. Empty return to finish editing items. 'c' to cancel.", "line_num": glob.invalid_ln}
 	while True:
-		line = gnrl.enter_digit(1, len(todo), first_text, True)
+		disp.edit_items_menu()
+		line = gnrl.enter_digit(1, first_text, True)
 		if line == -1:
-			disp.confirm_edits_text(todo == unchanged, 'edited')
-			return todo
+			disp.confirm_edits_text(glob.todo == unchanged, 'edited')
+			sleep(1)
+			return None
 		elif line == -2:
 			gnrl.slowprint('', glob.no_chng, '')
-			return unchanged
-		second_text = [f"Enter the new text for line {line + 1}. 'c' to cancel edits on line {line + 1}.", "Item can't be a number.", f"Cancelled edits on line {line + 1}", "Item must be two or more characters."]
-		edited = edit_item_text(2, second_text)
+			glob.todo = unchanged
+			sleep(1)
+			return None
+		second_text = {"context": f"Enter the new text for line {line + 1}. 'c' to cancel edits on line {line + 1}.", "number": "Item can't be a number.", "cancel": f"Cancelled edits on line {line + 1}", "length": "Item must be two or more characters."}
+		edited = edit_item_text(second_text)
 		if edited == 'c':
 			sleep(1)
-			disp.edit_items_menu(todo)	
 			continue
-		todo.remove(todo[line])
-		todo.insert(line, edited)
-		disp.edit_items_menu(todo)
+		glob.todo.pop(line)
+		glob.todo.insert(line, edited)
 
-def edit_item_text(minlength: int, text: list[str]) -> str:
-	gnrl.slowprint('', text[0], '')
+def edit_item_text(text: dict) -> str:
+	minlength = 2
+	gnrl.slowprint('', text["context"], '')
 	while True:
 		edited = input(" > ")
 		if edited.isdigit():
-			gnrl.slowprint(text[1])
-			continue
+			gnrl.slowprint(text["number"])
 		elif len(edited) >= minlength:
 			return edited
 		elif edited.lower() == 'c':
-			gnrl.slowprint('', text[2], '')
+			gnrl.slowprint('', text["cancel"], '')
 			return edited
-		gnrl.slowprint(text[3])
+		else:
+			gnrl.slowprint(text["length"])
 
-def postpone_items(todo: list[str]) -> list[str]:
-	unchanged = todo.copy()
+def postpone_items() -> None:
+	unchanged = glob.todo.copy()
 	to_postpone = []
-	text = ["Enter line number(s) to postpone. Empty return to finish postponing items. 'c' to cancel.", glob.invalid_ln]
+	text = {"context": "Enter line number(s) to postpone. Empty return to finish postponing items. 'c' to cancel.", "line_num": glob.invalid_ln}
 	while True:
-		disp.postpone_items_menu(todo)
-		line = gnrl.enter_digit(1, len(todo), text, True)
+		disp.postpone_items_menu()
+		line = gnrl.enter_digit(1, text, True)
 		if line == -1:
 			break
 		elif line == -2:
 			gnrl.slowprint('', glob.no_chng, '')
-			return unchanged
-		to_postpone.append(todo[line])	
-		todo.remove(todo[line])
+			glob.todo = unchanged	
+			sleep(1)	
+			return None
+		to_postpone.append(glob.todo[line])	
+		glob.todo.pop(line)
 	add_to_postpone(to_postpone)	
-	disp.confirm_edits_text(todo == unchanged, "postponed")	
-	return todo
+	disp.confirm_edits_text(glob.todo == unchanged, "postponed")
+	sleep(1)	
+	return None
 
 def add_to_postpone(to_postpone: list[str]) -> None:
 	with open(path.join(glob.progfiles, "postpone"), 'a') as f:
@@ -106,43 +114,49 @@ def add_to_postpone(to_postpone: list[str]) -> None:
 			f.write(f"{item}\n")	
 	return None
 
-def rm_items(todo: list[str]) -> list[str]:
-	unchanged = todo.copy()
-	text = ["Enter line number(s) to remove. Empty return to finish removing items. 'c' to cancel.", glob.invalid_ln]
+def rm_items() -> None:
+	unchanged = glob.todo.copy()
+	text = {"context": "Enter line number(s) to remove. Empty return to finish removing items. 'c' to cancel.", "line_num": glob.invalid_ln}
 	while True:
-		disp.rm_items_menu(todo)
-		line = gnrl.enter_digit(1, len(todo), text, True)
+		disp.rm_items_menu()
+		line = gnrl.enter_digit(1, text, True)
 		if line == -1:
-			disp.confirm_edits_text(todo == unchanged, "removed")	
-			if not len(todo):
+			disp.confirm_edits_text(glob.todo == unchanged, "removed")	
+			if not len(glob.todo):
 				fman.clear_open_file()	
-			return todo
+			sleep(1)	
+			return None
 		elif line == -2:
 			gnrl.slowprint('', glob.no_chng, '')
-			return unchanged
-		todo.pop(line)
+			glob.todo = unchanged
+			sleep(1)
+			return None
+		glob.todo.pop(line)
 
-def clear(todo): 
+def clear() -> None: 
 	gnrl.slowprint('', "Are you sure you want to clear your to-do list? (y/N)", '')
 	while True:
 		check = input(" > ")
 		match check:
 			case 'y' | 'Y':
 				fman.clear_open_file()
+				glob.todo = []
 				gnrl.slowprint('', "To-do list cleared.", '')
-				return []
+				sleep(1)	
+				return None
 			case 'n' | 'N' | '':
 				gnrl.slowprint('', glob.no_chng, '')
-				return todo 
+				sleep(1)
+				return None 
 			case _:
 				gnrl.slowprint(glob.y_or_n)
 
-def autosave(todo: list[str]) -> None:
+def autosave() -> None:
 	open_file = fman.read_open_file()
 	if len(open_file):
 		last_saved = fman.open_list(open_file["name"])
 		last_saved.pop()
-		if todo == last_saved:
+		if glob.todo == last_saved:
 			return None
 	if (len(open_file)) or (f"{glob.date}.todo" not in listdir(glob.listfiles)):
 		if not len(open_file):
@@ -152,16 +166,16 @@ def autosave(todo: list[str]) -> None:
 			with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
 				f.write(f"{open_file["name"]}\n{open_file["lstype"]}\n")	
 		with open(path.join(glob.listfiles, open_file["name"]), 'w') as f:
-			for items in todo:
-				f.write(f"{items}\n")
+			for item in glob.todo:
+				f.write(f"{item}\n")
 			f.write(f"{open_file["lstype"]}\n")
 		gnrl.slowprint('', f"Saved list to '{open_file["name"]}'.", '')
 		sleep(1)
 	else:
-		prompt_save(todo)
+		prompt_save()
 	return None
 
-def save(todo: list[str]) -> None:
+def save() -> None:
 	disp.save_menu()
 	files = fman.get_file_names()
 	open_file = fman.read_open_file()
@@ -187,9 +201,10 @@ def save(todo: list[str]) -> None:
 				gnrl.slowprint("Please name your file.")
 		elif file == 'c':
 			gnrl.slowprint('', "Cancelled file save.", '')
-			return
+			sleep(1)
+			return None
 		elif gnrl.is_daily(file):
-			gnrl.slowprint("Name can't be a glob.date in the format of 'YYYY-MM-DD'.")
+			gnrl.slowprint("Name can't be a date in the format of 'YYYY-MM-DD'.")
 		elif f"{file}.todo" in files:
 			if overwrite_save(f"{file}.todo"):
 				break
@@ -201,13 +216,14 @@ def save(todo: list[str]) -> None:
 	with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
 		f.write(f"{file}.todo\n{identifier}\n")
 	with open(path.join(glob.listfiles, f"{file}.todo"), 'w') as f:
-		for items in todo:
-			f.write(f"{items}\n")
+		for item in glob.todo:
+			f.write(f"{item}\n")
 		f.write(f"{identifier}\n")
 	gnrl.slowprint('', f"File written successfully to '{path.join(glob.listfiles, file)}.todo'.", '')
+	sleep(1)
 	return None
 
-def prompt_save(todo) -> None:
+def prompt_save() -> None:
 	gnrl.slowprint('', "Would you like to save your current to-do list? (Y/n)", '')
 	while True:
 		will_save = input(" > ")
@@ -215,8 +231,7 @@ def prompt_save(todo) -> None:
 			case 'n' | 'N':
 				return None
 			case 'y' | 'Y' | '':
-				save(todo)
-				sleep(1)
+				save()
 				return None
 			case _:
 				gnrl.slowprint(glob.y_or_n)
@@ -234,10 +249,11 @@ def overwrite_save(filename: str) -> bool:
 			case _:
 				gnrl.slowprint(glob.y_or_n)
 
-def load(unchanged: list[str]) -> list[str]:
+def load() -> None:
+	unchanged = glob.todo.copy()
 	if not len(listdir(glob.listfiles)):
 		gnrl.slowprint('', "No files to show.", '')
-		return unchanged
+		return None
 	disp.load_menu()
 	while True:
 		files = fman.get_file_names()
@@ -249,19 +265,19 @@ def load(unchanged: list[str]) -> list[str]:
 				if len(open_file):
 					last_saved = fman.open_list(open_file["name"])
 					last_saved.pop()
-					if unchanged != last_saved:
-						prompt_save(unchanged)
-				elif len(unchanged):
-					prompt_save(unchanged)
-				todo = fman.open_list(files[select])
-				if not len(todo):
+					if glob.todo != last_saved:
+						prompt_save()
+				elif len(glob.todo):
+					prompt_save()
+				glob.todo = fman.open_list(files[select])
+				if not len(glob.todo):
 					if fman.empty_file_delete(files[select]):
 						continue
 					else:
-						todo = fman.open_list(files[select])
+						glob.todo = fman.open_list(files[select])
 				with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
-					f.write(f"{files[select]}\n{todo[-1]}\n")
-				todo.pop()
+					f.write(f"{files[select]}\n{glob.todo[-1]}\n")
+				glob.todo.pop()
 				break
 			else:
 				gnrl.slowprint(glob.invalid_fn)
@@ -269,7 +285,8 @@ def load(unchanged: list[str]) -> list[str]:
 			match select:
 				case 'c':
 					gnrl.slowprint('', "No file loaded.", '')
-					return unchanged
+					sleep(1)
+					return None
 				case 'r':	
 					fman.rename_load_file(files)
 				case 'a':
@@ -281,4 +298,5 @@ def load(unchanged: list[str]) -> list[str]:
 					continue
 			disp.load_menu()
 	gnrl.slowprint('', f"File {files[select]} successfully loaded.", '')
-	return todo
+	sleep(1)
+	return None

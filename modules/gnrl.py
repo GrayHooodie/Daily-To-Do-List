@@ -15,21 +15,21 @@ def unstrike(text: str) -> str:
 		new_text += text[i]
 	return new_text
 
-def enter_digit(base: int, length: int, text: list[str], enter_to_confirm: bool) -> int:
-	slowprint('', text[0], '')
+def enter_digit(base: int, text: dict, enter_to_confirm: bool) -> int:
+	slowprint('', text["context"], '')
 	while True:
 		num = input(" > ")
 		if num.isdigit():
 			num = int(num) - base
-			if num in range(length):
+			if num in range(len(glob.todo)):
 				return num
 		elif num.lower() == 'c':
-			if len(text) == 3:
-				slowprint('', text[2], '')
+			if "cancel" in text:
+				slowprint('', text["cancel"], '')
 			return -2
 		elif enter_to_confirm and num == '':
 			return -1	
-		slowprint(text[1])
+		slowprint(text["line_num"])
 
 def is_daily(file: str) -> bool:
 	isdate = file.split('-')
