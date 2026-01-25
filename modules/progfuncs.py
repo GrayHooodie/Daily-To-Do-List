@@ -251,7 +251,7 @@ def overwrite_save(filename: str) -> bool:
 
 def load() -> None:
 	unchanged = glob.todo.copy()
-	if not len(listdir(glob.listfiles)):
+	if not len(fman.get_file_names()):
 		gnrl.slowprint('', "No files to show.", '')
 		return None
 	disp.load_menu()

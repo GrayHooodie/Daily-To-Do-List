@@ -5,15 +5,7 @@ import modules.glob as glob
 import modules.gnrl as gnrl
 
 def get_file_names() -> list[str]:
-	files = listdir(glob.listfiles)
-	num = 1
-	for i in range(len(files)):
-		if i >= len(files):
-			break
-		if glob.ext not in files[i]:
-			files.remove(files[i])
-		num += 1
-	return files
+	return [f for f in listdir(glob.listfiles) if ".todo" in f]
 
 def select_identifier(filename: str) -> str:
 	identifier: str = read_list_type(f"{filename}.todo")
