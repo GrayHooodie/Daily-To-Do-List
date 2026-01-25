@@ -65,7 +65,7 @@ def archive_load_file(files: list[str]) -> None:
 
 def archiveit(filename: str) -> None:
 	open_file = read_open_file()
-	if len(open_file) and open_file == filename:
+	if len(open_file) and open_file["name"] == filename:
 		clear_open_file()
 		glob.todo = []	
 	rename(path.join(glob.listfiles, filename), path.join(glob.listfiles, "archive", filename))
