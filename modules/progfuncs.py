@@ -251,11 +251,14 @@ def overwrite_save(filename: str) -> bool:
 
 def load() -> None:
 	unchanged = glob.todo.copy()
-	if not len(fman.get_file_names()):
-		gnrl.slowprint('', "No files to show.", '')
-		return None
-	disp.load_menu()
+	invalid_line = False	
 	while True:
+		if not len(fman.get_file_names()):
+			gnrl.slowprint('', "No files to show.", '')
+			sleep(1)
+			return None
+		if not invalid_line:
+			disp.load_menu()
 		files = fman.get_file_names()
 		open_file = fman.read_open_file()
 		select = input(" > ").lower()
@@ -281,6 +284,7 @@ def load() -> None:
 				break
 			else:
 				gnrl.slowprint(glob.invalid_fn)
+				invalid_line = True
 		else:
 			match select:
 				case 'c':
@@ -295,8 +299,7 @@ def load() -> None:
 					fman.delete_load_file(files)
 				case _:
 					gnrl.slowprint(glob.invalid_fn)
-					continue
-			disp.load_menu()
+					invalid_line = True
 	gnrl.slowprint('', f"File {files[select]} successfully loaded.", '')
 	sleep(1)
 	return None
