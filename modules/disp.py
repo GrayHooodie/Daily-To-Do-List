@@ -25,11 +25,12 @@ def list_items() -> None:
 
 def list_files(*function_header: str) -> None:
 	open_file = fman.read_open_file()
-	if len(open_file):
-		gnrl.slowprint(function_header[0], function_header[1], f"\nCurrent File: {open_file["name"]}", '', "Files:", '')
-	else:
-		gnrl.slowprint(function_header[0], function_header[1], '', "Files:", '')
 	files = fman.get_file_names()
+	gnrl.slowprint(function_header[0], function_header[1])
+	if len(open_file):
+		gnrl.slowprint(f"\nCurrent File: {open_file["name"]}")
+	if len(files):
+		gnrl.slowprint('', "Files:", '')
 	num = 1
 	for file in files:
 		if num < 10:

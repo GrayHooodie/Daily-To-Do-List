@@ -178,6 +178,7 @@ def delete_load_file(files: list[str]) -> None:
 			gnrl.slowprint(glob.invalid_fn)
 
 def confirm_delete(files: list[str], to_delete: int) -> None:
+	file_is_open = False
 	open_file = read_open_file()
 	if len(open_file) and open_file["name"] == files[to_delete]:
 		file_is_open = True
