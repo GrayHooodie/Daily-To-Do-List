@@ -72,6 +72,10 @@ def archive_load_file(files: list[str]) -> None:
 			gnrl.slowprint(glob.invalid_fn)
 
 def archiveit(filename: str) -> None:
+	open_file = read_open_file()
+	if len(open_file) and open_file == filename:
+		clear_open_file()
+		glob.todo = []	
 	rename(path.join(glob.listfiles, filename), path.join(glob.listfiles, "archive", filename))
 	return None
 
