@@ -101,6 +101,9 @@ def postpone_items() -> None:
 			glob.todo = unchanged	
 			sleep(1)	
 			return None
+		elif ord(glob.todo[line][1]) == 822:
+			gnrl.slowprint("Item can't be crossed-off.")
+			continue
 		to_postpone.append(glob.todo[line])	
 		glob.todo.pop(line)
 	add_to_postpone(to_postpone)	

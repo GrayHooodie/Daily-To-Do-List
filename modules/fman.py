@@ -130,7 +130,8 @@ def autoload() -> None:
 					glob.todo = [line.strip('\n') for line in f.readlines()]
 				glob.todo.pop()
 			else:
-				glob.todo = open_list(open_file["name"])
+				default_items()
+				glob.todo += open_list(open_file["name"])
 				glob.todo.pop()
 				rm_crossed()
 				append_postponed()
@@ -142,6 +143,13 @@ def autoload() -> None:
 			glob.todo.pop()
 		except Exception:
 			clear_open_file()
+	return None
+
+def default_items() -> None:
+	with open(path.join(glob.conffiles, "daily-default"), 'r') as f:
+		items = [line.strip("\n") for line in f.readlines()]
+	if len(items):
+		glob.todo = items
 	return None
 
 def rm_crossed() -> None:
@@ -221,6 +229,11 @@ def clear_open_file() -> None:
 def file_integrity() -> None:
 	if not path.exists(glob.progfiles):
 		makedirs(glob.progfiles)
+	if not path.exists(glob.conffiles):
+		makedirs(glob.conffiles)
+	if not path.exists(path.join(glob.conffiles, "daily-default")):
+		with open(path.join(glob.conffiles, "daily-default"), 'w'):
+			pass
 	if not path.exists(path.join(glob.progfiles, "lastopen")):
 		clear_open_file()
 	if not path.exists(path.join(glob.progfiles, "postpone")):
