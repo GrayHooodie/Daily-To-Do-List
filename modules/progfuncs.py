@@ -89,6 +89,7 @@ def edit_item_text(text: dict) -> str:
 
 def postpone_items() -> None:
 	unchanged = glob.todo.copy()
+	crossed = False
 	to_postpone = []
 	text = {"context": "Enter line number(s) to postpone. Empty return to finish postponing items. 'c' to cancel.", "line_num": glob.invalid_ln}
 	while True:
