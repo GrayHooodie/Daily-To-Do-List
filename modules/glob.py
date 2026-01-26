@@ -11,6 +11,7 @@ todo: list[str] = []
 date: str = datetime.today().strftime('%Y-%m-%d')
 home: str = str(Path.home())
 listfiles: str = path.join(home, "Documents", "To-Do Lists")
+conffiles: str = path.join(home, ".dtdl", "config")
 progfiles: str = path.join(home, ".dtdl", "programfiles")
 ext: str = ".todo"
 
