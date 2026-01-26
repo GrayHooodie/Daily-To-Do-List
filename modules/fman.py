@@ -52,7 +52,8 @@ def archive_load_file(files: list[str]) -> None:
 		if to_archive.isdigit():
 			to_archive = int(to_archive) - 1
 			if to_archive in range(len(files)):
-				archiveit(files[to_archive])
+				confirm(files[to_archive], {"type": "archive", "pres-verb": "archive", "past-verb": "archival"})
+				sleep(1)
 				return None
 			else:
 				gnrl.slowprint(glob.invalid_fn)
@@ -62,14 +63,6 @@ def archive_load_file(files: list[str]) -> None:
 			return None
 		else:
 			gnrl.slowprint(glob.invalid_fn)
-
-def archiveit(filename: str) -> None:
-	open_file = read_open_file()
-	if len(open_file) and open_file["name"] == filename:
-		clear_open_file()
-		glob.todo = []	
-	rename(path.join(glob.listfiles, filename), path.join(glob.listfiles, "archive", filename))
-	return None
 
 def rename_load_file(files: list[str]) -> None:
 	gnrl.slowprint('', "Enter the number corresponding to the file you would like to rename. 'c' to cancel.", '')
@@ -166,7 +159,8 @@ def delete_load_file(files: list[str]) -> None:
 		if to_delete.isdigit():
 			to_delete = int(to_delete) - 1
 			if to_delete in range(len(files)):
-				confirm_delete(files, to_delete)
+				confirm(files[to_delete], {"type": "delete", "pres-verb": "delete", "past-verb": "deletion"})
+				sleep(1)
 				return None
 			else:
 				gnrl.slowprint(glob.invalid_fn)
@@ -177,27 +171,31 @@ def delete_load_file(files: list[str]) -> None:
 		else:
 			gnrl.slowprint(glob.invalid_fn)
 
-def confirm_delete(files: list[str], to_delete: int) -> None:
+def confirm(filename: str, function: dict) -> None:
 	file_is_open = False
 	open_file = read_open_file()
-	if len(open_file) and open_file["name"] == files[to_delete]:
+	if len(open_file) and open_file["name"] == filename:
 		file_is_open = True
 	if file_is_open:	
-		gnrl.slowprint('', f"Are you sure you'd like to delete the file '{files[to_delete]}'? This will also clear your current to-do list. (y/N)", '')
+		gnrl.slowprint('', f"Are you sure you'd like to {function["pres-verb"]} the file '{filename}'? This will also clear your current to-do list. (y/N)", '')
 	else:
-		gnrl.slowprint('', f"Are you sure you'd like to delete the file '{files[to_delete]}'? (y/N)", '')
+		gnrl.slowprint('', f"Are you sure you'd like to {function["pres-verb"]} the file '{filename}'? (y/N)", '')
 	while True:
-		confirm_delete = input(" > ").lower()
-		match confirm_delete:
+		confirmation = input(" > ").lower()
+		match confirmation:
 			case 'n' | '':
-				gnrl.slowprint('', f"Deletion of file '{files[to_delete]}' cancelled.", '')
-				sleep(1)
+				gnrl.slowprint('', f"{function["past-verb"].capitalize()} of file '{files[to_delete]}' cancelled.", '')
 				return None
 			case 'y':
 				if file_is_open:
 					clear_open_file()
 					glob.todo = []	
-				remove(path.join(glob.listfiles, files[to_delete]))
+				if function["type"] == "delete":
+					remove(path.join(glob.listfiles, filename))
+					gnrl.slowprint('', "File successfully deleted.", '')
+				elif function["type"] == "archive":
+					rename(path.join(glob.listfiles, filename), path.join(glob.listfiles, "archive", filename))
+					gnrl.slowprint('', f"File successfully archived. It can be found again in the '{path.join(glob.listfiles, "archive")}' directory.", '')
 				return None
 			case _:
 				gnrl.slowprint(glob.y_or_n)
