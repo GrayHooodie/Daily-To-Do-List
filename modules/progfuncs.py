@@ -92,7 +92,9 @@ def postpone_items() -> None:
 	to_postpone = []
 	text = {"context": "Enter line number(s) to postpone. Empty return to finish postponing items. 'c' to cancel.", "line_num": glob.invalid_ln}
 	while True:
-		disp.postpone_items_menu()
+		if not crossed:
+			disp.postpone_items_menu()
+		crossed = False
 		line = gnrl.enter_digit(1, text, True)
 		if line == -1:
 			break
@@ -103,6 +105,8 @@ def postpone_items() -> None:
 			return None
 		elif ord(glob.todo[line][1]) == 822:
 			gnrl.slowprint("Item can't be crossed-off.")
+			crossed = True
+			sleep(1)
 			continue
 		to_postpone.append(glob.todo[line])	
 		glob.todo.pop(line)
