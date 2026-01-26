@@ -184,7 +184,7 @@ def confirm(filename: str, function: dict) -> None:
 		confirmation = input(" > ").lower()
 		match confirmation:
 			case 'n' | '':
-				gnrl.slowprint('', f"{function["past-verb"].capitalize()} of file '{files[to_delete]}' cancelled.", '')
+				gnrl.slowprint('', f"{function["past-verb"].capitalize()} of file '{filename}' cancelled.", '')
 				return None
 			case 'y':
 				if file_is_open:
