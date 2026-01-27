@@ -53,16 +53,20 @@ def archive_load_file(files: list[str]) -> None:
 			to_archive = int(to_archive) - 1
 			if to_archive in range(len(files)):
 				confirm(files[to_archive], {"type": "archive", "pres-verb": "archive", "past-verb": "archival"})
-				sleep(1)
+				sleep(1.5)
 				return None
 			else:
 				gnrl.slowprint(glob.invalid_fn)
 		elif to_rename.lower() == 'c':
 			gnrl.slowprint('', "Cancelled archiving.", '')
-			sleep(1)
+			sleep(1.5)
 			return None
 		else:
 			gnrl.slowprint(glob.invalid_fn)
+
+def archiveit(filename: str) -> None:
+	rename(path.join(glob.listfiles, filename), path.join(glob.listfiles, "archive", filename))
+	return None
 
 def rename_load_file(files: list[str]) -> None:
 	gnrl.slowprint('', "Enter the number corresponding to the file you would like to rename. 'c' to cancel.", '')
@@ -77,7 +81,7 @@ def rename_load_file(files: list[str]) -> None:
 				gnrl.slowprint(glob.invalid_fn)
 		elif to_rename.lower() == 'c':
 			gnrl.slowprint('', "Cancelled renaming.", '')
-			sleep(1)
+			sleep(1.5)
 			return None
 		else:
 			gnrl.slowprint(glob.invalid_fn)
@@ -88,7 +92,7 @@ def renameit(files, to_rename) -> None:
 		new_name = input(" > ")
 		if new_name.lower() == 'c':
 			gnrl.slowprint('', f"Cancelled renaming of '{files[to_rename].split(glob.ext)[0]}'.", '')
-			sleep(1)
+			sleep(1.5)
 			return None
 		elif len(new_name) > 1:
 			if not file_exists(new_name):
@@ -168,16 +172,20 @@ def delete_load_file(files: list[str]) -> None:
 			to_delete = int(to_delete) - 1
 			if to_delete in range(len(files)):
 				confirm(files[to_delete], {"type": "delete", "pres-verb": "delete", "past-verb": "deletion"})
-				sleep(1)
+				sleep(1.5)
 				return None
 			else:
 				gnrl.slowprint(glob.invalid_fn)
 		elif to_delete.lower() == 'c':
 			gnrl.slowprint('', "Cancelled file deletion.", '')
-			sleep(1)
+			sleep(1.5)
 			return None
 		else:
 			gnrl.slowprint(glob.invalid_fn)
+
+def deleteit(filename: str) -> None:
+	remove(path.join(glob.listfiles, filename))
+	return None	
 
 def confirm(filename: str, function: dict) -> None:
 	file_is_open = False
@@ -199,10 +207,10 @@ def confirm(filename: str, function: dict) -> None:
 					clear_open_file()
 					glob.todo = []	
 				if function["type"] == "delete":
-					remove(path.join(glob.listfiles, filename))
+					deleteit(filename)
 					gnrl.slowprint('', "File successfully deleted.", '')
 				elif function["type"] == "archive":
-					rename(path.join(glob.listfiles, filename), path.join(glob.listfiles, "archive", filename))
+					archiveit(filename)
 					gnrl.slowprint('', f"File successfully archived. It can be found again in the '{path.join(glob.listfiles, "archive")}' directory.", '')
 				return None
 			case _:

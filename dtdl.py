@@ -65,7 +65,8 @@ def main() -> int:
 					gnrl.slowprint('', "'s'  Sort Items", "'a'  Arrange Items", "'e'  Edit Items", "'p'  Postpone Items", "'r'  Remove Items", '', "'C'  Clear List", "'S'  Save List To File", "'L'  Load List From File", '', "'h'  Show This Help Text", "'q'  Quit", '')
 					helping = True
 				case 'q' | 'Q':
-					if len(glob.todo):
+					open_file = fman.read_open_file()
+					if len(open_file) or len(glob.todo):
 						pf.autosave()
 					system(glob.clear)
 					return 0

@@ -25,9 +25,9 @@ def cross(line: int) -> None:
 
 def arrange_items() -> None:
 	unchanged = glob.todo.copy()
-	disp.arrange_items_menu()
 	first_text = {"context": "Enter the line number you would like to move. Empty return to finish arranging items. 'c' to cancel.", "line_num": glob.invalid_ln}
 	while True:
+		disp.arrange_items_menu()
 		line = gnrl.enter_digit(1, first_text, True)
 		if line == -1:
 			disp.confirm_edits_text(glob.todo == unchanged, "arranged")
@@ -42,12 +42,10 @@ def arrange_items() -> None:
 		dest = gnrl.enter_digit(1, second_text, False)
 		if dest == -2:
 			sleep(1)
-			disp.arrange_items_menu()
 			continue
 		item = glob.todo[line]
 		glob.todo.remove(item)
 		glob.todo.insert(dest, item)
-		disp.arrange_items_menu()
 
 def edit_items() -> None:
 	unchanged = glob.todo.copy()
@@ -103,7 +101,8 @@ def postpone_items() -> None:
 			return None
 		to_postpone.append(glob.todo[line])	
 		glob.todo.pop(line)
-	add_to_postpone(to_postpone)	
+	if len(to_postpone):	
+		add_to_postpone(to_postpone)	
 	disp.confirm_edits_text(glob.todo == unchanged, "postponed")
 	sleep(1)	
 	return None
@@ -122,8 +121,6 @@ def rm_items() -> None:
 		line = gnrl.enter_digit(1, text, True)
 		if line == -1:
 			disp.confirm_edits_text(glob.todo == unchanged, "removed")	
-			if not len(glob.todo):
-				fman.clear_open_file()	
 			sleep(1)	
 			return None
 		elif line == -2:
