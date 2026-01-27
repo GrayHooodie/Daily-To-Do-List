@@ -11,11 +11,13 @@ def main() -> int:
 	fman.file_integrity()
 	fman.autoload()
 	show_title: bool = True
-	helping: bool = False
+	bypass: bool = False
 	while True:
-		if not helping:
-			disp.menu(show_title)
-		helping = False
+		disp.menu(show_title, bypass)
+		if bypass:
+			bypass = False
+		if show_title:
+			show_title = False
 		item = input(" > ")
 		if item.isdigit():
 			item = int(item) - 1
@@ -34,17 +36,21 @@ def main() -> int:
 						pf.arrange_items()
 					else:
 						gnrl.slowprint("Must have at least 2 list items to arrange.")
+						bypass = True
 				case 'e' | 'E':
 					if len(glob.todo) > 0:
 						pf.edit_items()
 					else:
 						gnrl.slowprint("Must have at least 1 list item to edit.")
+						bypass = True
 				case 'p' | 'P':
 					open_file = fman.read_open_file()
 					if not len(open_file):
 						gnrl.slowprint("Must have a saved file open to postpone items.")
+						bypass = True
 					elif open_file["lstype"] == "%c":
 						gnrl.slowprint("File must be a 'daily' to-do list to postpone items. A 'daily' to-do list is one that is named with the default of the current day's date.")
+						bypass = True
 					else:
 						pf.postpone_items()
 				case 'r' | 'R':
@@ -52,6 +58,7 @@ def main() -> int:
 						pf.rm_items()
 					else:
 						gnrl.slowprint("Must have at least 1 list item to remove.")
+						bypass = True
 				case 'c' | 'C':
 					pf.clear()
 				case 'S':
@@ -59,11 +66,12 @@ def main() -> int:
 						pf.save()
 					else:
 						gnrl.slowprint("Must have a list to save.")
+						bypass = True
 				case 'l' | 'L':
 					pf.load()
 				case 'h' | 'H':
 					gnrl.slowprint('', "'s'  Sort Items", "'a'  Arrange Items", "'e'  Edit Items", "'p'  Postpone Items", "'r'  Remove Items", '', "'C'  Clear List", "'S'  Save List To File", "'L'  Load List From File", '', "'h'  Show This Help Text", "'q'  Quit", '')
-					helping = True
+					bypass = True
 				case 'q' | 'Q':
 					open_file = fman.read_open_file()
 					if len(open_file) or len(glob.todo):
@@ -75,8 +83,7 @@ def main() -> int:
 						glob.todo.append(item)
 					else:
 						gnrl.slowprint(f"Unknown command '{item}'.") 
-		if show_title:
-			show_title = False	
+						bypass = True
 
 if __name__ == "__main__":
 	main()

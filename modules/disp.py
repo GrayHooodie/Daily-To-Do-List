@@ -95,7 +95,9 @@ def title() -> None:
 	gnrl.slowprint('', "---------------------------", "Welcome to your to-do list!", "---------------------------", '')
 	return None
 
-def menu(justopened: bool) -> None:
+def menu(justopened: bool, bypass: bool) -> None:
+	if bypass:
+		return None
 	system(glob.clear)
 	if justopened:
 		title()
