@@ -23,7 +23,8 @@ def read_list_type(filename: str) -> str:
 
 def move_old_dailys(files):
 	for f in files:
-		if gnrl.is_daily(f.split(glob.ext)[0]):
+		fstripped = f.split(glob.ext)[0]
+		if gnrl.is_daily(fstripped) and fstripped != glob.date:
 			archiveit(f)
 	return None
 
@@ -121,6 +122,8 @@ def open_list(file: str) -> list[str]:
 	if file_exists(file):	
 		with open(path.join(glob.listfiles, file), 'r') as f:
 			return [line.strip('\n') for line in f.readlines()]
+	else:
+		return []
 
 def autoload() -> None:
 	glob.todo = []
@@ -128,8 +131,6 @@ def autoload() -> None:
 	if len(open_file):
 		if open_file["lstype"] == "%d" and open_file["name"] != f"{glob.date}.todo":
 			if f"{glob.date}.todo" in listdir(glob.listfiles):
-				with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
-					f.write(f"{glob.date}.todo\n%d\n")
 				with open(path.join(glob.listfiles, f"{glob.date}.todo"), 'r') as f:
 					glob.todo = [line.strip('\n') for line in f.readlines()]
 				glob.todo.pop()
@@ -139,7 +140,8 @@ def autoload() -> None:
 				glob.todo.pop()
 				rm_crossed()
 				append_postponed()
-				clear_open_file()
+			with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
+				f.write(f"{glob.date}.todo\n%d\n")
 			return None
 		try:
 			with open(path.join(glob.listfiles, open_file["name"]), 'r') as f:

@@ -161,16 +161,13 @@ def autosave(using_clear: bool) -> None:
 	open_file = fman.read_open_file()
 	if len(open_file):
 		last_saved = fman.open_list(open_file["name"])
-		last_saved.pop()
+		if len(last_saved):
+			last_saved.pop()
 		if glob.todo == last_saved:
 			return None
 	if (len(open_file)) or (f"{glob.date}.todo" not in listdir(glob.listfiles)):
-		if not len(open_file):
-			files = fman.get_file_names()
-			fman.move_old_dailys(files)
-			open_file = {"name": f"{glob.date}.todo", "lstype": "%d"}
-			with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
-				f.write(f"{open_file["name"]}\n{open_file["lstype"]}\n")	
+		files = fman.get_file_names()
+		fman.move_old_dailys(files)
 		with open(path.join(glob.listfiles, open_file["name"]), 'w') as f:
 			for item in glob.todo:
 				f.write(f"{item}\n")
