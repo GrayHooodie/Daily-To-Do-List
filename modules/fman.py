@@ -98,11 +98,8 @@ def renameit(files, to_rename) -> None:
 			gnrl.slowprint('', f"Cancelled renaming of '{files[to_rename].split(glob.ext)[0]}'.", '')
 			sleep(glob.slptm)
 			return None
-		elif len(new_name) > 1:
+		elif len(new_name) > 0:
 			if not file_exists(new_name):
-				list_to_be_renamed = open_list(files[to_rename])
-				if list_to_be_renamed[-1] == "%d":
-					new_name += "(D)"
 				open_file = read_open_file()
 				if len(open_file) and files[to_rename] == open_file["name"]:
 					open_file["name"] = f"{new_name}.todo"
@@ -113,7 +110,7 @@ def renameit(files, to_rename) -> None:
 			else:
 				gnrl.slowprint(f"Name '{new_name}' already in use. If you wish to use the name '{new_name}' for this file, first delete the file currently using that name.")
 		else:
-			gnrl.slowprint("Name must be longer than one character.")
+			gnrl.slowprint("Name must be at least one character long.")
 
 def file_exists(filename: str) -> bool:
 	files = get_file_names()
