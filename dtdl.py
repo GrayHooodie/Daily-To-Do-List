@@ -38,7 +38,7 @@ def main() -> int:
 						gnrl.slowprint("Must have at least 2 list items to arrange.")
 						bypass = True
 				case 'e' | 'E':
-					if len(glob.todo) > 0:
+					if len(glob.todo):
 						pf.edit_items()
 					else:
 						gnrl.slowprint("Must have at least 1 list item to edit.")
@@ -54,7 +54,7 @@ def main() -> int:
 					else:
 						pf.postpone_items()
 				case 'r' | 'R':
-					if len(glob.todo) > 0:
+					if len(glob.todo):
 						pf.rm_items()
 					else:
 						gnrl.slowprint("Must have at least 1 list item to remove.")
@@ -62,13 +62,17 @@ def main() -> int:
 				case 'c' | 'C':
 					pf.clear()
 				case 'S':
-					if len(glob.todo) > 0:
+					if len(glob.todo):
 						pf.save()
 					else:
 						gnrl.slowprint("Must have a list to save.")
 						bypass = True
 				case 'l' | 'L':
-					pf.load()
+					if len(fman.get_file_names()):
+						pf.load()
+					else:
+						gnrl.slowprint("No files to show.")
+						bypass = True
 				case 'h' | 'H':
 					gnrl.slowprint('', "'s'  Sort Items", "'a'  Arrange Items", "'e'  Edit Items", "'p'  Postpone Items", "'r'  Remove Items", '', "'C'  Clear List / Close File", "'S'  Save List To File", "'L'  Load List From File", '', "'h'  Show This Help Text", "'q'  Quit", '')
 					bypass = True
