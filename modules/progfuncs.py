@@ -263,6 +263,8 @@ def load() -> None:
 			return None
 		if not invalid_line:
 			disp.load_menu()
+		else:
+			invalid_line = False
 		files = fman.get_file_names()
 		open_file = fman.read_open_file()
 		select = input(" > ").lower()
