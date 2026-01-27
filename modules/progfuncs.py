@@ -62,7 +62,7 @@ def edit_items() -> None:
 			glob.todo = unchanged
 			sleep(glob.slptm)
 			return None
-		second_text = {"context": f"Enter the new text for line {line + 1}. 'c' to cancel edits on line {line + 1}.", "number": "Item can't be a number.", "cancel": f"Cancelled edits on line {line + 1}", "length": "Item must be two or more characters."}
+		second_text = {"context": f"Enter the new text for line {line + 1}. 'c' to cancel edits on line {line + 1}.", "number": "Item can't be a number.", "cancel": f"Cancelled edits on line {line + 1}.", "length": "Item must be two or more characters."}
 		edited = edit_item_text(second_text)
 		if edited == 'c':
 			sleep(glob.slptm)
@@ -130,15 +130,24 @@ def rm_items() -> None:
 			return None
 		glob.todo.pop(line)
 
-def clear() -> None: 
-	gnrl.slowprint('', "Are you sure you want to clear your to-do list? (y/N)", '')
+def clear() -> None:
+	open_file = fman.read_open_file()
+	if len(open_file):
+		gnrl.slowprint('', f"Are you sure you want to close file '{open_file["name"]}'? Progress will be saved. (y/N)", '')
+	else:
+		gnrl.slowprint('', "Are you sure you want to clear your to-do list? (y/N)", '')
 	while True:
 		check = input(" > ")
 		match check:
 			case 'y' | 'Y':
+				if len(open_file):
+					autosave()
 				fman.clear_open_file()
 				glob.todo = []
-				gnrl.slowprint('', "To-do list cleared.", '')
+				if len(open_file):
+					gnrl.slowprint('', f"File successfully closed. Progress successfully saved to '{path.join(glob.listfiles, open_file["name"])}'.", '')
+				else:
+					gnrl.slowprint('', "To-do list successfully cleared.", '')
 				sleep(glob.slptm)	
 				return None
 			case 'n' | 'N' | '':
@@ -166,7 +175,7 @@ def autosave() -> None:
 			for item in glob.todo:
 				f.write(f"{item}\n")
 			f.write(f"{open_file["lstype"]}\n")
-		gnrl.slowprint('', f"Saved list to '{open_file["name"]}'.", '')
+		gnrl.slowprint('', f"List successfully saved to '{path.join(glob.listfiles, open_file["name"])}'.", '')
 		sleep(glob.slptm)
 	else:
 		prompt_save()
@@ -216,7 +225,7 @@ def save() -> None:
 		for item in glob.todo:
 			f.write(f"{item}\n")
 		f.write(f"{identifier}\n")
-	gnrl.slowprint('', f"File written successfully to '{path.join(glob.listfiles, file)}.todo'.", '')
+	gnrl.slowprint('', f"List successfully saved to '{path.join(glob.listfiles, file)}.todo'.", '')
 	sleep(glob.slptm)
 	return None
 
@@ -297,6 +306,6 @@ def load() -> None:
 				case _:
 					gnrl.slowprint(glob.invalid_fn)
 					invalid_line = True
-	gnrl.slowprint('', f"File {files[select]} successfully loaded.", '')
+	gnrl.slowprint('', f"File '{files[select]}' successfully loaded.", '')
 	sleep(glob.slptm)
 	return None
