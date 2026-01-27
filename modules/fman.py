@@ -213,7 +213,7 @@ def confirm(filename: str, function: dict) -> None:
 					gnrl.slowprint('', "File successfully deleted.", '')
 				elif function["type"] == "archive":
 					archiveit(filename)
-					gnrl.slowprint('', f"File successfully archived. It can be found again in the '{path.join(glob.listfiles, "archive")}' directory.", '')
+					gnrl.slowprint('', f"File successfully archived. It can be found at '{path.join(glob.listfiles, "archive", filename)}'.", '')
 				return None
 			case _:
 				gnrl.slowprint(glob.y_or_n)

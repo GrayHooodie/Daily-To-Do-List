@@ -141,11 +141,14 @@ def clear() -> None:
 		match check:
 			case 'y' | 'Y':
 				if len(open_file):
-					autosave(True)
+					saved = autosave(True)
 				fman.clear_open_file()
 				glob.todo = []
 				if len(open_file):
-					gnrl.slowprint('', f"File successfully closed. Progress successfully saved to '{path.join(glob.listfiles, open_file["name"])}'.", '')
+					if saved:
+						gnrl.slowprint('', f"File successfully closed. Progress successfully saved to '{path.join(glob.listfiles, open_file["name"])}'.", '')
+					else:
+						gnrl.slowprint('', "File successfully closed.", '')
 				else:
 					gnrl.slowprint('', "To-do list successfully cleared.", '')
 				sleep(glob.slptm)	
@@ -157,14 +160,14 @@ def clear() -> None:
 			case _:
 				gnrl.slowprint(glob.y_or_n)
 
-def autosave(using_clear: bool) -> None:
+def autosave(using_clear: bool) -> bool:
 	open_file = fman.read_open_file()
 	if len(open_file):
 		last_saved = fman.open_list(open_file["name"])
 		if len(last_saved):
 			last_saved.pop()
 		if glob.todo == last_saved:
-			return None
+			return False
 	if (len(open_file)) or (f"{glob.date}.todo" not in listdir(glob.listfiles)):
 		files = fman.get_file_names()
 		fman.move_old_dailys(files)
@@ -177,7 +180,7 @@ def autosave(using_clear: bool) -> None:
 			sleep(glob.slptm)
 	else:
 		prompt_save()
-	return None
+	return True
 
 def save() -> None:
 	disp.save_menu()
