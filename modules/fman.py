@@ -57,7 +57,7 @@ def archive_load_file(files: list[str]) -> None:
 				return None
 			else:
 				gnrl.slowprint(glob.invalid_fn)
-		elif to_rename.lower() == 'c':
+		elif to_archive.lower() == 'c':
 			gnrl.slowprint('', "Cancelled archiving.", '')
 			sleep(glob.slptm)
 			return None
