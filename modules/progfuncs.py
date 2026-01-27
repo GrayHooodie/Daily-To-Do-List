@@ -89,13 +89,10 @@ def edit_item_text(text: dict) -> str:
 
 def postpone_items() -> None:
 	unchanged = glob.todo.copy()
-	crossed = False
 	to_postpone = []
-	text = {"context": "Enter line number(s) to postpone. Empty return to finish postponing items. 'c' to cancel.", "line_num": glob.invalid_ln}
+	text = {"context": "Enter line number(s) to postpone. Empty return to finish postponing items. 'c' to cancel.", "line_num": glob.invalid_ln, "crossed": "Item can't be crossed-off."}
 	while True:
-		if not crossed:
-			disp.postpone_items_menu()
-		crossed = False
+		disp.postpone_items_menu()
 		line = gnrl.enter_digit(1, text, True)
 		if line == -1:
 			break
@@ -104,11 +101,6 @@ def postpone_items() -> None:
 			glob.todo = unchanged	
 			sleep(1)	
 			return None
-		elif ord(glob.todo[line][1]) == 822:
-			gnrl.slowprint("Item can't be crossed-off.")
-			crossed = True
-			sleep(1)
-			continue
 		to_postpone.append(glob.todo[line])	
 		glob.todo.pop(line)
 	add_to_postpone(to_postpone)	

@@ -22,7 +22,10 @@ def enter_digit(base: int, text: dict, enter_to_confirm: bool) -> int:
 		if num.isdigit():
 			num = int(num) - base
 			if num in range(len(glob.todo)):
-				return num
+				if "postpone" in text["context"] and ord(glob.todo[num][1]) == 822:
+					slowprint(text["crossed"])
+				else:
+					return num	
 		elif num.lower() == 'c':
 			if "cancel" in text:
 				slowprint('', text["cancel"], '')
