@@ -76,6 +76,9 @@ def rename_load_file(files: list[str]) -> None:
 		if to_rename.isdigit():
 			to_rename = int(to_rename) - 1
 			if to_rename in range(len(files)):
+				if gnrl.is_daily(files[to_rename].split(glob.ext)[0]):
+					gnrl.slowprint("Can't rename a daily list.")
+					continue	
 				renameit(files, to_rename)
 				return None
 			else:
