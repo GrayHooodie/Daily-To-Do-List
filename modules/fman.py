@@ -53,13 +53,13 @@ def archive_load_file(files: list[str]) -> None:
 			to_archive = int(to_archive) - 1
 			if to_archive in range(len(files)):
 				confirm(files[to_archive], {"type": "archive", "pres-verb": "archive", "past-verb": "archival"})
-				sleep(1.5)
+				sleep(glob.slptm)
 				return None
 			else:
 				gnrl.slowprint(glob.invalid_fn)
 		elif to_rename.lower() == 'c':
 			gnrl.slowprint('', "Cancelled archiving.", '')
-			sleep(1.5)
+			sleep(glob.slptm)
 			return None
 		else:
 			gnrl.slowprint(glob.invalid_fn)
@@ -81,7 +81,7 @@ def rename_load_file(files: list[str]) -> None:
 				gnrl.slowprint(glob.invalid_fn)
 		elif to_rename.lower() == 'c':
 			gnrl.slowprint('', "Cancelled renaming.", '')
-			sleep(1.5)
+			sleep(glob.slptm)
 			return None
 		else:
 			gnrl.slowprint(glob.invalid_fn)
@@ -92,7 +92,7 @@ def renameit(files, to_rename) -> None:
 		new_name = input(" > ")
 		if new_name.lower() == 'c':
 			gnrl.slowprint('', f"Cancelled renaming of '{files[to_rename].split(glob.ext)[0]}'.", '')
-			sleep(1.5)
+			sleep(glob.slptm)
 			return None
 		elif len(new_name) > 1:
 			if not file_exists(new_name):
@@ -172,13 +172,13 @@ def delete_load_file(files: list[str]) -> None:
 			to_delete = int(to_delete) - 1
 			if to_delete in range(len(files)):
 				confirm(files[to_delete], {"type": "delete", "pres-verb": "delete", "past-verb": "deletion"})
-				sleep(1.5)
+				sleep(glob.slptm)
 				return None
 			else:
 				gnrl.slowprint(glob.invalid_fn)
 		elif to_delete.lower() == 'c':
 			gnrl.slowprint('', "Cancelled file deletion.", '')
-			sleep(1.5)
+			sleep(glob.slptm)
 			return None
 		else:
 			gnrl.slowprint(glob.invalid_fn)

@@ -32,7 +32,8 @@ def enter_digit(base: int, text: dict, enter_to_confirm: bool) -> int:
 			return -2
 		elif enter_to_confirm and num == '':
 			return -1	
-		slowprint(text["line_num"])
+		else:
+			slowprint(text["line_num"])
 
 def is_daily(file: str) -> bool:
 	isdate = file.split('-')

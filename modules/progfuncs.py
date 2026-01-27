@@ -31,17 +31,17 @@ def arrange_items() -> None:
 		line = gnrl.enter_digit(1, first_text, True)
 		if line == -1:
 			disp.confirm_edits_text(glob.todo == unchanged, "arranged")
-			sleep(1)
+			sleep(glob.slptm)
 			return None
 		elif line == -2:
 			gnrl.slowprint('', glob.no_chng, '')
 			glob.todo = unchanged
-			sleep(1)
+			sleep(glob.slptm)
 			return None	
 		second_text = {"context": f"Enter the new position of line {line + 1}. 'c' to cancel line {line + 1} arrangement.", "line_num": glob.invalid_ln, "cancel": f"Cancelled arrangement of line {line + 1}."}
 		dest = gnrl.enter_digit(1, second_text, False)
 		if dest == -2:
-			sleep(1)
+			sleep(glob.slptm)
 			continue
 		item = glob.todo[line]
 		glob.todo.remove(item)
@@ -55,17 +55,17 @@ def edit_items() -> None:
 		line = gnrl.enter_digit(1, first_text, True)
 		if line == -1:
 			disp.confirm_edits_text(glob.todo == unchanged, 'edited')
-			sleep(1)
+			sleep(glob.slptm)
 			return None
 		elif line == -2:
 			gnrl.slowprint('', glob.no_chng, '')
 			glob.todo = unchanged
-			sleep(1)
+			sleep(glob.slptm)
 			return None
 		second_text = {"context": f"Enter the new text for line {line + 1}. 'c' to cancel edits on line {line + 1}.", "number": "Item can't be a number.", "cancel": f"Cancelled edits on line {line + 1}", "length": "Item must be two or more characters."}
 		edited = edit_item_text(second_text)
 		if edited == 'c':
-			sleep(1)
+			sleep(glob.slptm)
 			continue
 		glob.todo.pop(line)
 		glob.todo.insert(line, edited)
@@ -97,14 +97,14 @@ def postpone_items() -> None:
 		elif line == -2:
 			gnrl.slowprint('', glob.no_chng, '')
 			glob.todo = unchanged	
-			sleep(1)	
+			sleep(glob.slptm)	
 			return None
 		to_postpone.append(glob.todo[line])	
 		glob.todo.pop(line)
 	if len(to_postpone):	
 		add_to_postpone(to_postpone)	
 	disp.confirm_edits_text(glob.todo == unchanged, "postponed")
-	sleep(1)	
+	sleep(glob.slptm)	
 	return None
 
 def add_to_postpone(to_postpone: list[str]) -> None:
@@ -121,12 +121,12 @@ def rm_items() -> None:
 		line = gnrl.enter_digit(1, text, True)
 		if line == -1:
 			disp.confirm_edits_text(glob.todo == unchanged, "removed")	
-			sleep(1)	
+			sleep(glob.slptm)	
 			return None
 		elif line == -2:
 			gnrl.slowprint('', glob.no_chng, '')
 			glob.todo = unchanged
-			sleep(1)
+			sleep(glob.slptm)
 			return None
 		glob.todo.pop(line)
 
@@ -139,11 +139,11 @@ def clear() -> None:
 				fman.clear_open_file()
 				glob.todo = []
 				gnrl.slowprint('', "To-do list cleared.", '')
-				sleep(1)	
+				sleep(glob.slptm)	
 				return None
 			case 'n' | 'N' | '':
 				gnrl.slowprint('', glob.no_chng, '')
-				sleep(1)
+				sleep(glob.slptm)
 				return None 
 			case _:
 				gnrl.slowprint(glob.y_or_n)
@@ -167,7 +167,7 @@ def autosave() -> None:
 				f.write(f"{item}\n")
 			f.write(f"{open_file["lstype"]}\n")
 		gnrl.slowprint('', f"Saved list to '{open_file["name"]}'.", '')
-		sleep(1)
+		sleep(glob.slptm)
 	else:
 		prompt_save()
 	return None
@@ -198,7 +198,7 @@ def save() -> None:
 				gnrl.slowprint("Please name your file.")
 		elif file == 'c':
 			gnrl.slowprint('', "Cancelled file save.", '')
-			sleep(1)
+			sleep(glob.slptm)
 			return None
 		elif gnrl.is_daily(file):
 			gnrl.slowprint("Name can't be a date in the format of 'YYYY-MM-DD'.")
@@ -217,7 +217,7 @@ def save() -> None:
 			f.write(f"{item}\n")
 		f.write(f"{identifier}\n")
 	gnrl.slowprint('', f"File written successfully to '{path.join(glob.listfiles, file)}.todo'.", '')
-	sleep(1)
+	sleep(glob.slptm)
 	return None
 
 def prompt_save() -> None:
@@ -252,7 +252,7 @@ def load() -> None:
 	while True:
 		if not len(fman.get_file_names()):
 			gnrl.slowprint('', "No files to show.", '')
-			sleep(1)
+			sleep(glob.slptm)
 			return None
 		if not invalid_line:
 			disp.load_menu()
@@ -286,7 +286,7 @@ def load() -> None:
 			match select:
 				case 'c':
 					gnrl.slowprint('', "No file loaded.", '')
-					sleep(1)
+					sleep(glob.slptm)
 					return None
 				case 'r':	
 					fman.rename_load_file(files)
@@ -298,5 +298,5 @@ def load() -> None:
 					gnrl.slowprint(glob.invalid_fn)
 					invalid_line = True
 	gnrl.slowprint('', f"File {files[select]} successfully loaded.", '')
-	sleep(1)
+	sleep(glob.slptm)
 	return None

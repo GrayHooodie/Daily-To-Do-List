@@ -14,6 +14,7 @@ listfiles: str = path.join(home, "Documents", "To-Do Lists")
 conffiles: str = path.join(home, ".dtdl", "config")
 progfiles: str = path.join(home, ".dtdl", "programfiles")
 ext: str = ".todo"
+slptm = 1.5
 
 invalid_ln: str = "Please enter a valid line number."
 invalid_fn: str = "Please enter a valid file number."
