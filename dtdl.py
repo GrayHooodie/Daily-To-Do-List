@@ -75,7 +75,7 @@ def main() -> int:
 				case 'q' | 'Q':
 					open_file = fman.read_open_file()
 					if len(open_file) or len(glob.todo):
-						pf.autosave()
+						pf.autosave(False)
 					system(glob.clear)
 					return 0
 				case _:

@@ -141,7 +141,7 @@ def clear() -> None:
 		match check:
 			case 'y' | 'Y':
 				if len(open_file):
-					autosave()
+					autosave(True)
 				fman.clear_open_file()
 				glob.todo = []
 				if len(open_file):
@@ -157,7 +157,7 @@ def clear() -> None:
 			case _:
 				gnrl.slowprint(glob.y_or_n)
 
-def autosave() -> None:
+def autosave(using_clear: bool) -> None:
 	open_file = fman.read_open_file()
 	if len(open_file):
 		last_saved = fman.open_list(open_file["name"])
@@ -175,8 +175,9 @@ def autosave() -> None:
 			for item in glob.todo:
 				f.write(f"{item}\n")
 			f.write(f"{open_file["lstype"]}\n")
-		gnrl.slowprint('', f"List successfully saved to '{path.join(glob.listfiles, open_file["name"])}'.", '')
-		sleep(glob.slptm)
+		if not using_clear:	
+			gnrl.slowprint('', f"List successfully saved to '{path.join(glob.listfiles, open_file["name"])}'.", '')
+			sleep(glob.slptm)
 	else:
 		prompt_save()
 	return None
