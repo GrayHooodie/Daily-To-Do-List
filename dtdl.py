@@ -65,13 +65,13 @@ def main() -> int:
 					if len(glob.todo):
 						pf.save()
 					else:
-						gnrl.slowprint("Must have a list to save.")
+						gnrl.slowprint("Must have at least 1 list item to save.")
 						bypass = True
 				case 'l' | 'L':
 					if len(fman.get_file_names()):
 						pf.load()
 					else:
-						gnrl.slowprint("No files to show.")
+						gnrl.slowprint("Must have at least 1 saved file to load.")
 						bypass = True
 				case 'h' | 'H':
 					gnrl.slowprint('', "'s'  Sort Items", "'a'  Arrange Items", "'e'  Edit Items", "'p'  Postpone Items", "'r'  Remove Items", '', "'C'  Clear List / Close File", "'S'  Save List To File", "'L'  Load List From File", '', "'h'  Show This Help Text", "'q'  Quit", '')
