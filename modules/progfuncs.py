@@ -276,7 +276,8 @@ def load() -> None:
 			if select in range(len(files)):
 				if len(open_file):
 					last_saved = fman.open_list(open_file["name"])
-					last_saved.pop()
+					if len(last_saved):
+						last_saved.pop()
 					if glob.todo != last_saved:
 						prompt_save()
 				elif len(glob.todo):

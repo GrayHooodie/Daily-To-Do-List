@@ -160,8 +160,8 @@ def default_items() -> None:
 
 def rm_old_default_items() -> None:
 	default_items = read_default_items()
-	for item in glob.todo:
-		if item in default_items:
+	for item in default_items:
+		if item in glob.todo:
 			glob.todo.remove(item)
 	return None
 
