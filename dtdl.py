@@ -46,10 +46,10 @@ def main() -> int:
 				case 'p' | 'P':
 					open_file = fman.read_open_file()
 					if not len(open_file):
-						gnrl.slowprint("Must have a saved file open to postpone items.")
+						gnrl.slowprint("Must have a saved 'daily' list open to postpone items.")
 						bypass = True
 					elif open_file["lstype"] == "%c":
-						gnrl.slowprint("File must be a 'daily' to-do list to postpone items. A 'daily' to-do list is one that is named with the default of the current day's date.")
+						gnrl.slowprint("Must be a 'daily' to-do list to postpone items. A 'daily' to-do list is one that is named with the default of the current day's date.")
 						bypass = True
 					else:
 						pf.postpone_items()
@@ -71,7 +71,7 @@ def main() -> int:
 					if len(fman.get_file_names()):
 						pf.load()
 					else:
-						gnrl.slowprint("Must have at least 1 saved file to load.")
+						gnrl.slowprint("Must have at least 1 saved list to load.")
 						bypass = True
 				case 'h' | 'H':
 					gnrl.slowprint('', "'s'  Sort Items", "'a'  Arrange Items", "'e'  Edit Items", "'p'  Postpone Items", "'r'  Remove Items", '', "'C'  Clear List / Close File", "'S'  Save List To File", "'L'  Load List From File", '', "'h'  Show This Help Text", "'q'  Quit", '')
