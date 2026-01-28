@@ -152,23 +152,23 @@ def autoload() -> None:
 	return None
 
 def default_items() -> None:
-    rm_old_default_items()
-    default_items = read_default_items()
-    for i in range(len(default_items)):
-        glob.todo.insert(i, default_items[i])
+	rm_old_default_items()
+	default_items = read_default_items()
+	for i in range(len(default_items)):
+		glob.todo.insert(i, default_items[i])
 	return None
 
 def rm_old_default_items() -> None:
 	default_items = read_default_items()
-    for item in glob.todo:
-        if item in default_items:
-            glob.todo.remove(item)
-    return None
+	for item in glob.todo:
+		if item in default_items:
+			glob.todo.remove(item)
+	return None
 
 def read_default_items() -> list[str]:
-    with open(path.join(glob.conffiles, "daily-default"), 'r') as f:
-	    items = [line.strip("\n") for line in f.readlines()]
-    return items
+	with open(path.join(glob.conffiles, "daily-default"), 'r') as f:
+		items = [line.strip("\n") for line in f.readlines()]
+	return items
 
 def rm_crossed() -> None:
 	uncrossed = []
