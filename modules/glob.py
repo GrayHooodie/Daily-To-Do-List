@@ -4,6 +4,8 @@ from pathlib import Path
 
 
 def get_tweak_value(tweakname: str, default: int or float) -> int:
+    with open(usr_tweaks, 'r') as f:
+        tweaks = [line.split('\n') for line in f.readlines()]
     for line in tweaks:
         if tweakname in line:
             if len(line.split('=')) == 2:
@@ -40,9 +42,6 @@ ext: str = ".todo"
 slptm = 1.5
 
 # app tweaks (user can set these)
-with open(usr_tweaks, 'r') as f:
-    tweaks = [line.split('\n') for line in f.readlines()]
-
 # maxlength
 maxlength = get_tweak_int("maxvalue", 50)
 
