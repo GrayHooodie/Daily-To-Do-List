@@ -51,6 +51,6 @@ def slowprint(*text) -> None:
 	delay: float = 0.02
 	for line in text:
 		print(line)
-		sleep(glob.textspeed)
+		sleep(glob.get_tweak_float("textspeed", 0.02))
 	return None
 
