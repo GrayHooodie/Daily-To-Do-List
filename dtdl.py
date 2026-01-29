@@ -16,7 +16,7 @@ def main() -> int:
 	show_title: bool = True
 	bypass: bool = False
 	while True:
-		pages = (len(glob.todo) / maxlength) + (len(glob.todo) % maxlength > 0)	
+		pages = (int(len(glob.todo) / maxlength)) + (len(glob.todo) % maxlength > 0)	
 		disp.menu(show_title, bypass, page, pages)
 		if bypass:
 			bypass = False
