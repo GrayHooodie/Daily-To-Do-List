@@ -6,6 +6,7 @@ from pathlib import Path
 def get_tweak_value(tweakname: str, default: int or float):
     with open(usr_tweaks, 'r') as f:
         tweak = [line.split('\n') for line in f.readlines() if tweakname in line]
+        print(tweak)
     if len(tweak) and len(tweak[0].split('=')) == 2:
         return tweak[0].split('=')[1]
     return default
