@@ -13,8 +13,8 @@ def list_items(page: int, pages: int) -> None:
 	if len(glob.todo):
 		num = 1
 		for _ in range(page):
-			num += glob.get_tweak_float("textspeed", 0.02)
-		for item in glob.todo[((page - 1) * glob.get_tweak_float("textspeed", 0.02)):(page * glob.get_tweak_float("textspeed", 0.02))]:
+			num += glob.get_tweak_int("maxlength", 50)
+		for item in glob.todo[((page - 1) * glob.get_tweak_int("maxlength", 50)):(page * glob.get_tweak_int("maxlength", 50))]:
 			if num < 10:
 				gnrl.slowprint(f" {num}.   {item}")
 			elif num < 100:
