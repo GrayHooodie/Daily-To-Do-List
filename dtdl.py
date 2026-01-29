@@ -7,11 +7,10 @@ import modules.glob as glob
 import modules.gnrl as gnrl
 import modules.progfuncs as pf
 
-maxlength = glob.get_tweak_int("maxvalue", 50)
-textspeed = glob.get_tweak_float("textspeed", 0.02)
-
 def main() -> int:
 	fman.file_integrity()
+	maxlength = glob.get_tweak_int("maxvalue", 50)
+	textspeed = glob.get_tweak_float("textspeed", 0.02)	
 	fman.autoload()
 	page = 1
 	show_title: bool = True
