@@ -6,6 +6,12 @@ import modules.glob as glob
 import modules.gnrl as gnrl
 
 def list_items(page: int, pages: int) -> None:
+	maxlength = glob.get_tweak_int("maxlength", 50)
+	start_splice = (page - 1) * maxlength
+	if start_splice + maxlength <= len(glob.todo):
+		end_splice = start_splice + maxlength
+	else:
+		end_splice = len(glob.todo)
 	open_file = fman.read_open_file()
 	if len(open_file):
 		gnrl.slowprint(f"Current File: {open_file["name"]}")
@@ -13,8 +19,8 @@ def list_items(page: int, pages: int) -> None:
 	if len(glob.todo):
 		num = 1
 		for _ in range(page):
-			num += glob.get_tweak_int("maxlength", 50)
-		for item in glob.todo[((page - 1) * glob.get_tweak_int("maxlength", 50)):(page * glob.get_tweak_int("maxlength", 50))]:
+			num += maxlength
+		for item in glob.todo[start_splice:end_splice]:
 			if num < 10:
 				gnrl.slowprint(f" {num}.   {item}")
 			elif num < 100:
@@ -25,13 +31,13 @@ def list_items(page: int, pages: int) -> None:
 		if page > 1:
 			last_page = str(page - 1) 
 		else:
-			last_page = " "
+			last_page = ' '
 		cur_page = str(page) + '\u0332'
 		if page < pages:
 			next_page = str(page + 1)
 		else:
-			next_page = " "
-		gnrl.slowprint(f"p: {last_page} {cur_page} {next_page}", "")
+			next_page = ' '
+		gnrl.slowprint('', f"p: {last_page} {cur_page} {next_page}", '')
 	else:
 		gnrl.slowprint(" (Empty)")
 	gnrl.slowprint('')
