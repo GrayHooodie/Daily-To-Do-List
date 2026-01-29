@@ -9,7 +9,7 @@ import modules.progfuncs as pf
 
 def main() -> int:
 	fman.file_integrity()
-	maxlength = glob.get_tweak_int("maxvalue", 50)
+	maxlength = glob.get_tweak_int("maxlength", 50)
 	textspeed = glob.get_tweak_float("textspeed", 0.02)	
 	fman.autoload()
 	page = 1
