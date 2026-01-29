@@ -6,7 +6,7 @@ import modules.glob as glob
 import modules.gnrl as gnrl
 
 def list_items(page: int, pages: int) -> None:
-	maxlength = glob.get_tweak_int("maxlength", 5)
+	maxlength = glob.get_tweak_int("maxlength", 50)
 	start_splice = (page - 1) * maxlength
 	if start_splice + maxlength <= len(glob.todo):
 		end_splice = start_splice + maxlength
