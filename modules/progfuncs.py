@@ -38,14 +38,22 @@ def arrange_items() -> None:
 			glob.todo = unchanged
 			sleep(glob.slptm)
 			return None	
-		second_text = {"context": f"Enter the new position of line {line + 1}. 'c' to cancel line {line + 1} arrangement.", "line_num": glob.invalid_ln, "cancel": f"Cancelled arrangement of line {line + 1}."}
-		dest = gnrl.enter_digit(1, second_text, False)
-		if dest == -2:
-			sleep(glob.slptm)
+		elif line == -3:
 			continue
-		item = glob.todo[line]
-		glob.todo.remove(item)
-		glob.todo.insert(dest, item)
+		second_text = {"context": f"Enter the new position of line {line + 1}. 'c' to cancel line {line + 1} arrangement.", "line_num": glob.invalid_ln, "cancel": f"Cancelled arrangement of line {line + 1}."}
+		while True:
+			dest = gnrl.enter_digit(1, second_text, False)
+			if dest == -2:
+				sleep(glob.slptm)
+				break
+			elif dest == -3:
+				disp.arrange_items_menu()
+				continue
+			else:
+				item = glob.todo[line]
+				glob.todo.remove(item)
+				glob.todo.insert(dest, item)
+				break
 
 def edit_items() -> None:
 	unchanged = glob.todo.copy()
@@ -62,6 +70,8 @@ def edit_items() -> None:
 			glob.todo = unchanged
 			sleep(glob.slptm)
 			return None
+		elif line == -3:
+			continue
 		second_text = {"context": f"Enter the new text for line {line + 1}. 'c' to cancel edits on line {line + 1}.", "number": "Item can't be a number.", "cancel": f"Cancelled edits on line {line + 1}.", "length": "Item must be two or more characters."}
 		edited = edit_item_text(second_text)
 		if edited == 'c':
@@ -99,6 +109,8 @@ def postpone_items() -> None:
 			glob.todo = unchanged	
 			sleep(glob.slptm)	
 			return None
+		elif line == -3:
+			continue
 		to_postpone.append(glob.todo[line])	
 		glob.todo.pop(line)
 	if len(to_postpone):	
@@ -128,6 +140,8 @@ def rm_items() -> None:
 			glob.todo = unchanged
 			sleep(glob.slptm)
 			return None
+		elif line == -3:
+			continue
 		glob.todo.pop(line)
 
 def clear() -> None:
@@ -166,8 +180,8 @@ def autosave(using_clear: bool) -> bool:
 		last_saved = fman.open_list(open_file["name"])
 		if len(last_saved):
 			last_saved.pop()
-		if glob.todo == last_saved:
-			return False
+			if glob.todo == last_saved:
+				return False
 	if (len(open_file)) or (f"{glob.date}.todo" not in listdir(glob.listfiles)):
 		files = fman.get_file_names()
 		fman.move_old_dailys(files)

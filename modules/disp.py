@@ -4,23 +4,44 @@ from time import sleep
 import modules.fman as fman
 import modules.glob as glob
 import modules.gnrl as gnrl
+import modules.twks as twks
+
 
 def list_items() -> None:
+	start_splice = (twks.page - 1) * twks.pagelength
+	if start_splice + twks.pagelength <= len(glob.todo):
+		end_splice = start_splice + twks.pagelength
+	else:
+		end_splice = len(glob.todo)
 	open_file = fman.read_open_file()
 	if len(open_file):
 		gnrl.slowprint(f"Current File: {open_file["name"]}")
 	gnrl.slowprint('', "To-Do List:", '')
-	if len(glob.todo) > 0:
+	if len(glob.todo):
 		num = 1
-		for item in glob.todo:
+		for _ in range(twks.page - 1):
+			num += twks.pagelength
+		for item in glob.todo[start_splice:end_splice]:
 			if num < 10:
+				gnrl.slowprint(f" {num}.   {item}")
+			elif num < 100:
 				gnrl.slowprint(f" {num}.  {item}")
 			else:
 				gnrl.slowprint(f" {num}. {item}")
 			num += 1
+		if twks.page > 1:
+			last_page = str(twks.page - 1) 
+		else:
+			last_page = ' '
+		cur_page = str(twks.page) + '\u0332'
+		if twks.page < twks.pages:
+			next_page = str(twks.page + 1)
+		else:
+			next_page = ' '
+		gnrl.slowprint('', f"p: {last_page} {cur_page} {next_page}", '')
 	else:
 		gnrl.slowprint(" (Empty)")
-	gnrl.slowprint('')
+	#gnrl.slowprint('')
 	return None
 
 def list_files(*function_header: str) -> None:
