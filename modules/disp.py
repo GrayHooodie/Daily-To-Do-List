@@ -18,7 +18,7 @@ def list_items(page: int, pages: int) -> None:
 	gnrl.slowprint('', "To-Do List:", '')
 	if len(glob.todo):
 		num = 1
-		for _ in range(page):
+		for _ in range(page - 1):
 			num += maxlength
 		for item in glob.todo[start_splice:end_splice]:
 			if num < 10:

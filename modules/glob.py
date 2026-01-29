@@ -13,14 +13,16 @@ def get_tweak_value(tweakname: str, default: int or float):
     return default
 
 def get_tweak_int(tweakname: str, default: int) -> int:
+    tweak_value = get_tweak_value(tweakname, default)
     try:
-        return int(get_tweak_value(tweakname, default))
+        return int(tweak_value)
     except ValueError:
         return default
 
 def get_tweak_float(tweakname: str, default: float) -> float:
+    tweak_value = get_tweak_value(tweakname, default)
     try:
-        return float(get_tweak_value(tweakname, default))
+        return float(tweak_value)
     except ValueError:
         return default
 
