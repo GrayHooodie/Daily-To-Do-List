@@ -41,13 +41,6 @@ usr_tweaks: str = path.join(conffiles, "tweaks.conf")
 ext: str = ".todo"
 slptm = 1.5
 
-# app tweaks (user can set these)
-# maxlength
-maxlength = get_tweak_int("maxvalue", 50)
-
-# printspeed
-textspeed = get_tweak_float("textspeed", 0.02)
-
 invalid_ln: str = "Please enter a valid line number."
 invalid_fn: str = "Please enter a valid file number."
 y_or_n: str = "Enter 'y' or 'n'."

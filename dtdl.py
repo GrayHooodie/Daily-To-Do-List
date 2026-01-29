@@ -7,6 +7,9 @@ import modules.glob as glob
 import modules.gnrl as gnrl
 import modules.progfuncs as pf
 
+maxlength = glob.get_tweak_int("maxvalue", 50)
+textspeed = glob.get_tweak_float("textspeed", 0.02)
+
 def main() -> int:
 	fman.file_integrity()
 	fman.autoload()
@@ -14,7 +17,7 @@ def main() -> int:
 	show_title: bool = True
 	bypass: bool = False
 	while True:
-		pages = (len(glob.todo) / glob.maxlength) + (len(glob.todo) % glob.maxlength > 0)	
+		pages = (len(glob.todo) / maxlength) + (len(glob.todo) % maxlength > 0)	
 		disp.menu(show_title, bypass, page, pages)
 		if bypass:
 			bypass = False
