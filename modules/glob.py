@@ -3,7 +3,7 @@ from os import name, path
 from pathlib import Path
 
 
-def get_tweak_value(tweakname: str, default: int or float) -> int or float:
+def get_tweak_value(tweakname: str, default: int or float):
     with open(usr_tweaks, 'r') as f:
         tweaks = [line.split('\n') for line in f.readlines()]
     for line in tweaks:
