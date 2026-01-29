@@ -31,7 +31,7 @@ def list_items(page: int, pages: int) -> None:
 			next_page = str(page + 1)
 		else:
 			next_page = " "
-		slowprint(f"p: {last_page} {cur_page} {next_page}", "")
+		gnrl.slowprint(f"p: {last_page} {cur_page} {next_page}", "")
 	else:
 		gnrl.slowprint(" (Empty)")
 	gnrl.slowprint('')
