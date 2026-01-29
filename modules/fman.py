@@ -150,6 +150,9 @@ def autoload() -> None:
 			glob.todo.pop()
 		except Exception:
 			clear_open_file()
+	else:
+		with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
+			f.write(f"{glob.date}.todo\n%d\n")
 	return None
 
 def default_items() -> None:
