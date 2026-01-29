@@ -5,19 +5,33 @@ import modules.fman as fman
 import modules.glob as glob
 import modules.gnrl as gnrl
 
-def list_items() -> None:
+def list_items(page: int, pages: int) -> None:
 	open_file = fman.read_open_file()
 	if len(open_file):
 		gnrl.slowprint(f"Current File: {open_file["name"]}")
 	gnrl.slowprint('', "To-Do List:", '')
-	if len(glob.todo) > 0:
+	if len(glob.todo):
 		num = 1
-		for item in glob.todo:
+		for _ in range(page):
+			num += glob.maxlength
+		for item in glob.todo[((page - 1) * glob.maxlength):(page * glob.maxlength)]:
 			if num < 10:
+				gnrl.slowprint(f" {num}.   {item}")
+			elif num < 100:
 				gnrl.slowprint(f" {num}.  {item}")
 			else:
 				gnrl.slowprint(f" {num}. {item}")
 			num += 1
+		if page > 1:
+			last_page = str(page - 1) 
+		else:
+			last_page = " "
+		cur_page = str(page) + '\u0332'
+		if page < pages:
+			next_page = str(page + 1)
+		else:
+			next_page = " "
+		slowprint(f"p: {last_page} {cur_page} {next_page}", "")
 	else:
 		gnrl.slowprint(" (Empty)")
 	gnrl.slowprint('')
@@ -95,12 +109,12 @@ def title() -> None:
 	gnrl.slowprint('', "---------------------------", "Welcome to your to-do list!", "---------------------------", '')
 	return None
 
-def menu(justopened: bool, bypass: bool) -> None:
+def menu(justopened: bool, bypass: bool, page: int, pages: int) -> None:
 	if bypass:
 		return None
 	system(glob.clear)
 	if justopened:
 		title()
-	list_items()
+	list_items(page, pages)
 	gnrl.slowprint('', "Add an item, or cross-off an item by entering its line number. 'h' for help.", '')
 	return None

@@ -10,10 +10,12 @@ import modules.progfuncs as pf
 def main() -> int:
 	fman.file_integrity()
 	fman.autoload()
+	page = 1
 	show_title: bool = True
 	bypass: bool = False
 	while True:
-		disp.menu(show_title, bypass)
+		pages = (len(glob.todo) / glob.maxlength) + (len(glob.todo) % glob.maxlength > 0)	
+		disp.menu(show_title, bypass, page, pages)
 		if bypass:
 			bypass = False
 		if show_title:
@@ -25,6 +27,12 @@ def main() -> int:
 				pf.cross(item)		
 			else:
 				gnrl.slowprint("Please enter a valid line number to cross-off.")
+		elif len(item) > 1 and item[0].lower() == 'p' and item[1:].isdigit():
+			if int(item[1:]) in range(pages):
+				page = int(item[1:])
+			else:
+				gnrl.slowprint("Please enter a valid page number.")
+				bypass = True
 		else:
 			match item:
 				case '':

@@ -1,5 +1,6 @@
-from os import listdir, makedirs, path, remove, rename, system
+from os import dup, listdir, makedirs, path, remove, rename, system
 from time import sleep
+from shutil import copy
 
 import modules.glob as glob
 import modules.gnrl as gnrl
@@ -256,6 +257,8 @@ def file_integrity() -> None:
 	if not path.exists(path.join(glob.conffiles, "daily-default")):
 		with open(path.join(glob.conffiles, "daily-default"), 'w'):
 			pass
+	if not path.exists(path.join(glob.conffiles, "tweaks.conf")):
+		copy(glob.def_tweaks, glob.usr_tweaks)
 	if not path.exists(path.join(glob.progfiles, "lastopen")):
 		clear_open_file()
 	if not path.exists(path.join(glob.progfiles, "postpone")):
