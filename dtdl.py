@@ -30,7 +30,7 @@ def main() -> int:
 			else:
 				gnrl.slowprint("Please enter a valid line number to cross-off.")
 		elif len(item) > 1 and item[0].lower() == 'p' and item[1:].isdigit():
-			if int(item[1:]) in range(pages):
+			if int(item[1:]) in range(pages + 1):
 				page = int(item[1:])
 			else:
 				gnrl.slowprint("Please enter a valid page number.")
