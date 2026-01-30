@@ -2,6 +2,7 @@ from os import makedirs, path
 from time import sleep
 
 import modules.glob as glob
+import modules.twks as twks
 
 def strike(text: str) -> str:
 	new_text: str = ""
@@ -26,6 +27,13 @@ def enter_digit(base: int, text: dict, enter_to_confirm: bool) -> int:
 					slowprint(text["crossed"])
 				else:
 					return num	
+		elif len(num) > 1 and num[0].lower() == 'p' and num[1:].isdigit():
+			if int(num[1:]) in range(twks.pages + 1):
+				twks.page = int(num[1:])
+				return -3
+			else:
+				gnrl.slowprint("Please enter a valid page number.")
+				continue
 		elif num.lower() == 'c':
 			if "cancel" in text:
 				slowprint('', text["cancel"], '')
@@ -51,6 +59,6 @@ def slowprint(*text) -> None:
 	delay: float = 0.02
 	for line in text:
 		print(line)
-		sleep(glob.get_tweak_float("textspeed", 0.02))
+		sleep(0.02)
 	return None
 

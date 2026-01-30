@@ -1,23 +1,22 @@
 # Simple todo-list program made by Matt L on 2025/12/11 while not wanting to go to sleep
 from os import system
 
-import modules.disp as disp
 import modules.fman as fman
+fman.file_integrity()
+
+import modules.disp as disp
 import modules.glob as glob
 import modules.gnrl as gnrl
 import modules.progfuncs as pf
+import modules.twks as twks
 
 def main() -> int:
-	fman.file_integrity()
-	maxlength = glob.get_tweak_int("maxlength", 50)
-	textspeed = glob.get_tweak_float("textspeed", 0.02)	
 	fman.autoload()
-	page = 1
 	show_title: bool = True
 	bypass: bool = False
 	while True:
-		pages = (int(len(glob.todo) / maxlength)) + (len(glob.todo) % maxlength > 0)	
-		disp.menu(show_title, bypass, page, pages)
+		twks.pages = (int(len(glob.todo) / twks.pagelength)) + (len(glob.todo) % twks.pagelength > 0)	
+		disp.menu(show_title, bypass)
 		if bypass:
 			bypass = False
 		if show_title:
@@ -30,8 +29,8 @@ def main() -> int:
 			else:
 				gnrl.slowprint("Please enter a valid line number to cross-off.")
 		elif len(item) > 1 and item[0].lower() == 'p' and item[1:].isdigit():
-			if int(item[1:]) in range(pages + 1):
-				page = int(item[1:])
+			if int(item[1:]) in range(twks.pages + 1):
+				twks.page = int(item[1:])
 			else:
 				gnrl.slowprint("Please enter a valid page number.")
 				bypass = True

@@ -2,7 +2,6 @@ from datetime import datetime
 from os import name, path
 from pathlib import Path
 
-
 def get_tweak_value(tweakname: str, default: int or float):
     with open(usr_tweaks, 'r') as f:
         tweak = [line.strip('\n') for line in f.readlines() if tweakname in line]

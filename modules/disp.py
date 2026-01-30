@@ -4,12 +4,13 @@ from time import sleep
 import modules.fman as fman
 import modules.glob as glob
 import modules.gnrl as gnrl
+import modules.twks as twks
 
-def list_items(page: int, pages: int) -> None:
-	maxlength = glob.get_tweak_int("maxlength", 50)
-	start_splice = (page - 1) * maxlength
-	if start_splice + maxlength <= len(glob.todo):
-		end_splice = start_splice + maxlength
+
+def list_items() -> None:
+	start_splice = (twks.page - 1) * twks.pagelength
+	if start_splice + twks.pagelength <= len(glob.todo):
+		end_splice = start_splice + twks.pagelength
 	else:
 		end_splice = len(glob.todo)
 	open_file = fman.read_open_file()
@@ -18,8 +19,8 @@ def list_items(page: int, pages: int) -> None:
 	gnrl.slowprint('', "To-Do List:", '')
 	if len(glob.todo):
 		num = 1
-		for _ in range(page - 1):
-			num += maxlength
+		for _ in range(twks.page - 1):
+			num += twks.pagelength
 		for item in glob.todo[start_splice:end_splice]:
 			if num < 10:
 				gnrl.slowprint(f" {num}.   {item}")
@@ -28,13 +29,13 @@ def list_items(page: int, pages: int) -> None:
 			else:
 				gnrl.slowprint(f" {num}. {item}")
 			num += 1
-		if page > 1:
-			last_page = str(page - 1) 
+		if twks.page > 1:
+			last_page = str(twks.page - 1) 
 		else:
 			last_page = ' '
-		cur_page = str(page) + '\u0332'
-		if page < pages:
-			next_page = str(page + 1)
+		cur_page = str(twks.page) + '\u0332'
+		if twks.page < twks.pages:
+			next_page = str(twks.page + 1)
 		else:
 			next_page = ' '
 		gnrl.slowprint('', f"p: {last_page} {cur_page} {next_page}", '')
@@ -115,12 +116,12 @@ def title() -> None:
 	gnrl.slowprint('', "---------------------------", "Welcome to your to-do list!", "---------------------------", '')
 	return None
 
-def menu(justopened: bool, bypass: bool, page: int, pages: int) -> None:
+def menu(justopened: bool, bypass: bool) -> None:
 	if bypass:
 		return None
 	system(glob.clear)
 	if justopened:
 		title()
-	list_items(page, pages)
+	list_items()
 	gnrl.slowprint('', "Add an item, or cross-off an item by entering its line number. 'h' for help.", '')
 	return None

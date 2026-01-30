@@ -153,6 +153,9 @@ def autoload() -> None:
 	else:
 		with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
 			f.write(f"{glob.date}.todo\n%d\n")
+		if file_exists(f"{glob.date}.todo"):
+			glob.todo = open_list(f"{glob.date}.todo")
+			glob.todo.pop()
 	return None
 
 def default_items() -> None:
