@@ -2,8 +2,6 @@
 from os import system
 
 import modules.fman as fman
-fman.file_integrity()
-
 import modules.disp as disp
 import modules.glob as glob
 import modules.gnrl as gnrl

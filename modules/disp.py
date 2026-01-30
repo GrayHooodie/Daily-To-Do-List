@@ -41,7 +41,7 @@ def list_items() -> None:
 		gnrl.slowprint('', f"p: {last_page} {cur_page} {next_page}", '')
 	else:
 		gnrl.slowprint(" (Empty)")
-	gnrl.slowprint('')
+	#gnrl.slowprint('')
 	return None
 
 def list_files(*function_header: str) -> None:
