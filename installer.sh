@@ -30,15 +30,8 @@ then
         echo $PATH | grep ~/.local/bin > /dev/null 2>&1
         if [ $? == 1 ]
         then
-            if [ $(echo $0) == bash ]
-            then
-                echo "export PATH=$PATH:~/.local/bin" >> ~/.bashrc
-            elif [ $(echo $0) == zsh ]
-            then
-                echo "export PATH=$PATH:~/.local/bin" >> ~/.zshrc
-            else
-                echo "set -x PATH $PATH:~/.local/bin" >> ~/.config/fish/config.fish
-            fi
+            echo "export PATH=$PATH:~/.local/bin" >> ~/.bashrc
+            source ~/.bashrc
         fi
         mv dist/dtdl ~/.local/bin/
     fi
