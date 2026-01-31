@@ -30,8 +30,22 @@ then
         echo $PATH | grep ~/.local/bin > /dev/null 2>&1
         if [ $? == 1 ]
         then
-            echo "export PATH=$PATH:~/.local/bin" >> ~/.bashrc
-            source ~/.bashrc
+            if [ "/bin/bash" == $(echo $SHELL) ]
+            then
+                echo "export PATH=$PATH:~/.local/bin" >> ~/.bashrc
+                source ~/.bashrc
+            elif [ "/bin/zsh" == $(echo $SHELL) ]
+            then
+                echo "export PATH=$PATH:~/.local/bin" >> ~/.zshrc
+                source ~/.zshrc
+            elif [ "/bin/fish" == $(echo $SHELL) ]
+            then
+                echo "set -x PATH $PATH:~/.local/bin" >> ~/.config/fish/config.fish
+                source ~/.config/fish/config.fish
+            else
+                echo "Unknown shell. Aborting."
+                exit
+            fi
         fi
         mv dist/dtdl ~/.local/bin/
     fi
