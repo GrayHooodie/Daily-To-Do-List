@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo "Creating virtual environment..."
+python3 -m venv env
+source env/bin/activate
+echo "Installing dependencies..."
+python3 -m pip install -r requirements.txt
 echo "Compiling..."
 env/bin/pyinstaller -F dtdl.py > /dev/null 2>&1
 echo "Installing..."
