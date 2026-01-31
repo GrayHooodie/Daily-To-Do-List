@@ -40,8 +40,7 @@ then
                 source ~/.zshrc
             elif [ "/bin/fish" == $(echo $SHELL) ]
             then
-                echo "set -x PATH $PATH:~/.local/bin" >> ~/.config/fish/config.fish
-                source ~/.config/fish/config.fish
+                echo "set -U fish_user_paths ~/.local/bin" >> ~/.config/fish/config.fish
             else
                 echo "Unknown shell. Aborting."
                 exit
