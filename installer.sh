@@ -1,10 +1,10 @@
 #!/bin/bash
 
 echo "Creating virtual environment..."
-python3 -m venv env
-source env/bin/activate
+python3 -m venv env > /dev/null 2>&1
+source env/bin/activate > /dev/null 2>&1
 echo "Installing dependencies..."
-python3 -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt > /dev/null 2>&1
 echo "Compiling..."
 env/bin/pyinstaller -F dtdl.py > /dev/null 2>&1
 echo "Installing..."
@@ -30,7 +30,7 @@ then
         echo $PATH | grep ~/.local/bin > /dev/null 2>&1
         if [ $? == 1 ]
         then
-            export PATH=$PATH:~/.local/bin
+            echo "export PATH=$PATH:~/.local/bin" >> ~/.bashrc
         fi
         mv dist/dtdl ~/.local/bin/
     fi
