@@ -42,9 +42,11 @@ then
     echo "Error. Not installed."
     exit
 fi
+echo "Removing unnecessary files..."
 rmdir dist
 rm -r build
 rm dtdl.spec
+rm -r env
 
 which dtdl > /dev/null 2>&1
 if [ $? == 1 ]
