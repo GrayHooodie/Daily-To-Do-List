@@ -1,12 +1,7 @@
 #!/bin/bash
 
-echo "Creating virtual environment..."
-python3 -m venv env > /dev/null 2>&1
-source env/bin/activate > /dev/null 2>&1
-echo "Installing dependencies..."
-python3 -m pip install -r requirements.txt > /dev/null 2>&1
 echo "Compiling..."
-env/bin/pyinstaller -F dtdl.py > /dev/null 2>&1
+dependencies/pyinstaller -F dtdl.py > /dev/null 2>&1
 echo "Installing..."
 which dtdl > /dev/null 2>&1
 if [ $? == 0 ]
@@ -30,15 +25,15 @@ then
         echo $PATH | grep ~/.local/bin > /dev/null 2>&1
         if [ $? == 1 ]
         then
-            if [ "/bin/bash" == $(echo $SHELL) ]
+            if [[ "$(echo $SHELL)" =~ "bash" ]]
             then
                 echo "export PATH=$PATH:~/.local/bin" >> ~/.bashrc
                 source ~/.bashrc
-            elif [ "/bin/zsh" == $(echo $SHELL) ]
+            elif [[ "$(echo $SHELL)" =~ "zsh" ]]
             then
                 echo "export PATH=$PATH:~/.local/bin" >> ~/.zshrc
                 source ~/.zshrc
-            elif [ "/bin/fish" == $(echo $SHELL) ]
+            elif [[ "$(echo $SHELL)" =~ "fish" ]]
             then
                 echo "set -U fish_user_paths ~/.local/bin" >> ~/.config/fish/config.fish
             else
