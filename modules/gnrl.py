@@ -59,6 +59,6 @@ def slowprint(*text) -> None:
 	delay: float = 0.02
 	for line in text:
 		print(line)
-		sleep(0.02)
+		sleep(delay)
 	return None
 

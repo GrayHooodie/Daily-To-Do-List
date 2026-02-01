@@ -40,7 +40,7 @@ def list_items() -> None:
 			next_page = ' '
 		gnrl.slowprint('', f"p: {last_page} {cur_page} {next_page}", '')
 	else:
-		gnrl.slowprint(" (Empty)")
+		gnrl.slowprint(" (Empty)", '')
 	#gnrl.slowprint('')
 	return None
 

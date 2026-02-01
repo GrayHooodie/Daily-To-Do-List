@@ -1,17 +1,10 @@
 #!/bin/bash
 
 echo "Installing..."
-which dtdl > /dev/null 2>&1
-if [ $? == 0 ]
+if [ $(which dtdl) == ~/.local/bin/dtdl ]
 then
-    if [ $(which dtdl) == ~/.local/bin/dtdl ]
-    then
-        cp dist/dtdl ~/.local/bin/dtdl
-    fi
-fi
-ls dist | grep dtdl > /dev/null 2>&1
-if [ $? == 0 ]
-then
+    cp dist/dtdl ~/.local/bin/dtdl
+else
     sudo --prompt="Enter password to make program available to all users. Otherwise, type Ctrl+c:" cp dist/dtdl /usr/bin 2> /dev/null
     if [ $? == 1 ]
     then
@@ -38,8 +31,6 @@ then
         cp dist/dtdl ~/.local/bin/
     fi
 fi
-echo "Removing unnecessary files..."
-rm -r dist
 
 which dtdl > /dev/null 2>&1
 if [ $? == 1 ]
