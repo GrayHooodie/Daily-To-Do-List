@@ -1,27 +1,21 @@
 #!/bin/bash
 
-echo "Compiling..."
-dependencies/pyinstaller -F dtdl.py > /dev/null 2>&1
 echo "Installing..."
 which dtdl > /dev/null 2>&1
 if [ $? == 0 ]
 then
     if [ $(which dtdl) == ~/.local/bin/dtdl ]
     then
-        mv dist/dtdl ~/.local/bin/dtdl
+        cp dist/dtdl ~/.local/bin/dtdl
     fi
 fi
 ls dist | grep dtdl > /dev/null 2>&1
 if [ $? == 0 ]
 then
-    sudo --prompt="Enter password to make program available to all users. Otherwise, type Ctrl+c:" mv dist/dtdl /usr/bin 2> /dev/null
+    sudo --prompt="Enter password to make program available to all users. Otherwise, type Ctrl+c:" cp dist/dtdl /usr/bin 2> /dev/null
     if [ $? == 1 ]
     then
-        ls ~/.local/bin > /dev/null 2>&1
-        if [ $? == 2 ]
-        then
-            mkdir ~/.local/bin
-        fi
+        mkdir -p ~/.local/bin
         echo $PATH | grep ~/.local/bin > /dev/null 2>&1
         if [ $? == 1 ]
         then
@@ -41,20 +35,11 @@ then
                 exit
             fi
         fi
-        mv dist/dtdl ~/.local/bin/
+        cp dist/dtdl ~/.local/bin/
     fi
 fi
-ls dist | grep dtdl > /dev/null 2>&1
-if [ $? == 0 ]
-then
-    echo "Error. Not installed."
-    exit
-fi
 echo "Removing unnecessary files..."
-rmdir dist
-rm -r build
-rm dtdl.spec
-rm -r env
+rm -r dist
 
 which dtdl > /dev/null 2>&1
 if [ $? == 1 ]
