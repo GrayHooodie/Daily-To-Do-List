@@ -1,6 +1,8 @@
 # Simple todo-list program made by Matt L on 2025/12/11 while not wanting to go to sleep
 from os import system
 
+import setup
+
 import modules.disp as disp
 import modules.fman as fman
 import modules.glob as glob

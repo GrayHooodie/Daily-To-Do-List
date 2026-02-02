@@ -11,7 +11,8 @@ if not path.exists(path.join(glob.conffiles, "daily-default")):
 	with open(path.join(glob.conffiles, "daily-default"), 'w'):
 		pass
 if not path.exists(path.join(glob.conffiles, "tweaks.conf")):
-	copy(glob.def_tweaks, glob.usr_tweaks)
+	if path.exists(glob.def_tweaks):
+		copy(glob.def_tweaks, glob.usr_tweaks)
 if not path.exists(path.join(glob.progfiles, "lastopen")):
 	with open(path.join(glob.progfiles, "lastopen"), 'w'):
 		pass
