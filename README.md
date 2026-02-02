@@ -4,12 +4,23 @@
 
 ### Main Branch
 Simply run the following command while in the project folder:
-**./installer.sh**
+**./install.sh**
 
-### Staging/Dev/Other Branch
+### Other Branches
 Python and PyInstaller must be installed. Run the following commands while in the project folder:
 **./compile.sh**
-**./installer.sh**
+**./install.sh**
+
+
+## Running Daily-To-Do-List
+
+### After Install
+Simply type the following command into your terminal:
+**dtdl**
+
+### From Source
+Move into the project folder, and run the following command:
+**python3 dtdl.py**
 
 
 ## Configuration
@@ -19,4 +30,4 @@ A file called *tweaks.conf* is located at *~/.dtdl/config/tweaks.conf*. You can 
 
 where *twkname* is the name of the tweak, and *value* is a number.
 
-If you make a mistake and need to reference the default *tweaks.conf*, it's located at *Daily-To-Do-List/defaults/tweaks.conf*. Or, if you want to start over, simply delete the *tweaks.conf* file located at *~/.dtdl/config/tweaks.conf* and it will be copied from the *defaults* folder the next time you open the application.
+If you make a mistake and need to reference the default *tweaks.conf*, it's located at *Daily-To-Do-List/defaults/tweaks.conf*. Or, if you want to start over, simply delete the *tweaks.conf* file located at *~/.dtdl/config/tweaks.conf* and run **./install.sh** in the project folder.

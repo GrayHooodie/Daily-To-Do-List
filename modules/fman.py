@@ -1,36 +1,7 @@
-from os import dup, listdir, makedirs, path, remove, rename, system
+from os import listdir, path, remove, rename
 from time import sleep
-from shutil import copy
 
 import modules.glob as glob
-
-def file_integrity() -> None:
-	if not path.exists(glob.progfiles):
-		makedirs(glob.progfiles)
-	if not path.exists(glob.conffiles):
-		makedirs(glob.conffiles)
-	if not path.exists(path.join(glob.conffiles, "daily-default")):
-		with open(path.join(glob.conffiles, "daily-default"), 'w'):
-			pass
-	if not path.exists(path.join(glob.conffiles, "tweaks.conf")):
-		copy(glob.def_tweaks, glob.usr_tweaks)
-	if not path.exists(path.join(glob.progfiles, "lastopen")):
-		clear_open_file()
-	if not path.exists(path.join(glob.progfiles, "postpone")):
-		with open(path.join(glob.progfiles, "postpone"), 'w'):
-			pass
-	if not path.exists(glob.listfiles):
-		makedirs(glob.listfiles)
-	if not path.exists(path.join(glob.listfiles, "archive")):
-		makedirs(path.join(glob.listfiles, "archive"))	
-	return None
-
-def clear_open_file() -> None:
-	with open(path.join(glob.progfiles, "lastopen"), 'w'):
-		return None
-
-file_integrity()
-
 import modules.gnrl as gnrl
 
 def get_file_names() -> list[str]:
@@ -279,6 +250,6 @@ def read_open_file() -> dict[str: str]:
 		return {"name": open_file[0], "lstype": open_file[1]}
 	return {}
 
-
-
-
+def clear_open_file() -> None:
+	with open(path.join(glob.progfiles, "lastopen"), 'w'):
+		return None

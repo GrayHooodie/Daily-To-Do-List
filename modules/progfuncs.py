@@ -327,3 +327,4 @@ def load() -> None:
 	gnrl.slowprint('', f"File '{files[select]}' successfully loaded.", '')
 	sleep(glob.slptm)
 	return None
+	

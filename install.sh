@@ -32,6 +32,8 @@ else
     fi
 fi
 
+python3 setup.py
+
 which dtdl > /dev/null 2>&1
 if [ $? == 1 ]
 then

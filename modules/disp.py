@@ -125,3 +125,4 @@ def menu(justopened: bool, bypass: bool) -> None:
 	list_items()
 	gnrl.slowprint('', "Add an item, or cross-off an item by entering its line number. 'h' for help.", '')
 	return None
+	

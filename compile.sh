@@ -6,7 +6,7 @@ if [ $? != 0 ]; then
     exit 1
 fi
 echo "Compiling..."
-pyinstaller -F dtdl.py > /dev/null 2>&1
+pyinstaller --onefile dtdl.py > /dev/null 2>&1
 if [ $? != 0 ]; then
     echo "PyInstaller error. Aborting."
     exit 1

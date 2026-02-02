@@ -61,4 +61,3 @@ def slowprint(*text) -> None:
 		print(line)
 		sleep(delay)
 	return None
-
