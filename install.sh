@@ -1,8 +1,7 @@
 #!/bin/bash
 
 echo "Installing..."
-test_path = $(which dtdl)
-if [ $test_path == ~/.local/bin/dtdl ]; then
+if [ $(which dtdl > /dev/null 2>&1) == ~/.local/bin/dtdl ]; then
     cp dist/dtdl ~/.local/bin/dtdl
 else
     sudo --prompt="Enter password to make program available to all users. Otherwise, type Ctrl+c:" cp dist/dtdl /usr/bin 2> /dev/null
