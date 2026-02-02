@@ -3,11 +3,11 @@
 ## Installation
 
 ### Main Branch
-Simply run the following command while in the project folder:
+Simply clone the repository, and run the following command while in the project folder:
 **./install.sh**
 
 ### Other Branches
-Python and PyInstaller must be installed. Run the following commands while in the project folder:
+Python and PyInstaller must be installed. Clone the repository and run the following commands while in the project folder:
 **./compile.sh**
 **./install.sh**
 
