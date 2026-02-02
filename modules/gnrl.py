@@ -27,6 +27,8 @@ def enter_digit(base: int, text: dict, enter_to_confirm: bool) -> int:
 					slowprint(text["crossed"])
 				else:
 					return num	
+			else:
+				slowprint(text["line_num"])
 		elif len(num) > 1 and num[0].lower() == 'p' and num[1:].isdigit():
 			if int(num[1:]) in range(twks.pages + 1):
 				twks.page = int(num[1:])

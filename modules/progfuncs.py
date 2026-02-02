@@ -325,6 +325,7 @@ def load() -> None:
 					gnrl.slowprint(glob.invalid_fn)
 					invalid_line = True
 	gnrl.slowprint('', f"File '{files[select]}' successfully loaded.", '')
+	twks.page = 1
 	sleep(glob.slptm)
 	return None
 	
