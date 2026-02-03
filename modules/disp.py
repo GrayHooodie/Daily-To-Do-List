@@ -8,16 +8,20 @@ import modules.twks as twks
 
 
 def list_items() -> None:
-	start_splice = (twks.page - 1) * twks.pagelength
-	if start_splice + twks.pagelength <= len(glob.todo):
-		end_splice = start_splice + twks.pagelength
-	else:
-		end_splice = len(glob.todo)
+	
 	open_file = fman.read_open_file()
 	if len(open_file):
 		gnrl.slowprint(f"Current File: {open_file["name"]}")
 	gnrl.slowprint('', "To-Do List:", '')
 	if len(glob.todo):
+		twks.pages = int(len(glob.todo) / twks.pagelength) + (len(glob.todo) % twks.pagelength > 0)	
+		if twks.page > twks.pages:
+			twks.page = twks.pages
+		start_splice = (twks.page - 1) * twks.pagelength
+		if start_splice + twks.pagelength <= len(glob.todo):
+			end_splice = start_splice + twks.pagelength
+		else:
+			end_splice = len(glob.todo)
 		num = 1
 		for _ in range(twks.page - 1):
 			num += twks.pagelength
@@ -29,16 +33,29 @@ def list_items() -> None:
 			else:
 				gnrl.slowprint(f" {num}. {item}")
 			num += 1
-		if twks.page > 1:
-			last_page = str(twks.page - 1) 
-		else:
-			last_page = ' '
-		cur_page = str(twks.page) + '\u0332'
-		if twks.page < twks.pages:
-			next_page = str(twks.page + 1)
-		else:
-			next_page = ' '
-		gnrl.slowprint('', f"p: {last_page} {cur_page} {next_page}", '')
+		gnrl.slowprint('')
+		if twks.pages > 1:
+			if twks.page > 1:
+				last_page = f"{str(twks.page - 1)} "
+			else:
+				last_page = '  '
+			cur_page = f" {str(twks.page) + '\u0332'}"
+			if twks.page < twks.pages:
+				next_page = f"  {str(twks.page + 1)}"
+				end_page = ""
+			else:
+				next_page = ''
+			if twks.page + 1 < twks.pages:
+				if twks.page + 2 != twks.pages:
+					end_page += "  ..."
+				end_page += f"  {twks.pages}"
+			else:
+				end_page = ''
+			page_text = f"p: {last_page}{cur_page}{next_page}{end_page}"
+			border = ""
+			for _ in range(len(page_text) - 1):
+				border += '-'
+			gnrl.slowprint(border, page_text, border)
 	else:
 		gnrl.slowprint(" (Empty)", '')
 	#gnrl.slowprint('')

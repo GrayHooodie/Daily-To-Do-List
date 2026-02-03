@@ -20,14 +20,20 @@ else
                 echo "set -U fish_user_paths ~/.local/bin" >> ~/.config/fish/config.fish
             else
                 echo "Unknown shell. Aborting."
-                exit
+                exit 1
             fi
         fi
         cp dist/dtdl ~/.local/bin/
     fi
 fi
 
-python3 setup.py
+which python3 > /dev/null 2>&1
+if [ $? == 0 ]; then
+    python3 setup.py
+else
+    echo "Please install python, then run this script again."
+    exit 1
+fi
 
 which dtdl > /dev/null 2>&1
 if [ $? == 1 ]; then

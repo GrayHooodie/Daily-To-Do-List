@@ -34,7 +34,7 @@ def enter_digit(base: int, text: dict, enter_to_confirm: bool) -> int:
 				twks.page = int(num[1:])
 				return -3
 			else:
-				gnrl.slowprint("Please enter a valid page number.")
+				slowprint("Please enter a valid page number.")
 				continue
 		elif num.lower() == 'c':
 			if "cancel" in text:

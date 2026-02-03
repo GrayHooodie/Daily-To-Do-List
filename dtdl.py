@@ -15,9 +15,6 @@ def main() -> int:
 	show_title: bool = True
 	bypass: bool = False
 	while True:
-		twks.pages = (int(len(glob.todo) / twks.pagelength)) + (len(glob.todo) % twks.pagelength > 0)	
-		if twks.page > twks.pages:
-			twks.page = twks.pages
 		disp.menu(show_title, bypass)
 		if bypass:
 			bypass = False

@@ -5,6 +5,7 @@ import modules.disp as disp
 import modules.fman as fman
 import modules.glob as glob
 import modules.gnrl as gnrl
+import modules.twks as twks
 
 def sort_items() -> None:
 	uncrossed = []
