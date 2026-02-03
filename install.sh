@@ -10,13 +10,13 @@ else
         mkdir -p ~/.local/bin
         echo $PATH | grep ~/.local/bin > /dev/null 2>&1
         if [ $? == 1 ]; then
-            if [[ "$(echo $SHELL)" =~ "bash" ]]; then
+            if [ $(echo $SHELL | grep -oE '(\w+)$') == "bash" ]; then
                 echo "export PATH=$PATH:~/.local/bin" >> ~/.bashrc
                 source ~/.bashrc
-            elif [[ "$(echo $SHELL)" =~ "zsh" ]]; then
+            elif [ $(echo $SHELL | grep -oE '(\w+)$') == "zsh" ]; then
                 echo "export PATH=$PATH:~/.local/bin" >> ~/.zshrc
                 source ~/.zshrc
-            elif [[ "$(echo $SHELL)" =~ "fish" ]]; then
+            elif [ $(echo $SHELL | grep -oE '(\w+)$') == "fish" ]; then
                 echo "set -U fish_user_paths ~/.local/bin" >> ~/.config/fish/config.fish
             else
                 echo "Unknown shell. Aborting."

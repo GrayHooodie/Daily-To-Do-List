@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 which pyinstaller > /dev/null 2>&1
 if [ $? != 0 ]; then
