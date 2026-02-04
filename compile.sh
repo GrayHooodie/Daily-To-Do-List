@@ -7,7 +7,6 @@ if [ $? != 0 ]; then
         echo "Installing pipx..."
         if command -v apt > /dev/null 2>&1; then
             sudo --prompt="Enter password to install pipx (needed for dependencies):" apt install pipx -y > /dev/null 2>&1
-            echo test
         elif command -v dnf > /dev/null 2>&1; then
             sudo --prompt="Enter password to install pipx (needed for dependencies):" dnf install pipx -y > /dev/null 2>&1
         elif command -v yum > /dev/null 2>&1; then
