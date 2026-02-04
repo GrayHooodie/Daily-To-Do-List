@@ -49,6 +49,7 @@ if [ $? != 0 ]; then
         echo "Please install python with your package manager, and run this script again."
         exit 1
     fi
+    which python3 > /dev/null 2>&1
     if [ $? != 0 ]; then
         echo "Python must be installed for program setup."
         exit 1

@@ -19,6 +19,7 @@ if [ $? != 0 ]; then
             echo "Please install pipx with your package manager, and run this script again."
             exit 1
         fi
+        which pipx > /dev/null 2>&1 
         if [ $? != 0 ]; then
             echo "Pipx must be installed for dependencies while compiling. Either install pipx, or switch to the main branch where the program is pre-compiled."
             exit 1
