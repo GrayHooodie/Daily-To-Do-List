@@ -7,11 +7,11 @@ if [ $? = 0 ]; then
 else
     whchpth='U'
     read -p "Would you like to make the program available to all users? (requires superuser, i.e. your password) [y/n]:" whchpth
-    while [[ (${whchpth^^} != 'Y') && (${whchpth^^} != 'N') ]]; do read -p "Enter 'y' or 'n':" whchpth; done
+    while [[ ${whchpth^^} != 'Y' && ${whchpth^^} != 'N' ]]; do read -p "Enter 'y' or 'n': " whchpth; done
     if [ ${whchpth^^} = 'Y' ]; then
         sudo cp dist/dtdl /usr/bin 2> /dev/null
     fi
-    if [[ ($? != 0) || (${whchpth^^} = 'N') ]]; then
+    if [[ $? != 0 || ${whchpth^^} = 'N' ]]; then
         mkdir -p ~/.local/bin
         echo $PATH | grep ~/.local/bin > /dev/null 2>&1
         if [ $? != 0 ]; then
@@ -36,15 +36,15 @@ which python3 > /dev/null 2>&1
 if [ $? != 0 ]; then
     echo "Installing python..."
     if command -v apt > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python:" apt install python3 -y > /dev/null 2>&1
+        sudo --prompt="Enter password to install python: " apt install python3 -y > /dev/null 2>&1
     elif command -v dnf > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python:" dnf install python3 -y > /dev/null 2>&1
+        sudo --prompt="Enter password to install python: " dnf install python3 -y > /dev/null 2>&1
     elif command -v yum > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python:" yum install python3 -y > /dev/null 2>&1
+        sudo --prompt="Enter password to install python: " yum install python3 -y > /dev/null 2>&1
     elif command -v zypper > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python:" zypper install python3 -y > /dev/null 2>&1
+        sudo --prompt="Enter password to install python: " zypper install python3 -y > /dev/null 2>&1
     elif command -v pacman > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python:" pacman -Syu python3 -y > /dev/null 2>&1
+        sudo --prompt="Enter password to install python: " pacman -Syu python3 -y > /dev/null 2>&1
     else
         echo "Please install python with your package manager, and run this script again."
         exit 1

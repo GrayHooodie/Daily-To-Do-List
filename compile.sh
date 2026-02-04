@@ -6,15 +6,15 @@ if [ $? != 0 ]; then
     if [ $? != 0 ]; then
         echo "Installing pipx..."
         if command -v apt > /dev/null 2>&1; then
-            sudo --prompt="Enter password to install pipx (needed for dependencies):" apt install pipx -y > /dev/null 2>&1
+            sudo --prompt="Enter password to install pipx (needed for dependencies): " apt install pipx -y > /dev/null 2>&1
         elif command -v dnf > /dev/null 2>&1; then
-            sudo --prompt="Enter password to install pipx (needed for dependencies):" dnf install pipx -y > /dev/null 2>&1
+            sudo --prompt="Enter password to install pipx (needed for dependencies): " dnf install pipx -y > /dev/null 2>&1
         elif command -v yum > /dev/null 2>&1; then
-            sudo --prompt="Enter password to install pipx (needed for dependencies):" yum install pipx -y > /dev/null 2>&1
+            sudo --prompt="Enter password to install pipx (needed for dependencies): " yum install pipx -y > /dev/null 2>&1
         elif command -v zypper > /dev/null 2>&1; then
-            sudo --prompt="Enter password to install pipx (needed for dependencies):" zypper install python3-pipx -y > /dev/null 2>&1
+            sudo --prompt="Enter password to install pipx (needed for dependencies): " zypper install python3-pipx -y > /dev/null 2>&1
         elif command -v pacman > /dev/null 2>&1; then
-            sudo --prompt="Enter password to install pipx (needed for dependencies):" pacman -Syu python-pipx -y > /dev/null 2>&1
+            sudo --prompt="Enter password to install pipx (needed for dependencies): " pacman -Syu python-pipx -y > /dev/null 2>&1
         else
             echo "Please install pipx with your package manager, and run this script again."
             exit 1
