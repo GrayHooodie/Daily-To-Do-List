@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 echo "Installing..."
 ls ~/.local/bin/ | grep dtdl > /dev/null 2>&1
@@ -31,13 +31,15 @@ which python3 > /dev/null 2>&1
 if [ $? == 0 ]; then
     python3 setup.py
 else
-    echo "Please install python, then run this script again."
+    echo "Please install python with your package manager, and run this script again."
     exit 1
 fi
 
 which dtdl > /dev/null 2>&1
 if [ $? == 1 ]; then
     echo "Error. Not installed."
+    exit 1
 else
     echo "Installed to $(which dtdl)"
 fi
+exit 0
