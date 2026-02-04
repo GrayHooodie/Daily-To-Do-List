@@ -29,21 +29,25 @@ fi
 
 which python3 > /dev/null 2>&1
 if [ $? != 0 ]; then
+    echo "Installing python..."
     if command -v apt > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python:" apt install python3
+        sudo --prompt="Enter password to install python:" apt install python3 > /dev/null 2>&1
     elif command -v dnf > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python:" dnf install python3
+        sudo --prompt="Enter password to install python:" dnf install python3 > /dev/null 2>&1
     elif command -v yum > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python:" yum install python3
+        sudo --prompt="Enter password to install python:" yum install python3 > /dev/null 2>&1
     elif command -v zypper > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python:" zypper install python3
+        sudo --prompt="Enter password to install python:" zypper install python3 > /dev/null 2>&1
     elif command -v pacman > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python:" pacman -Syu python3
+        sudo --prompt="Enter password to install python:" pacman -Syu python3 > /dev/null 2>&1
     else
         echo "Please install python with your package manager, and run this script again."
         exit 1
     fi
 fi
+if [ $? != 0 ]; then
+    echo "Python must be installed for program setup."
+    exit 1
 python3 setup.py
 
 which dtdl > /dev/null 2>&1
