@@ -7,7 +7,7 @@ if [ $? = 0 ]; then
 else
     whchpth='U'
     read -p "Would you like to make the program available to all users? (requires superuser, i.e. your password) [y/n]:" whchpth
-    while [[ ${whchpth^^} != 'Y' && ${whchpth^^} != 'N' ]]; do read -p "Enter 'y' or 'n': " whchpth; done
+    while [ (${whchpth^^} != 'Y') && (${whchpth^^} != 'N') ]; do read -p "Enter 'y' or 'n': " whchpth; done
     if [ ${whchpth^^} = 'Y' ]; then
         sudo cp dist/dtdl /usr/bin 2> /dev/null
     fi
