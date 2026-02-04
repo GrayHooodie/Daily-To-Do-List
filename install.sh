@@ -2,21 +2,21 @@
 
 echo "Installing..."
 ls ~/.local/bin/ | grep dtdl > /dev/null 2>&1
-if [ $? == 0 ]; then
+if [ $? = 0 ]; then
     cp dist/dtdl ~/.local/bin/dtdl
 else
     sudo --prompt="Enter password to make program available to all users. Otherwise, type Ctrl+c:" cp dist/dtdl /usr/bin 2> /dev/null
-    if [ $? == 1 ]; then
+    if [ $? != 0 ]; then
         mkdir -p ~/.local/bin
         echo $PATH | grep ~/.local/bin > /dev/null 2>&1
-        if [ $? == 1 ]; then
-            if [ $(echo $SHELL | grep -oE '(\w+)$') == "bash" ]; then
+        if [ $? != 0 ]; then
+            if [ $(echo $SHELL | grep -oE '(\w+)$') = "bash" ]; then
                 echo "export PATH=$PATH:~/.local/bin" >> ~/.bashrc
                 source ~/.bashrc
-            elif [ $(echo $SHELL | grep -oE '(\w+)$') == "zsh" ]; then
+            elif [ $(echo $SHELL | grep -oE '(\w+)$') = "zsh" ]; then
                 echo "export PATH=$PATH:~/.local/bin" >> ~/.zshrc
                 source ~/.zshrc
-            elif [ $(echo $SHELL | grep -oE '(\w+)$') == "fish" ]; then
+            elif [ $(echo $SHELL | grep -oE '(\w+)$') = "fish" ]; then
                 echo "set -U fish_user_paths ~/.local/bin" >> ~/.config/fish/config.fish
             else
                 echo "Please add '~/.local/bin' to your PATH variable, and run this script again."
@@ -47,7 +47,7 @@ fi
 python3 setup.py
 
 which dtdl > /dev/null 2>&1
-if [ $? == 1 ]; then
+if [ $? != 0 ]; then
     echo "Error. Is '~/.local/bin' in your PATH variable?"
     exit 1
 else
