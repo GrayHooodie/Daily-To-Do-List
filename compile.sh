@@ -19,12 +19,12 @@ if [ $? != 0 ]; then
             echo "Please install pipx with your package manager, and run this script again."
             exit 1
         fi
-    fi
-    if [ $? != 0 ]; then
-        echo "Pipx must be installed for dependencies while compiling. Either install pipx, or switch to the main branch where the program is pre-compiled."
-        exit 1
-    else
-        echo "Pipx installed!"
+        if [ $? != 0 ]; then
+            echo "Pipx must be installed for dependencies while compiling. Either install pipx, or switch to the main branch where the program is pre-compiled."
+            exit 1
+        else
+            echo "Pipx installed!"
+        fi
     fi
     echo "Installing dependencies..."
     pipx install pyinstaller > /dev/null 2>&1

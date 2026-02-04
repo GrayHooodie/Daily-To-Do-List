@@ -44,12 +44,12 @@ if [ $? != 0 ]; then
         echo "Please install python with your package manager, and run this script again."
         exit 1
     fi
-fi
-if [ $? != 0 ]; then
-    echo "Python must be installed for program setup."
-    exit 1
-else
-    echo "Python installed!"
+    if [ $? != 0 ]; then
+        echo "Python must be installed for program setup."
+        exit 1
+    else
+        echo "Python installed!"
+    fi
 fi
 python3 setup.py
 
