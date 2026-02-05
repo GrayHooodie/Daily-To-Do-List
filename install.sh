@@ -7,11 +7,14 @@ if [ $? = 0 ]; then
 else
     whchpth='U'
     read -p "Would you like to make the program available to all users? (requires superuser, i.e. your password) [y/n]:" whchpth
-    while [ $(echo $whchpth | tr '[:lower:]' '[:upper:]') != 'Y' ] && [ $(echo $whchpth | tr '[:lower:]' '[:upper:]') != 'N' ]; do read -p "Enter 'y' or 'n': " whchpth; done
-    if [ ${whchpth^^} = 'Y' ]; then
+    while [ "$whchpth" != 'Y' ] && [ "$whchpth" != 'N' ]; do 
+		read -p "Enter 'y' or 'n': " whchpth
+		whchpth=$(echo $whchpth | tr '[:lower:]' '[:upper:]')
+	done
+    if [ $whchpth = 'Y' ]; then
         sudo cp dist/dtdl /usr/bin 2> /dev/null
     fi
-    if [[ $? != 0 || ${whchpth^^} = 'N' ]]; then
+    if [ $? != 0 ] || [ $whchpth = 'N' ]; then
         mkdir -p ~/.local/bin
         echo $PATH | grep ~/.local/bin > /dev/null 2>&1
         if [ $? != 0 ]; then
