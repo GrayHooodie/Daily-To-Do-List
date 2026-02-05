@@ -7,6 +7,7 @@ if [ $? = 0 ]; then
 else
     whchpth='U'
     read -p "Would you like to make the program available to all users? (requires superuser, i.e. your password) [y/n]:" whchpth
+	whchpth=$(echo $whchpth | tr '[:lower:]' '[:upper:]')
     while [ "$whchpth" != 'Y' ] && [ "$whchpth" != 'N' ]; do 
 		read -p "Enter 'y' or 'n': " whchpth
 		whchpth=$(echo $whchpth | tr '[:lower:]' '[:upper:]')
