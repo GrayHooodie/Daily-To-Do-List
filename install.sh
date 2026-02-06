@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if ! [ -f ./dist/dtdl ]; then
+    echo "Please run './compile.sh', then run this script again."
+    exit 1
+fi
+
 echo "Installing..."
 ls ~/.local/bin/ | grep dtdl > /dev/null 2>&1
 if [ $? = 0 ]; then
