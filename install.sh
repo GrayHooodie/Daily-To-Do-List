@@ -41,31 +41,6 @@ else
     fi
 fi
 
-which python3 > /dev/null 2>&1
-if [ $? != 0 ]; then
-    echo "Installing python..."
-    if command -v apt > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python: " apt install python3 -y > /dev/null 2>&1
-    elif command -v dnf > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python: " dnf install python3 -y > /dev/null 2>&1
-    elif command -v zypper > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python: " zypper install -y python3 > /dev/null 2>&1
-    elif command -v pacman > /dev/null 2>&1; then
-        yes | sudo --prompt="Enter password to install python: " pacman -S python3 > /dev/null 2>&1
-    else
-        echo "Please install python or python3 with your package manager, and run this script again."
-        exit 1
-    fi
-    which python3 > /dev/null 2>&1
-    if [ $? != 0 ]; then
-        echo "Python must be installed for program setup."
-        exit 1
-    else
-        echo "Python installed!"
-    fi
-fi
-python3 modules/setup.py
-
 which dtdl > /dev/null 2>&1
 if [ $? != 0 ]; then
     echo "Error. Is '~/.local/bin' in your PATH variable?"
