@@ -4,7 +4,6 @@
 Python must be installed to run from source.
 
 
-**-----------------------------------------------**
 ## Installation
 
 ### Main or Staging Branch
@@ -20,7 +19,6 @@ Clone the repository and run the following commands while in the project folder:
 > ./install.sh
 
 
-**-----------------------------------------------**
 ## Running Daily-To-Do-List
 
 ### After Install
@@ -35,7 +33,6 @@ Python must be version ^.^.^ or newer. Move into the project folder, and run the
 > python3 dtdl.py
 
 
-**-----------------------------------------------**
 ## Configuration
 
 ### Overview
