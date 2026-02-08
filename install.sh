@@ -48,14 +48,12 @@ if [ $? != 0 ]; then
         sudo --prompt="Enter password to install python: " apt install python3 -y > /dev/null 2>&1
     elif command -v dnf > /dev/null 2>&1; then
         sudo --prompt="Enter password to install python: " dnf install python3 -y > /dev/null 2>&1
-    elif command -v yum > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python: " yum install python3 -y > /dev/null 2>&1
     elif command -v zypper > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python: " zypper install python3 -y > /dev/null 2>&1
+        sudo --prompt="Enter password to install python: " zypper install -y python3 > /dev/null 2>&1
     elif command -v pacman > /dev/null 2>&1; then
-        sudo --prompt="Enter password to install python: " pacman -Syu python3 -y > /dev/null 2>&1
+        yes | sudo --prompt="Enter password to install python: " pacman -S python3 > /dev/null 2>&1
     else
-        echo "Please install python with your package manager, and run this script again."
+        echo "Please install python or python3 with your package manager, and run this script again."
         exit 1
     fi
     which python3 > /dev/null 2>&1

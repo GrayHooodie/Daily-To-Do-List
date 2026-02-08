@@ -30,6 +30,9 @@ def main() -> int:
 		elif len(item) > 1 and item[0].lower() == 'p' and item[1:].isdigit():
 			if int(item[1:]) in range(twks.pages + 1):
 				twks.page = int(item[1:])
+			elif twks.pages == 1:
+				gnrl.slowprint("You only have one page of list items.")
+				bypass = True
 			else:
 				gnrl.slowprint("Please enter a valid page number.")
 				bypass = True
@@ -82,7 +85,22 @@ def main() -> int:
 						gnrl.slowprint("Must have at least 1 saved list to load.")
 						bypass = True
 				case 'h' | 'H':
-					gnrl.slowprint('', "'s'  Sort Items", "'a'  Arrange Items", "'e'  Edit Items", "'p'  Postpone Items", "'r'  Remove Items", '', "'C'  Clear List / Close File", "'S'  Save List To File", "'L'  Load List From File", '', "'h'  Show This Help Text", "'q'  Quit", '')
+					gnrl.slowprint(
+					'',
+					"'s'  Sort Items",
+					"'a'  Arrange Items",
+					"'e'  Edit Items",
+					"'r'  Remove Items",
+					"'p'  Postpone Items/ Switch Page (when followed by a digit)",
+					'',
+					"'C'  Clear List / Close File",
+					"'S'  Save List To File",
+					"'L'  Load List From File",
+					'',
+					"'h'  Show This Help Text",
+					"'q'  Quit",
+					''
+					)
 					bypass = True
 				case 'q' | 'Q':
 					open_file = fman.read_open_file()
