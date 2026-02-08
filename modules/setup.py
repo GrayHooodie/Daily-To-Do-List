@@ -11,8 +11,11 @@ if not path.exists(path.join(glob.conffiles, "daily-default")):
 	with open(path.join(glob.conffiles, "daily-default"), 'w'):
 		pass
 if not path.exists(path.join(glob.conffiles, "tweaks.conf")):
-	if path.exists(glob.def_tweaks):
-		copy(glob.def_tweaks, glob.usr_tweaks)
+	with open(path.join(glob.conffiles, "tweaks.conf"), 'w') as f:
+		f.write("# List items to show on one page. This may be too high depending on your monitor resolution  |  Default is 50\n")
+		f.write("pagelength=50\n")
+		f.write("# Length of time between 2 lines of text, in seconds. I wouldn't recommend going higher than 0.05  |  Default is 0.02\n")
+		f.write("textspeed=0.02\n")
 if not path.exists(path.join(glob.progfiles, "lastopen")):
 	with open(path.join(glob.progfiles, "lastopen"), 'w'):
 		pass

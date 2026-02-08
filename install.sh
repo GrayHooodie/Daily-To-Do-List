@@ -64,7 +64,7 @@ if [ $? != 0 ]; then
         echo "Python installed!"
     fi
 fi
-python3 setup.py
+python3 modules/setup.py
 
 which dtdl > /dev/null 2>&1
 if [ $? != 0 ]; then
