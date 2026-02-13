@@ -11,7 +11,7 @@ def list_items() -> None:
 	
 	open_file = fman.read_open_file()
 	if len(open_file):
-		gnrl.slowprint(f"Current File: {open_file["name"]}")
+		gnrl.slowprint(f"Current File: {open_file['name']}")
 	gnrl.slowprint('', "To-Do List:", '')
 	if len(glob.todo):
 		twks.pages = int(len(glob.todo) / twks.pagelength) + (len(glob.todo) % twks.pagelength > 0)	
@@ -39,7 +39,7 @@ def list_items() -> None:
 				last_page = f"{str(twks.page - 1)} "
 			else:
 				last_page = '  '
-			cur_page = f" {str(twks.page) + '\u0332'}"
+			cur_page = f" {str(twks.page)} + '\u0332'"
 			if twks.page < twks.pages:
 				next_page = f"  {str(twks.page + 1)}"
 				end_page = ""
@@ -66,7 +66,7 @@ def list_files(*function_header: str) -> None:
 	files = fman.get_file_names()
 	gnrl.slowprint(function_header[0], function_header[1])
 	if len(open_file):
-		gnrl.slowprint(f"\nCurrent File: {open_file["name"]}")
+		gnrl.slowprint(f'\nCurrent File: {open_file["name"]}')
 	if len(files):
 		gnrl.slowprint('', "Files:", '')
 	num = 1
@@ -116,7 +116,7 @@ def save_menu():
 	list_files("[saving file]", "-------------")
 	files = fman.get_file_names()
 	if len(open_file) and fman.file_exists(open_file["name"]):
-		gnrl.slowprint('', f"Name your file, or empty return to overwrite '{open_file["name"]}'. 'c' to cancel.", '')
+		gnrl.slowprint('', f"Name your file, or empty return to overwrite '{open_file['name']}'. 'c' to cancel.", '')
 	elif f"{glob.date}.todo" not in files:
 		gnrl.slowprint('', f"Name your file, or empty return to name the file '{glob.date}'. 'c' to cancel.", '')
 	else:

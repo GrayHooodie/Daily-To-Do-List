@@ -148,7 +148,7 @@ def rm_items() -> None:
 def clear() -> None:
 	open_file = fman.read_open_file()
 	if len(open_file):
-		gnrl.slowprint('', f"Are you sure you want to close file '{open_file["name"]}'? Progress will be saved. (y/N)", '')
+		gnrl.slowprint('', f"Are you sure you want to close file '{open_file['name']}'? Progress will be saved. (y/N)", '')
 	else:
 		gnrl.slowprint('', "Are you sure you want to clear your to-do list? (y/N)", '')
 	while True:
@@ -161,7 +161,7 @@ def clear() -> None:
 				glob.todo = []
 				if len(open_file):
 					if saved:
-						gnrl.slowprint('', f"File successfully closed. Progress successfully saved to '{path.join(glob.listfiles, open_file["name"])}'.", '')
+						gnrl.slowprint('', f"File successfully closed. Progress successfully saved to '{path.join(glob.listfiles, open_file['name'])}'.", '')
 					else:
 						gnrl.slowprint('', "File successfully closed.", '')
 				else:
@@ -189,9 +189,9 @@ def autosave(using_clear: bool) -> bool:
 		with open(path.join(glob.listfiles, open_file["name"]), 'w') as f:
 			for item in glob.todo:
 				f.write(f"{item}\n")
-			f.write(f"{open_file["lstype"]}\n")
+			f.write(f"{open_file['lstype']}\n")
 		if not using_clear:	
-			gnrl.slowprint('', f"List successfully saved to '{path.join(glob.listfiles, open_file["name"])}'.", '')
+			gnrl.slowprint('', f"List successfully saved to '{path.join(glob.listfiles, open_file['name'])}'.", '')
 			sleep(glob.slptm)
 	else:
 		prompt_save()

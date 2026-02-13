@@ -104,7 +104,7 @@ def renameit(files, to_rename) -> None:
 				if len(open_file) and files[to_rename] == open_file["name"]:
 					open_file["name"] = f"{new_name}.todo"
 					with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
-						f.write(f"{open_file["name"]}\n{open_file["lstype"]}\n")
+						f.write(f"{open_file['name']}\n{open_file['lstype']}\n")
 				rename(path.join(glob.listfiles, files[to_rename]), path.join(glob.listfiles, f"{new_name}.todo"))
 				return None
 			else:
@@ -213,14 +213,14 @@ def confirm(filename: str, function: dict) -> None:
 	if len(open_file) and open_file["name"] == filename:
 		file_is_open = True
 	if file_is_open:	
-		gnrl.slowprint('', f"Are you sure you'd like to {function["pres-verb"]} the file '{filename}'? This will also clear your current to-do list. (y/N)", '')
+		gnrl.slowprint('', f"Are you sure you'd like to {function['pres-verb']} the file '{filename}'? This will also clear your current to-do list. (y/N)", '')
 	else:
-		gnrl.slowprint('', f"Are you sure you'd like to {function["pres-verb"]} the file '{filename}'? (y/N)", '')
+		gnrl.slowprint('', f"Are you sure you'd like to {function['pres-verb']} the file '{filename}'? (y/N)", '')
 	while True:
 		confirmation = input(" > ").lower()
 		match confirmation:
 			case 'n' | '':
-				gnrl.slowprint('', f"{function["past-verb"].capitalize()} of file '{filename}' cancelled.", '')
+				gnrl.slowprint('', f"{function['past-verb'].capitalize()} of file '{filename}' cancelled.", '')
 				return None
 			case 'y':
 				if file_is_open:
@@ -231,7 +231,7 @@ def confirm(filename: str, function: dict) -> None:
 					gnrl.slowprint('', "File successfully deleted.", '')
 				elif function["type"] == "archive":
 					archiveit(filename)
-					gnrl.slowprint('', f"File successfully archived. It can be found at '{path.join(glob.listfiles, "archive", filename)}'.", '')
+					gnrl.slowprint('', f"File successfully archived. It can be found at '{path.join(glob.listfiles, 'archive', filename)}'.", '')
 				return None
 			case _:
 				gnrl.slowprint(glob.y_or_n)
