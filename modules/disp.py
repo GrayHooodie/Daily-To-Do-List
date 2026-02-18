@@ -1,5 +1,4 @@
-from os import getlogin, listdir, makedirs, path, remove, rename, system
-from time import sleep
+from subprocess import call
 
 import modules.fman as fman
 import modules.glob as glob
@@ -11,7 +10,7 @@ def list_items() -> None:
 	
 	open_file = fman.read_open_file()
 	if len(open_file):
-		gnrl.slowprint(f"Current File: {open_file["name"]}")
+		gnrl.slowprint(f"Current File: {open_file['name']}")
 	gnrl.slowprint('', "To-Do List:", '')
 	if len(glob.todo):
 		twks.pages = int(len(glob.todo) / twks.pagelength) + (len(glob.todo) % twks.pagelength > 0)	
@@ -39,12 +38,13 @@ def list_items() -> None:
 				last_page = f"{str(twks.page - 1)} "
 			else:
 				last_page = '  '
-			cur_page = f" {str(twks.page) + '\u0332'}"
+			old_py_syntax = str(twks.page) + '\u0332'
+			cur_page = f" {old_py_syntax}"
 			if twks.page < twks.pages:
 				next_page = f"  {str(twks.page + 1)}"
-				end_page = ""
 			else:
 				next_page = ''
+			end_page = ""
 			if twks.page + 1 < twks.pages:
 				if twks.page + 2 != twks.pages:
 					end_page += "  ..."
@@ -66,7 +66,7 @@ def list_files(*function_header: str) -> None:
 	files = fman.get_file_names()
 	gnrl.slowprint(function_header[0], function_header[1])
 	if len(open_file):
-		gnrl.slowprint(f"\nCurrent File: {open_file["name"]}")
+		gnrl.slowprint(f"\nCurrent File: {open_file['name']}")
 	if len(files):
 		gnrl.slowprint('', "Files:", '')
 	num = 1
@@ -87,36 +87,36 @@ def confirm_edits_text(is_equal: bool, function: str) -> None:
 	return None
 
 def arrange_items_menu() -> None:
-	system(glob.clear)
+	call(glob.clear)
 	gnrl.slowprint("[arranging items]", "-----------------", '')
 	list_items()
 	return None
 
 def edit_items_menu() -> None:
-	system(glob.clear)
+	call(glob.clear)
 	gnrl.slowprint("[editing items]", "---------------", '')
 	list_items()
 	return None
 
 def postpone_items_menu() -> None:
-	system(glob.clear)
+	call(glob.clear)
 	gnrl.slowprint("[postponing items]", "------------------", '')
 	list_items()
 	return None
 
 def rm_items_menu() -> None:
-	system(glob.clear)
+	call(glob.clear)
 	gnrl.slowprint("[removing items]", "----------------", '')
 	list_items()
 	return None
 
 def save_menu():
-	system(glob.clear)
+	call(glob.clear)
 	open_file = fman.read_open_file()
 	list_files("[saving file]", "-------------")
 	files = fman.get_file_names()
-	if len(open_file) and fman.file_exists(open_file["name"]):
-		gnrl.slowprint('', f"Name your file, or empty return to overwrite '{open_file["name"]}'. 'c' to cancel.", '')
+	if len(open_file) and fman.file_exists(open_file['name']):
+		gnrl.slowprint('', f"Name your file, or empty return to overwrite '{open_file['name']}'. 'c' to cancel.", '')
 	elif f"{glob.date}.todo" not in files:
 		gnrl.slowprint('', f"Name your file, or empty return to name the file '{glob.date}'. 'c' to cancel.", '')
 	else:
@@ -124,7 +124,7 @@ def save_menu():
 	return None
 
 def load_menu() -> None:
-	system(glob.clear)
+	call(glob.clear)
 	list_files("[loading file]", "--------------")
 	gnrl.slowprint('', "Enter the number of file you would like to open. 'r' to rename a file. 'd' to delete a file. 'a' to archive a file. 'c' to cancel.", '')
 	return None
@@ -136,7 +136,7 @@ def title() -> None:
 def menu(justopened: bool, bypass: bool) -> None:
 	if bypass:
 		return None
-	system(glob.clear)
+	call(glob.clear)
 	if justopened:
 		title()
 	list_items()

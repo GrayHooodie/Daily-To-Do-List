@@ -53,7 +53,7 @@ def archive_load_file(files: list[str]) -> None:
 		if to_archive.isdigit():
 			to_archive = int(to_archive) - 1
 			if to_archive in range(len(files)):
-				confirm(files[to_archive], {"type": "archive", "pres-verb": "archive", "past-verb": "archival"})
+				confirm(files[to_archive], {'type': "archive", 'pres-verb': "archive", 'past-verb': "archival"})
 				sleep(glob.slptm)
 				return None
 			else:
@@ -66,7 +66,7 @@ def archive_load_file(files: list[str]) -> None:
 			gnrl.slowprint(glob.invalid_fn)
 
 def archiveit(filename: str) -> None:
-	rename(path.join(glob.listfiles, filename), path.join(glob.listfiles, "archive", filename))
+	rename(path.join(glob.listfiles, filename), path.join(glob.listfiles, 'archive', filename))
 	return None
 
 def rename_load_file(files: list[str]) -> None:
@@ -101,10 +101,10 @@ def renameit(files, to_rename) -> None:
 		elif len(new_name) > 0:
 			if not file_exists(new_name):
 				open_file = read_open_file()
-				if len(open_file) and files[to_rename] == open_file["name"]:
-					open_file["name"] = f"{new_name}.todo"
+				if len(open_file) and files[to_rename] == open_file['name']:
+					open_file['name'] = f"{new_name}.todo"
 					with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
-						f.write(f"{open_file["name"]}\n{open_file["lstype"]}\n")
+						f.write(f"{open_file['name']}\n{open_file['type']}\n")
 				rename(path.join(glob.listfiles, files[to_rename]), path.join(glob.listfiles, f"{new_name}.todo"))
 				return None
 			else:
@@ -129,13 +129,13 @@ def autoload() -> None:
 	glob.todo = []
 	open_file = read_open_file()
 	if len(open_file):
-		if open_file["lstype"] == "%d" and open_file["name"] != f"{glob.date}.todo":
+		if open_file['type'] == "%d" and open_file['name'] != f"{glob.date}.todo":
 			if f"{glob.date}.todo" in listdir(glob.listfiles):
 				with open(path.join(glob.listfiles, f"{glob.date}.todo"), 'r') as f:
 					glob.todo = [line.strip('\n') for line in f.readlines()]
 				glob.todo.pop()
 			else:
-				glob.todo += open_list(open_file["name"])
+				glob.todo += open_list(open_file['name'])
 				glob.todo.pop()
 				rm_crossed()
 				default_items()
@@ -144,11 +144,12 @@ def autoload() -> None:
 				f.write(f"{glob.date}.todo\n%d\n")
 			return None
 		try:
-			with open(path.join(glob.listfiles, open_file["name"]), 'r') as f:
+			with open(path.join(glob.listfiles, open_file['name']), 'r') as f:
 				glob.todo = [line.strip('\n') for line in f.readlines()]
 			glob.todo.pop()
-		except Exception:
+		except FileNotFoundError or IndexError:
 			clear_open_file()
+			glob.todo = []
 	else:
 		with open(path.join(glob.progfiles, "lastopen"), 'w') as f:
 			f.write(f"{glob.date}.todo\n%d\n")
@@ -159,14 +160,14 @@ def autoload() -> None:
 
 def default_items() -> None:
 	rm_old_default_items()
-	default_items = read_default_items()
-	for i in range(len(default_items)):
-		glob.todo.insert(i, default_items[i])
+	items = read_default_items()
+	for i in range(len(items)):
+		glob.todo.insert(i, items[i])
 	return None
 
 def rm_old_default_items() -> None:
-	default_items = read_default_items()
-	for item in default_items:
+	items = read_default_items()
+	for item in items:
 		if item in glob.todo:
 			glob.todo.remove(item)
 	return None
@@ -191,7 +192,7 @@ def delete_load_file(files: list[str]) -> None:
 		if to_delete.isdigit():
 			to_delete = int(to_delete) - 1
 			if to_delete in range(len(files)):
-				confirm(files[to_delete], {"type": "delete", "pres-verb": "delete", "past-verb": "deletion"})
+				confirm(files[to_delete], {'type': "delete", 'pres-verb': "delete", 'past-verb': "deletion"})
 				sleep(glob.slptm)
 				return None
 			else:
@@ -210,28 +211,29 @@ def deleteit(filename: str) -> None:
 def confirm(filename: str, function: dict) -> None:
 	file_is_open = False
 	open_file = read_open_file()
-	if len(open_file) and open_file["name"] == filename:
+	if len(open_file) and open_file['name'] == filename:
 		file_is_open = True
 	if file_is_open:	
-		gnrl.slowprint('', f"Are you sure you'd like to {function["pres-verb"]} the file '{filename}'? This will also clear your current to-do list. (y/N)", '')
+		gnrl.slowprint('', f"Are you sure you'd like to {function['pres-verb']} the file '{filename}'? This will also clear your current to-do list. (y/N)", '')
 	else:
-		gnrl.slowprint('', f"Are you sure you'd like to {function["pres-verb"]} the file '{filename}'? (y/N)", '')
+		gnrl.slowprint('', f"Are you sure you'd like to {function['pres-verb']} the file '{filename}'? (y/N)", '')
 	while True:
 		confirmation = input(" > ").lower()
 		match confirmation:
 			case 'n' | '':
-				gnrl.slowprint('', f"{function["past-verb"].capitalize()} of file '{filename}' cancelled.", '')
+				gnrl.slowprint('', f"{function['past-verb'].capitalize()} of file '{filename}' cancelled.", '')
 				return None
 			case 'y':
 				if file_is_open:
 					clear_open_file()
 					glob.todo = []	
-				if function["type"] == "delete":
+				if function['type'] == "delete":
 					deleteit(filename)
 					gnrl.slowprint('', "File successfully deleted.", '')
-				elif function["type"] == "archive":
+				elif function['type'] == "archive":
 					archiveit(filename)
-					gnrl.slowprint('', f"File successfully archived. It can be found at '{path.join(glob.listfiles, "archive", filename)}'.", '')
+					archived_path = path.join(glob.listfiles, "archive", filename)
+					gnrl.slowprint('', f"File successfully archived. It can be found at '{archived_path}'.", '')
 				return None
 			case _:
 				gnrl.slowprint(glob.y_or_n)
@@ -243,11 +245,11 @@ def append_postponed() -> None:
 		pass
 	return None
 
-def read_open_file() -> dict[str: str]:
+def read_open_file() -> dict[str, str]:
 	with open(path.join(glob.progfiles, "lastopen"), 'r') as f:
 		open_file = [line.strip('\n') for line in f.readlines()]
 	if len(open_file):
-		return {"name": open_file[0], "lstype": open_file[1]}
+		return {'name': open_file[0], 'type': open_file[1]}
 	return {}
 
 def clear_open_file() -> None:

@@ -7,7 +7,10 @@ if name == "nt":
 else:
     clear = "clear"
 
+
+show_title, bypass = True, False
 todo: list[str] = []
+unchanged: list[str] = []
 date: str = datetime.today().strftime('%Y-%m-%d')
 home: str = str(Path.home())
 listfiles: str = path.join(home, "Documents", "To-Do Lists")

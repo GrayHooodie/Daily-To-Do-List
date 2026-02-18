@@ -1,7 +1,7 @@
 # Simple todo-list program made by Matt L on 2025/12/11 while not wanting to go to sleep
-from os import system
+from subprocess import call
 
-import modules.setup
+from modules.setup import file_integrity
 import modules.disp as disp
 import modules.fman as fman
 import modules.glob as glob
@@ -9,16 +9,16 @@ import modules.gnrl as gnrl
 import modules.progfuncs as pf
 import modules.twks as twks
 
+@gnrl.ctrl_c_handler
 def main() -> int:
-	fman.autoload()
-	show_title: bool = True
-	bypass: bool = False
 	while True:
-		disp.menu(show_title, bypass)
-		if bypass:
-			bypass = False
-		if show_title:
-			show_title = False
+		glob.unchanged = []
+		file_integrity()
+		disp.menu(glob.show_title, glob.bypass)
+		if glob.bypass:
+			glob.bypass = False
+		if glob.show_title:
+			glob.show_title = False
 		item = input(" > ")
 		if item.isdigit():
 			item = int(item) - 1
@@ -31,10 +31,10 @@ def main() -> int:
 				twks.page = int(item[1:])
 			elif twks.pages == 1:
 				gnrl.slowprint("You only have one page of list items.")
-				bypass = True
+				glob.bypass = True
 			else:
 				gnrl.slowprint("Please enter a valid page number.")
-				bypass = True
+				glob.bypass = True
 		else:
 			match item:
 				case '':
@@ -46,21 +46,21 @@ def main() -> int:
 						pf.arrange_items()
 					else:
 						gnrl.slowprint("Must have at least 2 list items to arrange.")
-						bypass = True
+						glob.bypass = True
 				case 'e' | 'E':
 					if len(glob.todo):
 						pf.edit_items()
 					else:
 						gnrl.slowprint("Must have at least 1 list item to edit.")
-						bypass = True
+						glob.bypass = True
 				case 'p' | 'P':
 					open_file = fman.read_open_file()
 					if not len(open_file):
 						gnrl.slowprint("Must have a saved 'daily' list open to postpone items.")
-						bypass = True
-					elif open_file["lstype"] == "%c":
+						glob.bypass = True
+					elif open_file['type'] == "%c":
 						gnrl.slowprint("Must be a 'daily' to-do list to postpone items. A 'daily' to-do list is one that is named with the default of the current day's date.")
-						bypass = True
+						glob.bypass = True
 					else:
 						pf.postpone_items()
 				case 'r' | 'R':
@@ -68,7 +68,7 @@ def main() -> int:
 						pf.rm_items()
 					else:
 						gnrl.slowprint("Must have at least 1 list item to remove.")
-						bypass = True
+						glob.bypass = True
 				case 'c' | 'C':
 					pf.clear()
 				case 'S':
@@ -76,13 +76,13 @@ def main() -> int:
 						pf.save()
 					else:
 						gnrl.slowprint("Must have at least 1 list item to save.")
-						bypass = True
+						glob.bypass = True
 				case 'l' | 'L':
 					if len(fman.get_file_names()):
 						pf.load()
 					else:
 						gnrl.slowprint("Must have at least 1 saved list to load.")
-						bypass = True
+						glob.bypass = True
 				case 'h' | 'H':
 					gnrl.slowprint(
 					'',
@@ -100,19 +100,20 @@ def main() -> int:
 					"'q'  Quit",
 					''
 					)
-					bypass = True
+					glob.bypass = True
 				case 'q' | 'Q':
 					open_file = fman.read_open_file()
 					if len(open_file) or len(glob.todo):
-						pf.autosave(False)
-					system(glob.clear)
+						pf.autosave(using_clear=False)
+					call(glob.clear)
 					return 0
 				case _:
 					if len(item) > 1:
 						glob.todo.append(item)
 					else:
 						gnrl.slowprint(f"Unknown command '{item}'.") 
-						bypass = True
+						glob.bypass = True
 
 if __name__ == "__main__":
+	fman.autoload()
 	main()

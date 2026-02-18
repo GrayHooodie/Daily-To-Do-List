@@ -16,6 +16,7 @@ Clone the repository and run the following command while in the project folder:
 Clone the repository and run the following commands while in the project folder:
 
 > ./compile.sh
+
 > ./install.sh
 
 
@@ -28,7 +29,7 @@ Simply type the following command into your terminal:
 
 
 ### From Source
-Python must be version ^.^.^ or newer. Move into the project folder, and run the following command:
+Python must be version 3.10.0 or newer. Move into the project folder, and run the following command:
 
 > python3 dtdl.py
 
@@ -40,7 +41,7 @@ A file called *tweaks.conf* is located at *~/.dtdl/config/tweaks.conf*. You can 
 
 > twkname=value
 
-where *twkname* is the name of the tweak, and *value* is a number.
+where *twkname* is the name of the tweak, and *value* is a number. Any changes made will be applied the next time you open the program.
 
 If you need to reference the defaults, read **Available Tweaks** below. Or, if you want to start over, simply delete the *tweaks.conf* file located at *~/.dtdl/config/tweaks.conf* and it will be regenerated the next time you open the program.
 
@@ -48,7 +49,7 @@ If you need to reference the defaults, read **Available Tweaks** below. Or, if y
 So far, only two tweaks are available: *pagelength* and *textspeed*.
 
 #### pagelength
-This is how many list items will show up on a single page. This can make a huge difference if you're using this on a phone terminal emulator, or a small laptop screen. Default is 50.
+This is how many list items will show up on a single page. This can make a huge difference if you're using this on a phone terminal emulator, or a small or low resolution laptop screen. Default is 50.
 
 How it appears in the *tweaks.conf* file:
 
@@ -61,3 +62,5 @@ This is how many seconds between 2 lines of text (global to the whole program). 
 How it appears in the *tweaks.conf* file:
 
 > textspeed=0.02
+
+

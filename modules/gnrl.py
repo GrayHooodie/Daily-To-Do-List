@@ -1,5 +1,5 @@
-from os import makedirs, path
 from time import sleep
+from subprocess import call
 
 import modules.glob as glob
 import modules.twks as twks
@@ -16,19 +16,19 @@ def unstrike(text: str) -> str:
 		new_text += text[i]
 	return new_text
 
-def enter_digit(base: int, text: dict, enter_to_confirm: bool) -> int:
-	slowprint('', text["context"], '')
+def enter_digit(base: int, text: dict, enter_to_confirm: bool) -> int | None:
+	slowprint('', text['context'], '')
 	while True:
 		num = input(" > ")
 		if num.isdigit():
 			num = int(num) - base
 			if num in range(len(glob.todo)):
-				if "postpone" in text["context"] and ord(glob.todo[num][1]) == 822:
-					slowprint(text["crossed"])
+				if "postpone" in text['context'] and ord(glob.todo[num][1]) == 822:
+					slowprint(text['crossed'])
 				else:
 					return num	
 			else:
-				slowprint(text["line_num"])
+				slowprint(text['line_num'])
 		elif len(num) > 1 and num[0].lower() == 'p' and num[1:].isdigit():
 			if int(num[1:]) in range(twks.pages + 1):
 				twks.page = int(num[1:])
@@ -37,29 +37,47 @@ def enter_digit(base: int, text: dict, enter_to_confirm: bool) -> int:
 				slowprint("Please enter a valid page number.")
 				continue
 		elif num.lower() == 'c':
-			if "cancel" in text:
-				slowprint('', text["cancel"], '')
+			if 'cancel' in text:
+				slowprint('', text['cancel'], '')
 			return -2
 		elif enter_to_confirm and num == '':
 			return -1	
 		else:
-			slowprint(text["line_num"])
+			slowprint(text['line_num'])
 
 def is_daily(file: str) -> bool:
-	isdate = file.split('-')
+	isdate: list[str] = file.split('-')
+
 	if len(isdate) == 3:
 		for i in range(len(isdate)):
 			if not isdate[i].isdigit():
 				return False
-			else:
-				isdate[i] = int(isdate[i])
-		if isdate[0] in range(2000, 10000) and isdate[1] in range(1, 32) and isdate[2] in range(1, 32):
+		year, month, day = int(isdate[0]), int(isdate[1]), int(isdate[2])
+		if year in range(2000, 10000) and month in range(1, 32) and day in range(1, 32):
 			return True
 	return False
 
 def slowprint(*text) -> None:
-	delay: float = 0.02
 	for line in text:
 		print(line)
 		sleep(twks.textspeed)
 	return None
+
+def ctrl_c_handler(f):
+	def wrapper():
+		while True:
+			try:
+				f()
+				break
+			except KeyboardInterrupt:
+				slowprint('', '', "If you would like to exit without saving, press 'Ctrl+C' once more. Otherwise, enter anything else.", '')
+				try:
+					input(" > ")
+					if len(glob.unchanged):
+						glob.todo = glob.unchanged
+					continue
+				except KeyboardInterrupt:
+					call(glob.clear)
+					exit()
+	return wrapper
+
