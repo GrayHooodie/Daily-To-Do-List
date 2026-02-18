@@ -117,6 +117,8 @@ def save_menu():
 	files = fman.get_file_names()
 	if len(open_file) and fman.file_exists(open_file['name']):
 		gnrl.slowprint('', f"Name your file, or empty return to overwrite '{open_file['name']}'. 'c' to cancel.", '')
+	elif len(open_file):
+		gnrl.slowprint('', f"Name your file, or empty return to name the file '{open_file['name']}'. 'c' to cancel.", '')
 	elif f"{glob.date}.todo" not in files:
 		gnrl.slowprint('', f"Name your file, or empty return to name the file '{glob.date}'. 'c' to cancel.", '')
 	else:
