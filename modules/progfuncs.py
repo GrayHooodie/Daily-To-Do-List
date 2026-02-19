@@ -196,8 +196,9 @@ def autosave(using_clear: bool) -> bool:
 			if glob.todo == last_saved:
 				return False
 	if (len(open_file)) or (f"{glob.date}.todo" not in listdir(glob.listfiles)):
-		files = fman.get_file_names()
-		fman.move_old_dailys(files)
+		if open_file['name'] == f"{glob.date}.todo":
+			files = fman.get_file_names()
+			fman.move_old_dailys(files)
 		with open(path.join(glob.listfiles, open_file['name']), 'w') as f:
 			for item in glob.todo:
 				f.write(f"{item}\n")

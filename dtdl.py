@@ -90,7 +90,7 @@ def main() -> int:
 					"'a'  Arrange Items",
 					"'e'  Edit Items",
 					"'r'  Remove Items",
-					"'p'  Postpone Items/ Switch Page (when followed by a digit)",
+					"'p'  Postpone Items / Switch Page (when followed by a digit)",
 					'',
 					"'C'  Clear List / Close File",
 					"'S'  Save List To File",
