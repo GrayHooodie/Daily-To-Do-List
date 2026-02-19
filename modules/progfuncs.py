@@ -313,6 +313,8 @@ def load() -> None:
 				glob.todo = fman.open_list(files[select])
 				if not len(glob.todo):
 					if fman.empty_file_delete(files[select]):
+						gnrl.slowprint('', f"File '{files[select]}' successfully deleted.", '')
+						sleep(glob.slptm)
 						continue
 					else:
 						glob.todo = fman.open_list(files[select])
