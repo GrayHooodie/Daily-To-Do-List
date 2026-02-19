@@ -1,13 +1,14 @@
 from subprocess import call
 
+# Local modules imports
 import modules.fman as fman
 import modules.glob as glob
 import modules.gnrl as gnrl
 import modules.twks as twks
 
 
+# List is always shown using this
 def list_items() -> None:
-	
 	open_file = fman.read_open_file()
 	if len(open_file):
 		gnrl.slowprint(f"Current File: {open_file['name']}")
@@ -61,6 +62,7 @@ def list_items() -> None:
 	#gnrl.slowprint('')
 	return None
 
+# Files are always shown using this
 def list_files(*function_header: str) -> None:
 	open_file = fman.read_open_file()
 	files = fman.get_file_names()
@@ -79,37 +81,43 @@ def list_files(*function_header: str) -> None:
 	gnrl.slowprint('')	
 	return None
 
+# Used after using a user-interactive function
 def confirm_edits_text(is_equal: bool, function: str) -> None:
 	if is_equal:
-		gnrl.slowprint('', glob.no_chng, '')
+		gnrl.slowprint('', glob.NO_CHANGE, '')
 	else:
 		gnrl.slowprint('', f"Item(s) successfully {function}.", '')
 	return None
 
+# Menu for user-interactive function
 def arrange_items_menu() -> None:
 	call(glob.clear)
 	gnrl.slowprint("[arranging items]", "-----------------", '')
 	list_items()
 	return None
 
+# Menu for user-interactive function
 def edit_items_menu() -> None:
 	call(glob.clear)
 	gnrl.slowprint("[editing items]", "---------------", '')
 	list_items()
 	return None
 
+# Menu for user-interactive function
 def postpone_items_menu() -> None:
 	call(glob.clear)
 	gnrl.slowprint("[postponing items]", "------------------", '')
 	list_items()
 	return None
 
+# Menu for user-interactive function
 def rm_items_menu() -> None:
 	call(glob.clear)
 	gnrl.slowprint("[removing items]", "----------------", '')
 	list_items()
 	return None
 
+# Menu for user-interactive function
 def save_menu():
 	call(glob.clear)
 	open_file = fman.read_open_file()
@@ -125,16 +133,19 @@ def save_menu():
 		gnrl.slowprint('', "Name your file, or enter the corresponding number to overwrite a file. 'c' to cancel.", '')
 	return None
 
+# Menu for user-interactive function
 def load_menu() -> None:
 	call(glob.clear)
 	list_files("[loading file]", "--------------")
 	gnrl.slowprint('', "Enter the number of file you would like to open. 'r' to rename a file. 'd' to delete a file. 'a' to archive a file. 'c' to cancel.", '')
 	return None
 
+# Opening title banner
 def title() -> None:
 	gnrl.slowprint('', "---------------------------", "Welcome to your to-do list!", "---------------------------", '')
 	return None
 
+# Menu for main to-do list screen
 def menu(justopened: bool, bypass: bool) -> None:
 	if bypass:
 		return None

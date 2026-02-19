@@ -1,7 +1,27 @@
 # Simple todo-list program made by Matt L on 2025/12/11 while not wanting to go to sleep
 from subprocess import call
+import sys
 
-from modules.setup import file_integrity
+# CHANGE EACH UPDATE
+RELEASE_NUM = "v1.1.2"
+
+# Handles command line flags
+if len(sys.argv) > 1:
+	if len(sys.argv) > 2:
+		print("\ndtdl can only take one flag for input ('-v', '--version', 'h', '--help').\n")
+	elif sys.argv[1] in ["-v", "--version", "-h", "--help"]:
+		if 'v' in sys.argv[1]:
+			print(f"\ndtdl --- {RELEASE_NUM}\n")
+		elif 'h' in sys.argv[1]:
+			print("\n'-v', '--version'    ---    Show the current installed version of the program")
+			print("'-h', '--help'       ---    Show this help screen\n")
+		sys.exit(0)
+	else:
+		print(f"\nUnknown flag '{sys.argv[1]}'. You may use one of the following flags: '-v', '--version', '-h', '--help'\n")
+	sys.exit(1)
+
+# Local modules imports
+import modules.setup as setup
 import modules.disp as disp
 import modules.fman as fman
 import modules.glob as glob
@@ -12,20 +32,25 @@ import modules.twks as twks
 @gnrl.ctrl_c_handler
 def main() -> int:
 	while True:
+		# Resets the copy of the list that is created when things are edited/changed
 		glob.unchanged = []
-		file_integrity()
+		# Minimize errors by making sure there are program files
+		setup.file_integrity()
 		disp.menu(glob.show_title, glob.bypass)
 		if glob.bypass:
 			glob.bypass = False
 		if glob.show_title:
 			glob.show_title = False
+		# Prompting user
 		item = input(" > ")
+		# Crossing
 		if item.isdigit():
 			item = int(item) - 1
 			if item in range(len(glob.todo)):
 				pf.cross(item)		
 			else:
 				gnrl.slowprint("Please enter a valid line number to cross-off.")
+		# Pages
 		elif len(item) > 1 and item[0].lower() == 'p' and item[1:].isdigit():
 			if int(item[1:]) in range(twks.pages + 1):
 				twks.page = int(item[1:])
@@ -35,6 +60,7 @@ def main() -> int:
 			else:
 				gnrl.slowprint("Please enter a valid page number.")
 				glob.bypass = True
+		# Other commands
 		else:
 			match item:
 				case '':
@@ -107,6 +133,7 @@ def main() -> int:
 						pf.autosave(using_clear=False)
 					call(glob.clear)
 					return 0
+				# Items added to list
 				case _:
 					if len(item) > 1:
 						glob.todo.append(item)
@@ -115,5 +142,6 @@ def main() -> int:
 						glob.bypass = True
 
 if __name__ == "__main__":
+	# Only autoload once per program open
 	fman.autoload()
 	main()
