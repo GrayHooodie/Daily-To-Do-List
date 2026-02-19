@@ -34,7 +34,10 @@ def empty_file_delete(filename: str) -> bool:
 		will_delete = input(" > ").lower()
 		match will_delete:
 			case 'y':
-				remove(path.join(glob.listfiles, filename))
+				try:
+					remove(path.join(glob.listfiles, filename))
+				except FileNotFoundError:
+					pass
 				return True
 			case 'n':
 				with open(path.join(glob.listfiles, filename), 'w') as f:
