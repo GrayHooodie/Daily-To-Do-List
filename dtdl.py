@@ -1,5 +1,22 @@
 # Simple todo-list program made by Matt L on 2025/12/11 while not wanting to go to sleep
 from subprocess import call
+import sys
+
+RELEASE_NUM = "v1.1.0"
+
+if len(sys.argv) > 1:
+	if len(sys.argv) > 2:
+		print("\ndtdl can only take one flag for input ('-v', '--version', 'h', '--help').\n")
+	elif sys.argv[1] in ["-v", "--version", "-h", "--help"]:
+		if 'v' in sys.argv[1]:
+			print(f"\ndtdl --- {RELEASE_NUM}\n")
+		elif 'h' in sys.argv[1]:
+			print("\n'-v', '--version'    ---    Show the current installed version of the program")
+			print("'-h', '--help'       ---    Show this help screen\n")
+		sys.exit(0)
+	else:
+		print(f"\nUnknown flag '{sys.argv[1]}'. You may use one of the following flags: '-v', '--version', '-h', '--help'\n")
+	sys.exit(1)
 
 from modules.setup import file_integrity
 import modules.disp as disp
