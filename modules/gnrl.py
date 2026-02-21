@@ -86,4 +86,3 @@ def ctrl_c_handler(f):
 					call(glob.clear)
 					exit()
 	return wrapper
-
