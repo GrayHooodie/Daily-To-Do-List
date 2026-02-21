@@ -27,3 +27,5 @@ def file_integrity() -> None:
 	if not path.exists(path.join(glob.listfiles, "archive")):
 		makedirs(path.join(glob.listfiles, "archive"))
 	return None
+
+file_integrity()

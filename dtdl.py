@@ -2,8 +2,9 @@
 from subprocess import call
 import sys
 
-RELEASE_NUM = "v1.1.0"
+RELEASE_NUM = "v1.1.1"
 
+# Handles command line flags
 if len(sys.argv) > 1:
 	if len(sys.argv) > 2:
 		print("\ndtdl can only take one flag for input ('-v', '--version', 'h', '--help').\n")
@@ -18,7 +19,8 @@ if len(sys.argv) > 1:
 		print(f"\nUnknown flag '{sys.argv[1]}'. You may use one of the following flags: '-v', '--version', '-h', '--help'\n")
 	sys.exit(1)
 
-from modules.setup import file_integrity
+# Local modules imports
+import modules.setup as setup
 import modules.disp as disp
 import modules.fman as fman
 import modules.glob as glob
@@ -29,8 +31,10 @@ import modules.twks as twks
 @gnrl.ctrl_c_handler
 def main() -> int:
 	while True:
+		# Resets the copy of the list that is created when things are edited/changed
 		glob.unchanged = []
-		file_integrity()
+		# Minimize errors by making sure there are program files
+		setup.file_integrity()
 		disp.menu(glob.show_title, glob.bypass)
 		if glob.bypass:
 			glob.bypass = False
