@@ -3,8 +3,8 @@ from os import path
 import modules.glob as glob
 
 def get_tweak_value(tweakname: str, default: int | float):
-    if path.exists(path.join(glob.conffiles, "tweaks.conf")):
-        with open(path.join(glob.conffiles, "tweaks.conf"), 'r') as f:
+    if path.exists(path.join(glob.CONFFILES, "tweaks.conf")):
+        with open(path.join(glob.CONFFILES, "tweaks.conf"), 'r') as f:
             tweak = [line.strip('\n') for line in f.readlines() if tweakname in line]
         if len(tweak) and len(tweak[0].split('=')) == 2:
             return tweak[0].split('=')[1]

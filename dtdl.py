@@ -2,6 +2,7 @@
 from subprocess import call
 import sys
 
+# CHANGE EACH UPDATE
 RELEASE_NUM = "v1.1.1"
 
 # Handles command line flags
@@ -40,13 +41,16 @@ def main() -> int:
 			glob.bypass = False
 		if glob.show_title:
 			glob.show_title = False
+		# Prompting user
 		item = input(" > ")
+		# Crossing
 		if item.isdigit():
 			item = int(item) - 1
 			if item in range(len(glob.todo)):
 				pf.cross(item)		
 			else:
 				gnrl.slowprint("Please enter a valid line number to cross-off.")
+		# Pages
 		elif len(item) > 1 and item[0].lower() == 'p' and item[1:].isdigit():
 			if int(item[1:]) in range(twks.pages + 1):
 				twks.page = int(item[1:])
@@ -56,6 +60,7 @@ def main() -> int:
 			else:
 				gnrl.slowprint("Please enter a valid page number.")
 				glob.bypass = True
+		# Other commands
 		else:
 			match item:
 				case '':
@@ -128,6 +133,7 @@ def main() -> int:
 						pf.autosave(using_clear=False)
 					call(glob.clear)
 					return 0
+				# Items added to list
 				case _:
 					if len(item) > 1:
 						glob.todo.append(item)
@@ -136,5 +142,6 @@ def main() -> int:
 						glob.bypass = True
 
 if __name__ == "__main__":
+	# Only autoload once per program open
 	fman.autoload()
 	main()

@@ -4,18 +4,21 @@ from subprocess import call
 import modules.glob as glob
 import modules.twks as twks
 
+# Strike a string
 def strike(text: str) -> str:
 	new_text: str = ""
 	for c in text:
 		new_text += c + '\u0336'
 	return new_text
 
+# Unstrike a string
 def unstrike(text: str) -> str:
 	new_text: str = ""
 	for i in range(0, len(text), 2):
 		new_text += text[i]
 	return new_text
 
+# Enter a valid digit within the number of to-do list items
 def enter_digit(base: int, text: dict, enter_to_confirm: bool) -> int | None:
 	slowprint('', text['context'], '')
 	while True:
@@ -45,6 +48,7 @@ def enter_digit(base: int, text: dict, enter_to_confirm: bool) -> int | None:
 		else:
 			slowprint(text['line_num'])
 
+# Check if a string is in the same format as YYYY-MM-DD, as that's what I've chosen for this program
 def is_daily(file: str) -> bool:
 	isdate: list[str] = file.split('-')
 
@@ -57,12 +61,14 @@ def is_daily(file: str) -> bool:
 			return True
 	return False
 
+# Print one line at a time
 def slowprint(*text) -> None:
 	for line in text:
 		print(line)
 		sleep(twks.textspeed)
 	return None
 
+# Gracefully handle ctrl+c usage
 def ctrl_c_handler(f):
 	def wrapper():
 		while True:
