@@ -70,7 +70,7 @@ def archive_load_file(files: list[str]) -> None:
 
 # Break down parent function ^
 def archiveit(filename: str) -> None:
-	rename(path.join(glob.LISTFILES, filename), path.join(glob.LISTFILES, 'archive', filename))
+	rename(path.join(glob.LISTFILES, filename), path.join(glob.LISTFILES, "archive", filename))
 	return None
 
 # Child user-interactive function

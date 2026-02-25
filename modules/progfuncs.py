@@ -239,6 +239,8 @@ def save() -> None:
 		elif file == '':
 			if len(open_file):
 				file: str = open_file['name'].split(glob.EXT)[0]
+				if open_file['name'].split(glob.EXT)[0] == glob.date:
+					fman.move_old_dailys(files)
 				break
 			elif f"{glob.date}.todo" not in files:
 				file: str = glob.date
