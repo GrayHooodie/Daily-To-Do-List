@@ -3,7 +3,7 @@ from subprocess import call
 import sys
 
 # CHANGE EACH UPDATE
-RELEASE_NUM = "v1.1.2"
+RELEASE_NUM = "v1.1.3"
 
 # Handles command line flags
 if len(sys.argv) > 1:

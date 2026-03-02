@@ -257,7 +257,7 @@ def save() -> None:
 		elif f"{file}.todo" in files:
 			if overwrite_save(f"{file}.todo"):
 				break
-		elif glob.ext in file:
+		elif glob.EXT in file:
 			gnrl.slowprint("Name can't contain '.todo'.")
 		else:
 			break
