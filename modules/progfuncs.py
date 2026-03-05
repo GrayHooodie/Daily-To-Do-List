@@ -206,7 +206,6 @@ def autosave(using_clear: bool) -> bool:
 			last_saved.pop()
 			if glob.todo == last_saved:
 				return False
-	if (len(open_file)) or (f"{glob.date}.todo" not in listdir(glob.LISTFILES)):
 		if open_file['name'] == f"{glob.date}.todo":
 			files = fman.get_file_names()
 			fman.move_old_dailys(files)
