@@ -18,8 +18,8 @@ date: str = datetime.today().strftime('%Y-%m-%d')
 # Constants
 HOME: str = str(Path.home())
 LISTFILES: str = path.join(HOME, "Documents", "To-Do Lists")
-CONFFILES: str = path.join(HOME, ".dtdl", "config")
-PROGFILES: str = path.join(HOME, ".dtdl", "programfiles")
+CONFFILES: str = path.join(HOME, ".config", "dtdl")
+PROGFILES: str = path.join(HOME, ".config", "dtdl", "programfiles")
 EXT: str = ".todo"
 SLPTM = 1.5
 
