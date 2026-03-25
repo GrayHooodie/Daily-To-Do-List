@@ -8,7 +8,7 @@ fi
 echo "Installing..."
 ls ~/.local/bin/ | grep dtdl > /dev/null 2>&1
 if [ $? = 0 ]; then
-    cp dist/dtdl ~/.local/bin/dtdl
+    cp dist/dtdl ~/.local/bin/
 else
     whchpth='U'
     read -p "Would you like to make the program available to all users? (requires superuser, i.e. your password) [y/n]:" whchpth
@@ -18,10 +18,10 @@ else
 		whchpth=$(echo $whchpth | tr '[:lower:]' '[:upper:]')
 	done
     if [ $whchpth = 'Y' ]; then
-        sudo cp dist/dtdl /usr/bin 2> /dev/null
+        sudo cp dist/dtdl /usr/bin/ 2> /dev/null
     fi
     if [ $? != 0 ] || [ $whchpth = 'N' ]; then
-        mkdir -p ~/.local/bin
+        mkdir -p ~/.local/bin/
         echo $PATH | grep ~/.local/bin > /dev/null 2>&1
         if [ $? != 0 ]; then
             if [ $(echo $SHELL | grep -oE '(\w+)$') = "bash" ]; then
