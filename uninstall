@@ -1,0 +1,66 @@
+#!/bin/sh
+
+if ! command -v dtdl > /dev/null 2>&1; then
+	echo "You need dtdl to be installed in order to uninstall it."
+	exit 1
+fi
+
+printf "Uninstalling will delete config files and the dtdl binary from your system. However, your to-do lists located at '/home/$USER/Documents/To-Do Lists/' will remain.\n\n"
+
+user=0
+system=0
+if [ "$(whereis dtdl | grep '/home/.*/.local/bin/dtdl')" ]; then
+	user=1
+fi
+
+if [ "$(whereis dtdl | grep '/usr/bin/dtdl')" ]; then
+	system=1
+fi
+
+if [ $user = 1 ] && [ $system = 1 ]; then
+	echo "Install found at both system-wide and user locations."
+elif [ $user = 1 ]; then
+	echo "Install found for this user."
+elif [ $system = 1 ]; then
+	echo "Install found system-wide."
+fi
+
+uninstalled=0
+if [ $user = 1 ]; then
+	unin_user='U'
+	read -p "Uninstall dtdl for this user? [y/n]: " unin_user
+	unin_user=$(echo $unin_user | tr '[:lower:]' '[:upper:]')
+    while [ "$unin_user" != 'Y' ] && [ "$unin_user" != 'N' ]; do 
+		read -p "Enter 'y' or 'n': " unin_user
+		unin_user=$(echo $unin_user | tr '[:lower:]' '[:upper:]')
+	done
+	if [ $unin_user = 'Y' ]; then
+		rm /home/$USER/.local/bin/dtdl
+		uninstalled=$(expr $uninstalled + 1)
+	fi
+fi
+	
+if [ $system = 1 ]; then
+	unin_system='U'
+	read -p "Uninstall dtdl system-wide? (requires password) [y/n]: " unin_system
+	unin_system=$(echo $unin_system | tr '[:lower:]' '[:upper:]')
+    while [ "$unin_system" != 'Y' ] && [ "$unin_system" != 'N' ]; do 
+		read -p "Enter 'y' or 'n': " unin_system
+		unin_system=$(echo $unin_system | tr '[:lower:]' '[:upper:]')
+	done
+	if [ $unin_system = 'Y' ]; then
+		sudo rm /usr/bin/dtdl
+		if [ $? != 0 ]; then
+			echo "Error: System-wide dtdl uninstallation failed. Sudo password not entered."
+		fi
+		uninstalled=$(expr $uninstalled + 1)
+	fi
+fi
+
+if [ $uninstalled = $(expr $user + $system) ]; then
+	#rm -r ~/.config/dtdl
+	echo "Uninstallation successful."
+else
+	echo "Partial uninstallation successful. Configuration files at '/home/$USER/.config/dtdl' still remain."
+fi
+exit 0
